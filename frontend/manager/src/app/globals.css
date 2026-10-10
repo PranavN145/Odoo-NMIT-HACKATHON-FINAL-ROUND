@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand palette */
+  --color-navy: #13293D;
+  --color-blue: #006494;
+  --color-cerulean: #247BA0;
+  --color-accent: #1B98E0;
+  --color-canvas: #E8F1F2;
+
+  /* Surfaces and borders */
+  --color-surface: #FFFFFF;
+  --color-border: #D8E4E8;
+  --color-text: #13293D;
+  --color-text-muted: #5F7485;
+}
+
+body {
+  background-color: #E8F1F2;
+  color: #13293D;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+}
