@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skyline Student Association — Member Portal</title>
+  <!-- Google Fonts: Inter for UI body, Newsreader / Playfair for serif titles matching reference design -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ========================================================================= -->
+  <!-- TOPBAR (Matching Reference Screenshot: White bar, brand left, user right) -->
+  <!-- ========================================================================= -->
+  <header class="app-topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo" aria-hidden="true">
+        <!-- Isometric 3D Hexagon / Cube Geometry from reference -->
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" stroke="#247BA0" stroke-width="2" fill="#E8F1F2"/>
+          <path d="M16 2V30M4 9L16 16L28 9M4 23L16 16L28 23" stroke="#006494" stroke-width="1.8"/>
+          <circle cx="16" cy="16" r="3" fill="#13293D"/>
+        </svg>
+      </div>
+      <div class="topbar-brand">
+        <span class="brand-title">Skyline Student Association</span>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <!-- Cart Shortcut in Header -->
+      <button class="topbar-cart-btn" id="openCartBtn" title="View Shopping Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-trigger-badge" id="cartTriggerBadge">0</span>
+      </button>
+
+      <!-- User Profile Widget (matches screenshot: circular dark blue icon, name, role, chevron) -->
+      <div class="user-profile-widget" id="userProfileWidget" title="Member Account #8924">
+        <div class="user-avatar-circle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        </div>
+        <div class="user-details">
+          <span class="user-name">Alex Mercer</span>
+          <span class="user-role">Member</span>
+        </div>
+        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN WORKSPACE LAYOUT: Sidebar (Left) + Content (Right)                   -->
+  <!-- ========================================================================= -->
+  <div class="workspace-layout">
+
+    <!-- LEFT SIDEBAR (Matching reference image) -->
+    <aside class="workspace-sidebar">
+      <nav class="sidebar-nav" aria-label="Portal Navigation">
+        <!-- 1. Dashboard (Active by default) -->
+        <button class="nav-item active" data-tab="dashboard">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+          </svg>
+          <span class="nav-label">Dashboard</span>
+        </button>
+
+        <!-- 2. Events & Booking -->
+        <button class="nav-item" data-tab="events">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span class="nav-label">Events & Booking</span>
+        </button>
+
+        <!-- 3. Merchandise Store -->
+        <button class="nav-item" data-tab="store">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="nav-label">Merchandise Store</span>
+          <span class="nav-counter-pill" id="headerCartCount" style="display:none;">0</span>
+        </button>
+
+        <!-- 4. Announcements -->
+        <button class="nav-item" data-tab="announcements">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="nav-label">Announcements</span>
+          <span class="nav-counter-pill pulse" id="announcementBadge">1 New</span>
+        </button>
+
+        <!-- 5. My Passes & Orders -->
+        <button class="nav-item" data-tab="history">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span class="nav-label">My Passes & Orders</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Bottom Info (matches reference screenshot) -->
+      <div class="sidebar-footer">
+        <span class="version-tag">v2.4.0 Member Portal</span>
+      </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT (Pale mint-grey background) -->
+    <main class="workspace-content">
+      <div class="content-inner">
+
+        <!-- =================================================================== -->
+        <!-- TAB 1: DASHBOARD (Matches User Reference Image)                    -->
+        <!-- =================================================================== -->
+        <section id="tab-dashboard" class="tab-panel active">
+          
+          <!-- Top Page Title Bar (Serif title + Academic Year Pill on right) -->
+          <div class="dashboard-header-row">
+            <div>
+              <h1 class="page-headline">Dashboard</h1>
+              <p class="page-subheadline">A quick overview of your association membership and activities.</p>
+            </div>
+            <div class="academic-year-pill">
+              <span class="pill-dot"></span>
+              <span class="pill-text">Academic Year 2025–2026</span>
+            </div>
+          </div>
+
+          <!-- Top Row of 4 Metric Cards (Matching reference screenshot exactly) -->
+          <div class="metrics-grid">
+            
+            <!-- Card 1: Membership Status -->
+            <div class="metric-card" id="membershipMetricCard">
+              <div class="metric-card-top">
+                <span class="metric-label">Membership status</span>
+                <div class="metric-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#007A99" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-value" id="dashDaysLeft">Active (325d)</span>
+              </div>
+              <div class="metric-footer-text text-success">
+                Tier-1 Student Regular &bull; Valid Aug 2027
+              </div>
+            </div>
+
+            <!-- Card 2: Upcoming Events -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Upcoming events</span>
+                <div class="metric-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#007A99" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-value">4 Scheduled</span>
+              </div>
+              <div class="metric-footer-text">
+                Next: Tech Symposium (Nov 15)
+              </div>
+            </div>
+
+            <!-- Card 3: Active Passes / Tasks -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Active passes</span>
+                <div class="metric-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#007A99" stroke-width="2">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-value" id="dashTicketCount">2 Confirmed</span>
+              </div>
+              <div class="metric-footer-text text-success">
+                Digital QR codes ready for check-in
+              </div>
+            </div>
+
+            <!-- Card 4: Orders / Pending items -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Pending items</span>
+                <div class="metric-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#007A99" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-value" id="dashOrdersCount">1 Pickup Order</span>
+              </div>
+              <div class="metric-footer-text text-warning">
+                #ORD-8924 &bull; Desk 3 Pickup Ready
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Two-Column Section: Recent Activity (Left) + Quick Actions (Right) -->
+          <div class="dashboard-split-layout">
+            
+            <!-- LEFT CARD: Recent Activity (Matches reference image) -->
+            <div class="split-card left-card">
+              <div class="split-card-header">
+                <div class="header-tag-group">
+                  <h2 class="card-headline">Recent activity</h2>
+                  <span class="activity-badge-pill">Audit Log</span>
+                </div>
+                <button class="link-action-btn" data-switch-tab="announcements">
+                  <span>View all</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="activity-list">
+                <!-- Activity Item 1 -->
+                <div class="activity-item">
+                  <div class="activity-icon-container">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006494" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                    </svg>
+                  </div>
+                  <div class="activity-details">
+                    <span class="activity-title">Annual General Assembly draft updated</span>
+                    <div class="activity-submeta">
+                      <span class="meta-label">Related:</span>
+                      <span class="related-tag">Spring Gala 2026</span>
+                    </div>
+                  </div>
+                  <span class="activity-timestamp">2 hours ago</span>
+                </div>
+
+                <!-- Activity Item 2 -->
+                <div class="activity-item">
+                  <div class="activity-icon-container">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006494" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+                  <div class="activity-details">
+                    <span class="activity-title">New member roster submitted for review</span>
+                    <div class="activity-submeta">
+                      <span class="meta-label">Related:</span>
+                      <span class="related-tag">Finance Committee</span>
+                    </div>
+                  </div>
+                  <span class="activity-timestamp">Yesterday</span>
+                </div>
+
+                <!-- Activity Item 3 -->
+                <div class="activity-item">
+                  <div class="activity-icon-container">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006494" stroke-width="2">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                      <line x1="3" y1="6" x2="21" y2="6"></line>
+                      <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                  </div>
+                  <div class="activity-details">
+                    <span class="activity-title">Merchandise order fulfillment logged</span>
+                    <div class="activity-submeta">
+                      <span class="meta-label">Related:</span>
+                      <span class="related-tag">Spring Hoodie Batch</span>
+                    </div>
+                  </div>
+                  <span class="activity-timestamp">3 days ago</span>
+                </div>
+              </div>
+
+              <!-- Extra Dynamic Section for Booked Events Preview -->
+              <div class="dashboard-subsection-header mt-4">
+                <span class="sub-title">Featured Events Ready for Booking</span>
+                <span class="member-perk-hint">&#10003; 60% Member Discount Applied</span>
+              </div>
+              <div class="events-preview-list" id="dashEventsPreviewList">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+
+            <!-- RIGHT CARD: Quick Actions (Matches reference image) -->
+            <div class="split-card right-card">
+              <div class="quick-actions-header">
+                <h2 class="card-headline">Quick actions</h2>
+                <p class="quick-actions-desc">Frequently used shortcuts</p>
+              </div>
+
+              <div class="action-buttons-list">
+                <!-- Button 1: Solid Dark Teal (Primary) -->
+                <button class="btn-action-primary" id="qaCreateEventBtn" data-switch-tab="events">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  <span>Book event</span>
+                </button>
+
+                <!-- Button 2: White Outlined -->
+                <button class="btn-action-secondary" id="qaShopMerchBtn" data-switch-tab="store">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                  </svg>
+                  <span>Shop merchandise</span>
+                </button>
+
+                <!-- Button 3: White Outlined -->
+                <button class="btn-action-secondary" id="openMembershipModalBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                  </svg>
+                  <span>View digital pass</span>
+                </button>
+              </div>
+
+              <!-- Quick Action Note with Info icon & Keyboard Shortcut Badge -->
+              <div class="quick-action-footnote">
+                <div class="footnote-left">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <span>Operations require tier-2 sign-off</span>
+                </div>
+                <kbd class="shortcut-badge">&#8984;K</kbd>
+              </div>
+
+              <!-- Digital Pass Card Widget -->
+              <div class="member-id-card mt-4">
+                <div class="id-card-top">
+                  <div class="id-org-badge">
+                    <span class="org-icon">SKYLINE</span>
+                    <span class="org-name">Student Association</span>
+                  </div>
+                  <span class="id-status-badge">MEMBER</span>
+                </div>
+                <div class="id-card-body">
+                  <div class="id-chip-row">
+                    <div class="smart-chip" aria-hidden="true"></div>
+                    <span class="id-number">#SSA-2026-8924</span>
+                  </div>
+                  <div class="id-name">Alex Mercer</div>
+                  <div class="id-role">Verified Student Member</div>
+                </div>
+                <div class="id-card-bottom">
+                  <div>
+                    <div class="id-sublabel">EXPIRY DATE</div>
+                    <div class="id-subval">08 / 2027</div>
+                  </div>
+                  <div class="qr-preview-box" id="memberMiniQr" title="Digital Member Code">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="#13293D">
+                      <rect x="2" y="2" width="6" height="6"/>
+                      <rect x="16" y="2" width="6" height="6"/>
+                      <rect x="2" y="16" width="6" height="6"/>
+                      <rect x="10" y="4" width="4" height="2"/>
+                      <rect x="10" y="10" width="4" height="4"/>
+                      <rect x="4" y="10" width="2" height="4"/>
+                      <rect x="16" y="10" width="4" height="2"/>
+                      <rect x="10" y="18" width="4" height="2"/>
+                      <rect x="16" y="16" width="6" height="6"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="renewal-wrapper mt-3">
+                <button class="btn btn-outline btn-full" id="renewMembershipBtn">
+                  <span>Membership Renewal Info</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Hidden hook for announcement preview injection -->
+          <div id="dashAnnouncementsPreview" style="display:none;"></div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 2: EVENTS & TICKET BOOKING                                      -->
+        <!-- =================================================================== -->
+        <section id="tab-events" class="tab-panel">
+          <div class="section-title-bar">
+            <div>
+              <h1 class="page-headline">Events & Booking</h1>
+              <p class="page-subheadline">Reserve your digital entry ticket with exclusive member discount pricing.</p>
+            </div>
+            <div class="filter-group">
+              <button class="filter-btn active" data-event-filter="all">All Events</button>
+              <button class="filter-btn" data-event-filter="academic">Academic & Tech</button>
+              <button class="filter-btn" data-event-filter="cultural">Cultural & Arts</button>
+              <button class="filter-btn" data-event-filter="networking">Networking</button>
+            </div>
+          </div>
+
+          <!-- Events Catalog Grid -->
+          <div class="events-grid" id="eventsContainer">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 3: MERCHANDISE STORE                                            -->
+        <!-- =================================================================== -->
+        <section id="tab-store" class="tab-panel">
+          <div class="section-title-bar">
+            <div>
+              <h1 class="page-headline">Merchandise Store</h1>
+              <p class="page-subheadline">Official Skyline student apparel. Live inventory tracked per size variant.</p>
+            </div>
+            <div class="store-actions-bar">
+              <div class="store-info-pill">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>Free pickup at Student Association Desk (Room 204)</span>
+              </div>
+              <button class="btn-action-primary-compact" id="viewCartHeaderBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span>View Cart (<span id="cartCountBtnLabel">0</span>)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Merchandise Catalog Grid -->
+          <div class="merch-grid" id="merchContainer">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 4: ANNOUNCEMENTS                                                -->
+        <!-- =================================================================== -->
+        <section id="tab-announcements" class="tab-panel">
+          <div class="section-title-bar">
+            <div>
+              <h1 class="page-headline">Announcements</h1>
+              <p class="page-subheadline">Official executive board memos, constitution updates, and deadlines.</p>
+            </div>
+            <div class="search-input-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="announcementSearchInput" placeholder="Search notices and updates...">
+            </div>
+          </div>
+
+          <div class="announcements-feed" id="announcementsFeed">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 5: MY PASSES & ORDER HISTORY                                    -->
+        <!-- =================================================================== -->
+        <section id="tab-history" class="tab-panel">
+          <div class="section-title-bar">
+            <div>
+              <h1 class="page-headline">My Passes & Orders</h1>
+              <p class="page-subheadline">Access entry QR passes for booked events and track merchandise fulfillment.</p>
+            </div>
+            <div class="subnav-tabs-wrapper">
+              <button class="subnav-tab active" data-subtab="tickets">My Tickets (<span id="myTicketsBadgeCount">2</span>)</button>
+              <button class="subnav-tab" data-subtab="orders">My Orders (<span id="myOrdersBadgeCount">1</span>)</button>
+            </div>
+          </div>
+
+          <!-- Tickets Subtab -->
+          <div id="subtab-tickets-panel" class="subtab-panel active">
+            <div class="tickets-grid" id="myTicketsContainer">
+              <!-- Injected via JavaScript -->
+            </div>
+          </div>
+
+          <!-- Orders Subtab -->
+          <div id="subtab-orders-panel" class="subtab-panel">
+            <div class="orders-table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date Placed</th>
+                    <th>Items & Variants</th>
+                    <th>Total Amount</th>
+                    <th>Payment Status</th>
+                    <th>Fulfillment</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="myOrdersTableBody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Page Footer (Matches screenshot footer: Skyline Student Association · Manager/Member workspace) -->
+        <footer class="portal-footer">
+          <div class="footer-left">
+            <span>Skyline Student Association</span>
+            <span class="footer-sep">&middot;</span>
+            <span>Member workspace</span>
+          </div>
+          <div class="footer-right">
+            <span>&copy; 2026 Skyline Student Association</span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: DIGITAL TICKET / QR CODE PASS                                      -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="ticketPassModal" aria-hidden="true">
+    <div class="modal-card ticket-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-eyebrow">OFFICIAL DIGITAL EVENT PASS</span>
+          <h2 class="modal-title" id="modalTicketEventTitle">Annual Tech Symposium 2026</h2>
+        </div>
+        <button class="modal-close-btn" id="closeTicketModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="ticket-visual-wrapper">
+        <div class="ticket-visual-header">
+          <div class="ticket-badge">VALID ENTRY PASS</div>
+          <span class="ticket-verified-tag">&#10003; MEMBER RATE APPLIED</span>
+        </div>
+
+        <div class="ticket-info-grid">
+          <div class="info-cell">
+            <span class="cell-label">ATTENDEE</span>
+            <span class="cell-value" id="modalTicketAttendee">Alex Mercer</span>
+          </div>
+          <div class="info-cell">
+            <span class="cell-label">MEMBER ID</span>
+            <span class="cell-value">#SSA-2026-8924</span>
+          </div>
+          <div class="info-cell">
+            <span class="cell-label">DATE & TIME</span>
+            <span class="cell-value" id="modalTicketDate">Nov 15, 2026 • 10:00 AM</span>
+          </div>
+          <div class="info-cell">
+            <span class="cell-label">VENUE</span>
+            <span class="cell-value" id="modalTicketVenue">Campus Auditorium</span>
+          </div>
+        </div>
+
+        <div class="ticket-tear-line">
+          <div class="notch left"></div>
+          <div class="dashed-line"></div>
+          <div class="notch right"></div>
+        </div>
+
+        <div class="ticket-qr-area">
+          <div class="qr-render" id="modalQrCodeRender">
+            <!-- Dynamic QR Code SVG -->
+          </div>
+          <div class="ticket-code-label">TICKET VERIFICATION CODE</div>
+          <div class="ticket-code-val" id="modalTicketCode">TIC-2026-9A8B7C</div>
+          <p class="ticket-scan-instructions">Present this QR pass at the entrance scanner for instant check-in.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="printTicketBtn">Print / Save Pass</button>
+        <button class="btn-action-primary-compact" id="dismissTicketModalBtn">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: EVENT TICKET BOOKING CONFIRMATION                                 -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="bookEventModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-eyebrow">EVENT REGISTRATION</span>
+          <h2 class="modal-title" id="bookModalEventTitle">Confirm Ticket Booking</h2>
+        </div>
+        <button class="modal-close-btn" id="closeBookModalBtn">&times;</button>
+      </div>
+
+      <div class="booking-summary-box">
+        <div class="booking-row">
+          <span>Attendee Name:</span>
+          <strong>Alex Mercer (Member #8924)</strong>
+        </div>
+        <div class="booking-row">
+          <span>Date & Venue:</span>
+          <strong id="bookModalDateVenue">Nov 15, 2026 • Campus Auditorium</strong>
+        </div>
+        <div class="booking-row">
+          <span>Standard Non-Member Price:</span>
+          <span class="strike-price" id="bookModalStandardPrice">$25.00</span>
+        </div>
+        <div class="booking-row highlight">
+          <span>Your Member Discounted Price:</span>
+          <strong class="member-price-highlight" id="bookModalMemberPrice">$10.00</strong>
+        </div>
+        <div class="savings-alert">
+          &#10003; <strong>You save $15.00</strong> with your active student membership!
+        </div>
+      </div>
+
+      <div class="form-group mt-3">
+        <label for="bookNoteInput" class="form-label">Special Accommodations / Dietary Notes (Optional)</label>
+        <input type="text" id="bookNoteInput" class="form-input" placeholder="e.g., Vegetarian, Wheelchair access...">
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelBookBtn">Cancel</button>
+        <button class="btn-action-primary-compact" id="confirmBookTicketBtn">
+          <span>Confirm Booking ($<span id="confirmPriceBtnLabel">10.00</span>)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL / DRAWER: SHOPPING CART & CHECKOUT                                 -->
+  <!-- ========================================================================= -->
+  <div class="cart-drawer-backdrop" id="cartDrawerBackdrop" aria-hidden="true">
+    <div class="cart-drawer" id="cartDrawer">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <h2 class="drawer-title">Shopping Cart</h2>
+          <span class="drawer-subtitle" id="cartDrawerSubtitle">0 Items selected</span>
+        </div>
+        <button class="drawer-close-btn" id="closeCartDrawerBtn" aria-label="Close cart">&times;</button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="cart-empty-state" id="cartEmptyState">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#5F7485" stroke-width="1.5">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <p class="empty-title">Your cart is empty</p>
+          <p class="empty-desc">Explore the merchandise store and select your size variant to add apparel to your cart.</p>
+          <button class="btn btn-outline mt-3" id="startShoppingBtn">Browse Merch</button>
+        </div>
+
+        <div class="cart-items-list" id="cartItemsList" style="display:none;">
+          <!-- Items injected via JS -->
+        </div>
+      </div>
+
+      <div class="drawer-footer" id="cartDrawerFooter" style="display:none;">
+        <div class="cart-summary-line">
+          <span>Subtotal</span>
+          <span class="tabular-num" id="cartSubtotal">$0.00</span>
+        </div>
+        <div class="cart-summary-line">
+          <span>Member Fulfillment Fee</span>
+          <span class="text-success">FREE (Campus Pickup)</span>
+        </div>
+        <div class="cart-summary-total">
+          <span>Total Amount</span>
+          <span class="tabular-num" id="cartGrandTotal">$0.00</span>
+        </div>
+        <button class="btn-action-primary btn-full" id="checkoutBtn">
+          <span>Complete Order & Reserve Stock</span>
+        </button>
+        <p class="pickup-notice">Pickup at Student Association Desk (Room 204) Mon-Fri 10am-4pm.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

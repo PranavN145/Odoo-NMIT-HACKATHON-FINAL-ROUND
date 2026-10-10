@@ -1,0 +1,9 @@
+{
+  "name": "skyline-member-portal",
+  "version": "1.0.0",
+  "description": "Member Portal for Skyline Student Association",
+  "scripts": {
+    "start": "npx -y serve . -l 3000",
+    "dev": "npx -y serve . -l 3000"
+  }
+}
