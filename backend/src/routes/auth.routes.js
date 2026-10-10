@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
 const { authenticate } = require('../middleware/auth.middleware');
+const { loginRateLimiter } = require('../middleware/rateLimiter');
 
 /**
  * Public Authentication Endpoints
  */
 router.post('/register', authController.register);
-router.post('/login', authController.login);
+router.post('/login', loginRateLimiter, authController.login);
 
 /**
  * Protected Authentication Endpoints

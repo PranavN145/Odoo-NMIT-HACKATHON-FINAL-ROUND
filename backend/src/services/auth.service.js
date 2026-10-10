@@ -6,18 +6,22 @@ const BCRYPT_SALT_ROUNDS = 10;
 const DEFAULT_JWT_EXPIRES_IN = '24h';
 
 /**
- * Returns configured JWT secret. Throws if missing in production.
+ * Returns configured JWT secret. Throws an error if missing or empty.
+ * Predictable development fallback secrets are strictly disallowed.
  */
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('JWT_SECRET is not configured in environment variables');
-    }
-    // Development fallback warning if unset locally
-    return 'development_fallback_secret_key_change_in_production';
+  if (!secret || typeof secret !== 'string' || secret.trim() === '') {
+    throw new Error('JWT_SECRET is required and must be configured in environment variables');
   }
-  return secret;
+  return secret.trim();
+}
+
+/**
+ * Asserts that the required JWT_SECRET is configured at startup.
+ */
+function assertJwtSecretConfigured() {
+  getJwtSecret();
 }
 
 /**
@@ -140,6 +144,8 @@ async function getCurrentUser(userId, prismaClient = defaultPrisma) {
 }
 
 module.exports = {
+  getJwtSecret,
+  assertJwtSecretConfigured,
   signToken,
   sanitizeUser,
   registerUser,

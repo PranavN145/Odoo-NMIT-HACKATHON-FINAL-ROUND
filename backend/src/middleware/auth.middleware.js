@@ -1,17 +1,6 @@
 const jwt = require('jsonwebtoken');
 const defaultPrisma = require('../lib/prisma');
-const { sanitizeUser } = require('../services/auth.service');
-
-function getJwtSecret() {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('JWT_SECRET is not configured in environment variables');
-    }
-    return 'development_fallback_secret_key_change_in_production';
-  }
-  return secret;
-}
+const { sanitizeUser, getJwtSecret } = require('../services/auth.service');
 
 /**
  * Authentication Middleware

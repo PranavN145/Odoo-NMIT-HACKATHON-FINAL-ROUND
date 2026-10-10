@@ -1,3 +1,5 @@
+process.env.JWT_SECRET = 'explicit_test_secret_for_automated_tests_only';
+
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const bcrypt = require('bcrypt');
@@ -371,4 +373,67 @@ test('Authentication Module Tests', async (t) => {
       }
     );
   });
+
+  // -------------------------------------------------------------
+  // 6. Security Improvement Tests
+  // -------------------------------------------------------------
+  await t.test('Security - Missing JWT_SECRET strictly throws without fallback', () => {
+    const savedSecret = process.env.JWT_SECRET;
+    try {
+      delete process.env.JWT_SECRET;
+      assert.throws(
+        () => authService.getJwtSecret(),
+        { message: /JWT_SECRET is required/ }
+      );
+      assert.throws(
+        () => authService.assertJwtSecretConfigured(),
+        { message: /JWT_SECRET is required/ }
+      );
+
+      // Whitespace string must also throw
+      process.env.JWT_SECRET = '   ';
+      assert.throws(
+        () => authService.getJwtSecret(),
+        { message: /JWT_SECRET is required/ }
+      );
+    } finally {
+      process.env.JWT_SECRET = savedSecret;
+    }
+  });
+
+  await t.test('Security - Rate limiting on POST /api/auth/login triggers 429 without blocking other endpoints', async () => {
+    // We already made 2 login attempts in earlier subtests. Max is 20.
+    // Send repeated requests until limit is exceeded.
+    let rateLimitedResponse = null;
+    for (let i = 0; i < 22; i++) {
+      const res = await fetch(`${baseUrl}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'bad@university.edu', password: '' })
+      });
+      if (res.status === 429) {
+        rateLimitedResponse = res;
+        break;
+      }
+    }
+
+    assert.ok(rateLimitedResponse, 'Expected a 429 Too Many Requests response after exceeding login limit');
+    assert.strictEqual(rateLimitedResponse.status, 429);
+    const data = await rateLimitedResponse.json();
+    assert.strictEqual(data.status, 'error');
+    assert.strictEqual(data.message, 'Too many login attempts. Please try again later.');
+
+    // Ensure health check is NOT blocked by login rate limiting
+    const healthRes = await fetch(`${baseUrl}/api/health`);
+    assert.strictEqual(healthRes.status, 200, 'Health endpoint must not be blocked by login rate limiting');
+
+    // Ensure register endpoint is NOT blocked by login rate limiting
+    const registerRes = await fetch(`${baseUrl}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'A' }) // intentionally invalid to check status code
+    });
+    assert.strictEqual(registerRes.status, 400, 'Register endpoint must not return 429 rate limit error');
+  });
 });
+
