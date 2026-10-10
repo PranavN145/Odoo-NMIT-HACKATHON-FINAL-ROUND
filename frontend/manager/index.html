@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manager Portal Login | Skyline Student Association</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../home-page/styles.css" />
+</head>
+<body style="min-height: 100vh; display: flex; flex-direction: column; background-color: var(--color-canvas);">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../home-page/index.html" class="header-brand">
+        <div class="brand-icon-box" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <span class="brand-title-text">Skyline Student Association</span>
+      </a>
+      <a href="../home-page/index.html" class="btn-white-action" style="width: auto; padding: 7px 16px; font-size: 0.8125rem;">
+        ← Back to Overview
+      </a>
+    </div>
+  </header>
+
+  <!-- Login Form Box -->
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 48px 16px;">
+    <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: var(--radius-panel); padding: 36px; width: 100%; max-width: 440px; box-shadow: var(--shadow-card);">
+      <div style="text-align: center; margin-bottom: 28px;">
+        <div class="item-icon-badge manager" style="width: 48px; height: 48px; margin: 0 auto 12px; border-radius: 50%;">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <h2 style="font-family: var(--font-serif); font-size: 1.625rem; margin-bottom: 4px; color: var(--color-navy);">Manager Portal</h2>
+        <p style="font-size: 0.875rem; color: var(--color-text-muted);">Council admin access for event and finance administration.</p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); alert('Manager authentication verified! Entering Council Controls...');" style="display: flex; flex-direction: column; gap: 16px;">
+        <div>
+          <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--color-navy); margin-bottom: 6px;">Staff / Admin ID</label>
+          <input type="text" required placeholder="alex.mercer@skyline.edu" class="search-field" style="padding-left: 12px;" />
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <label style="font-size: 0.8125rem; font-weight: 600; color: var(--color-navy);">Admin Security Key</label>
+            <a href="#" style="font-size: 0.75rem; color: var(--color-baltic);">Key assistance</a>
+          </div>
+          <input type="password" required placeholder="••••••••" class="search-field" style="padding-left: 12px;" />
+        </div>
+        <button type="submit" class="btn-baltic-primary" style="width: 100%; justify-content: center; margin-top: 8px;">
+          Log In as Manager
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--color-border-subtle); text-align: center; font-size: 0.8125rem; color: var(--color-text-muted);">
+        Restricted to authorized Skyline council coordinators only.
+      </div>
+    </div>
+  </main>
+
+  <footer class="workspace-footer" style="padding: 16px 28px; margin-top: 0;">
+    <span>Skyline Student Association · Manager workspace</span>
+    <span>© 2026 Skyline Student Association</span>
+  </footer>
+
+</body>
+</html>
