@@ -20,7 +20,7 @@ export default function Sidebar({ isMobileOpen, onCloseMobile }) {
       <div className="space-y-1">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href;
+          const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
           return (
             <Link

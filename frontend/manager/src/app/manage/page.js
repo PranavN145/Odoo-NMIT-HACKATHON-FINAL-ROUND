@@ -1,4 +1,5 @@
-import { SlidersHorizontal, Users, Package, Calendar } from "lucide-react";
+import Link from "next/link";
+import { SlidersHorizontal, Calendar, Package, Users, ArrowRight } from "lucide-react";
 
 export default function ManagePage() {
   return (
@@ -6,11 +7,11 @@ export default function ManagePage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-serif font-bold text-[#13293D]">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#13293D] tracking-tight">
             Manage
           </h1>
           <p className="text-sm text-[#5F7485] mt-1">
-            Manage student organization records, events, and merchandise catalogues.
+            Manage events, merchandise, and volunteers.
           </p>
         </div>
 
@@ -20,49 +21,75 @@ export default function ManagePage() {
         </div>
       </div>
 
-      {/* Grid Content Placeholder */}
+      {/* Grid of 3 Fully Clickable Management Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Members Management Card */}
-        <div className="bg-white rounded-xl border border-[#D8E4E8] p-6 shadow-2xs space-y-4">
-          <div className="w-10 h-10 rounded-lg bg-[#EAF5FB] text-[#006494] flex items-center justify-center">
-            <Users className="w-5 h-5" />
-          </div>
-          <h2 className="text-lg font-bold text-[#13293D]">Members Roster</h2>
-          <p className="text-xs text-[#5F7485]">
-            Review student memberships, dues status, and active member benefits.
-          </p>
-          <button className="mt-2 text-xs font-semibold text-[#006494] hover:underline">
-            Manage roster →
-          </button>
-        </div>
-
-        {/* Events Management Card */}
-        <div className="bg-white rounded-xl border border-[#D8E4E8] p-6 shadow-2xs space-y-4">
-          <div className="w-10 h-10 rounded-lg bg-[#EAF5FB] text-[#006494] flex items-center justify-center">
+        
+        {/* Card 1 — Events */}
+        <Link
+          href="/manage/events"
+          className="group block bg-white rounded-xl border border-[#D8E4E8] p-6 shadow-2xs space-y-4 hover:border-[#1B98E0] hover:shadow-md hover:bg-[#FAFDFE] active:scale-[0.99] cursor-pointer transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#1B98E0] focus:ring-offset-2 focus:border-[#1B98E0]"
+        >
+          <div className="w-10 h-10 rounded-lg bg-[#EAF5FB] text-[#006494] flex items-center justify-center group-hover:bg-[#1B98E0] group-hover:text-white transition-colors">
             <Calendar className="w-5 h-5" />
           </div>
-          <h2 className="text-lg font-bold text-[#13293D]">Event Catalog</h2>
-          <p className="text-xs text-[#5F7485]">
-            Edit event details, update capacity limits, and monitor ticket sales.
-          </p>
-          <button className="mt-2 text-xs font-semibold text-[#006494] hover:underline">
-            Manage events →
-          </button>
-        </div>
+          <div className="space-y-1">
+            <h2 className="text-lg font-bold text-[#13293D] group-hover:text-[#006494] transition-colors">
+              Events
+            </h2>
+            <p className="text-xs text-[#5F7485] leading-relaxed">
+              View and manage association events.
+            </p>
+          </div>
+          <div className="pt-2 flex items-center text-xs font-semibold text-[#006494] group-hover:text-[#1B98E0] gap-1 transition-colors">
+            <span>View events</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+          </div>
+        </Link>
 
-        {/* Inventory Management Card */}
-        <div className="bg-white rounded-xl border border-[#D8E4E8] p-6 shadow-2xs space-y-4">
-          <div className="w-10 h-10 rounded-lg bg-[#EAF5FB] text-[#006494] flex items-center justify-center">
+        {/* Card 2 — Merchandise */}
+        <Link
+          href="/manage/merchandise"
+          className="group block bg-white rounded-xl border border-[#D8E4E8] p-6 shadow-2xs space-y-4 hover:border-[#1B98E0] hover:shadow-md hover:bg-[#FAFDFE] active:scale-[0.99] cursor-pointer transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#1B98E0] focus:ring-offset-2 focus:border-[#1B98E0]"
+        >
+          <div className="w-10 h-10 rounded-lg bg-[#EAF5FB] text-[#006494] flex items-center justify-center group-hover:bg-[#1B98E0] group-hover:text-white transition-colors">
             <Package className="w-5 h-5" />
           </div>
-          <h2 className="text-lg font-bold text-[#13293D]">Merchandise Inventory</h2>
-          <p className="text-xs text-[#5F7485]">
-            Track size-wise stock (S, M, L, XL), prices, and fulfillment orders.
-          </p>
-          <button className="mt-2 text-xs font-semibold text-[#006494] hover:underline">
-            Manage inventory →
-          </button>
-        </div>
+          <div className="space-y-1">
+            <h2 className="text-lg font-bold text-[#13293D] group-hover:text-[#006494] transition-colors">
+              Merchandise
+            </h2>
+            <p className="text-xs text-[#5F7485] leading-relaxed">
+              Manage products, prices, and availability.
+            </p>
+          </div>
+          <div className="pt-2 flex items-center text-xs font-semibold text-[#006494] group-hover:text-[#1B98E0] gap-1 transition-colors">
+            <span>View merchandise</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+          </div>
+        </Link>
+
+        {/* Card 3 — Volunteers */}
+        <Link
+          href="/manage/volunteers"
+          className="group block bg-white rounded-xl border border-[#D8E4E8] p-6 shadow-2xs space-y-4 hover:border-[#1B98E0] hover:shadow-md hover:bg-[#FAFDFE] active:scale-[0.99] cursor-pointer transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#1B98E0] focus:ring-offset-2 focus:border-[#1B98E0]"
+        >
+          <div className="w-10 h-10 rounded-lg bg-[#EAF5FB] text-[#006494] flex items-center justify-center group-hover:bg-[#1B98E0] group-hover:text-white transition-colors">
+            <Users className="w-5 h-5" />
+          </div>
+          <div className="space-y-1">
+            <h2 className="text-lg font-bold text-[#13293D] group-hover:text-[#006494] transition-colors">
+              Volunteers
+            </h2>
+            <p className="text-xs text-[#5F7485] leading-relaxed">
+              View volunteers and their responsibilities.
+            </p>
+          </div>
+          <div className="pt-2 flex items-center text-xs font-semibold text-[#006494] group-hover:text-[#1B98E0] gap-1 transition-colors">
+            <span>View volunteers</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+          </div>
+        </Link>
+
       </div>
     </div>
   );
