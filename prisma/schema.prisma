@@ -26,6 +26,13 @@ enum MembershipStatus {
   REJECTED
 }
 
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  COMPLETED
+  CANCELLED
+}
+
 enum TicketStatus {
   RESERVED
   PAID
@@ -46,6 +53,18 @@ enum TaskStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ReminderType {
+  MEMBERSHIP_RENEWAL
+  EVENT_UPCOMING
+  GENERAL
 }
 
 enum TransactionType {
@@ -70,7 +89,7 @@ enum ReimbursementStatus {
 }
 
 // ------------------------------------------------------
-// MODELS (12 Entities)
+// MODELS (14 Core Entities)
 // ------------------------------------------------------
 
 /// User accounts and role-based permissions
@@ -92,7 +111,9 @@ model User {
   createdEvents          Event[]                @relation("UserCreatedEvents")
   orders                 Order[]
   assignedTasks          VolunteerTask[]        @relation("AssignedTasks")
+  taskApplications       TaskApplication[]      @relation("UserTaskApplications")
   announcements          Announcement[]         @relation("PublishedAnnouncements")
+  reminders              Reminder[]             @relation("UserReminders")
   transactions           Transaction[]          @relation("RecordedTransactions")
   reimbursements         Reimbursement[]        @relation("ApplicantReimbursements")
   approvedReimbursements Reimbursement[]       @relation("ApprovedReimbursements")
@@ -114,20 +135,21 @@ model Membership {
   transactions Transaction[]
 }
 
-/// Events, capacity limits, and pricing tiers
+/// Events, capacity limits, pricing tiers, and lifecycle status
 model Event {
-  id            String   @id @default(uuid())
+  id            String      @id @default(uuid())
   title         String
   description   String
   date          DateTime
   venue         String
   capacity      Int
-  memberPrice   Decimal  @db.Decimal(10, 2)
-  standardPrice Decimal  @db.Decimal(10, 2)
+  memberPrice   Decimal     @db.Decimal(10, 2)
+  standardPrice Decimal     @db.Decimal(10, 2)
+  status        EventStatus @default(DRAFT)
   createdById   String
-  createdBy     User     @relation("UserCreatedEvents", fields: [createdById], references: [id])
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdBy     User        @relation("UserCreatedEvents", fields: [createdById], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
   // Relations
   tickets Ticket[]
@@ -138,7 +160,7 @@ model Event {
 model Ticket {
   id            String       @id @default(uuid())
   eventId       String
-  event         Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event         Event        @relation(fields: [eventId], references: [id], onDelete: Restrict)
   userId        String
   user          User         @relation("UserTickets", fields: [userId], references: [id], onDelete: Cascade)
   ticketCode    String       @unique
@@ -153,7 +175,7 @@ model Ticket {
   // Relations
   transactions Transaction[]
 
-  // Ensures one user can only obtain one ticket per event
+  // Ensures one user can only obtain one ticket per event for themselves
   @@unique([eventId, userId])
 }
 
@@ -210,7 +232,7 @@ model OrderItem {
   orderId   String
   order     Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
   variantId String
-  variant   ProductVariant @relation(fields: [variantId], references: [id])
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
   quantity  Int
   unitPrice Decimal        @db.Decimal(10, 2)
 }
@@ -221,13 +243,32 @@ model VolunteerTask {
   title       String
   description String
   assigneeId  String?
-  assignee    User?      @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  assignee    User?      @relation("AssignedTasks", fields: [assigneeId], references: [id], onDelete: SetNull)
   eventId     String?
-  event       Event?     @relation(fields: [eventId], references: [id])
+  event       Event?     @relation(fields: [eventId], references: [id], onDelete: SetNull)
   deadline    DateTime?
   status      TaskStatus @default(PENDING)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  // Relations
+  applications TaskApplication[]
+}
+
+/// Volunteer applications for open tasks
+model TaskApplication {
+  id          String            @id @default(uuid())
+  taskId      String
+  task        VolunteerTask     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  applicantId String
+  applicant   User              @relation("UserTaskApplications", fields: [applicantId], references: [id], onDelete: Cascade)
+  notes       String?
+  status      ApplicationStatus @default(PENDING)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Prevents duplicate applications for the same task by the same volunteer
+  @@unique([taskId, applicantId])
 }
 
 /// Public and targeted organization announcements
@@ -242,6 +283,18 @@ model Announcement {
   updatedAt     DateTime @updatedAt
 }
 
+/// Automated membership renewal and system reminders
+model Reminder {
+  id          String       @id @default(uuid())
+  recipientId String
+  recipient   User         @relation("UserReminders", fields: [recipientId], references: [id], onDelete: Cascade)
+  type        ReminderType @default(MEMBERSHIP_RENEWAL)
+  subject     String
+  message     String
+  sentAt      DateTime     @default(now())
+  status      String       @default("SENT")
+}
+
 /// Central traceable financial ledger (income & expenses)
 model Transaction {
   id           String              @id @default(uuid())
@@ -254,13 +307,13 @@ model Transaction {
 
   // Explicit foreign keys linking financial transactions to source records
   orderId         String?
-  order           Order?         @relation(fields: [orderId], references: [id])
+  order           Order?         @relation(fields: [orderId], references: [id], onDelete: SetNull)
   ticketId        String?
-  ticket          Ticket?        @relation(fields: [ticketId], references: [id])
+  ticket          Ticket?        @relation(fields: [ticketId], references: [id], onDelete: SetNull)
   membershipId    String?
-  membership      Membership?    @relation(fields: [membershipId], references: [id])
+  membership      Membership?    @relation(fields: [membershipId], references: [id], onDelete: SetNull)
   reimbursementId String?
-  reimbursement   Reimbursement? @relation(fields: [reimbursementId], references: [id])
+  reimbursement   Reimbursement? @relation(fields: [reimbursementId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
 }
