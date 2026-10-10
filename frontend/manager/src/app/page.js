@@ -177,7 +177,7 @@ export default function DashboardPage() {
             <div className="space-y-3 pt-2">
               {/* Primary Action Button */}
               <Link
-                href="/create"
+                href="/create/event"
                 className="w-full py-2.5 px-4 bg-[#006494] hover:bg-[#13293D] text-white text-sm font-semibold rounded-lg shadow-xs flex items-center justify-center gap-2 transition-colors"
               >
                 <Plus className="w-4 h-4" />
@@ -186,7 +186,7 @@ export default function DashboardPage() {
 
               {/* Secondary Action Button 1 */}
               <Link
-                href="/create"
+                href="/create/merchandise"
                 className="w-full py-2.5 px-4 bg-white border border-[#D8E4E8] hover:bg-[#F5F8FA] text-[#13293D] text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-colors"
               >
                 <ShoppingBag className="w-4 h-4 text-[#006494]" />
