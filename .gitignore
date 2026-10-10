@@ -3,37 +3,44 @@ node_modules/
 /.pnp
 .pnp.js
 
-# Environment variables
+# Environment variables & secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+*.env
 
-# Logs
+# Logs & Debugging
 logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# Runtime data
+# Runtime data & Local SQLite test DBs
 pids/
 *.pid
 *.seed
 *.pid.lock
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
 
 # Coverage / Tests
 coverage/
 
-# Build artifacts
+# Build artifacts & cache
 dist/
 build/
 .next/
 out/
+.turbo/
+.cache/
 
 # OS and IDE files
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+
