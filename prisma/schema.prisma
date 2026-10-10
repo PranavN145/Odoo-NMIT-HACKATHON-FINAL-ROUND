@@ -1,5 +1,5 @@
 // Prisma Schema for Student Organization System
-// Database: PostgreSQL
+// Complete Schema preserving all necessary entity details & relationships
 
 generator client {
   provider = "prisma-client-js"
@@ -89,7 +89,7 @@ enum ReimbursementStatus {
 }
 
 // ------------------------------------------------------
-// MODELS (14 Core Entities)
+// MODELS (14 Core Entities with Complete Details)
 // ------------------------------------------------------
 
 /// User accounts and role-based permissions
@@ -145,9 +145,9 @@ model Event {
   capacity      Int
   memberPrice   Decimal     @db.Decimal(10, 2)
   standardPrice Decimal     @db.Decimal(10, 2)
-  status        EventStatus @default(DRAFT)
-  createdById   String
-  createdBy     User        @relation("UserCreatedEvents", fields: [createdById], references: [id])
+  status        EventStatus @default(PUBLISHED)
+  createdById   String?
+  createdBy     User?       @relation("UserCreatedEvents", fields: [createdById], references: [id])
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
@@ -175,7 +175,7 @@ model Ticket {
   // Relations
   transactions Transaction[]
 
-  // Ensures one user can only obtain one ticket per event for themselves
+  // Constraint: One ticket per user per event
   @@unique([eventId, userId])
 }
 
@@ -207,7 +207,7 @@ model ProductVariant {
   // Relations
   orderItems OrderItem[]
 
-  // Prevents duplicate size entries for the same product
+  // Constraint: Unique combination of productId and size
   @@unique([productId, size])
 }
 
