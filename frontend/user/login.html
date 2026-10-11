@@ -128,20 +128,13 @@
         A 6-digit verification code has been dispatched to <strong id="verifyModalEmailTarget" style="color: var(--color-navy);"></strong>. Enter the code below to complete account activation.
       </p>
 
-      <!-- Verification Code helper -->
-      <div class="demo-credentials-badge" style="text-align: left; margin-bottom: 16px;" id="verifyCodeDemoBadge">
-        <div class="demo-credentials-row">
-          <span class="demo-credentials-label">Verification Code (Sent)</span>
-          <button type="button" class="demo-fill-btn" onclick="autoFillVerificationCode()">Auto Fill</button>
+      <!-- Email Inbox Instruction Banner -->
+      <div style="background: #F0F6F9; border: 1px solid #D2E4EC; border-radius: 8px; padding: 12px 14px; text-align: left; margin-bottom: 18px; font-size: 0.8125rem; color: var(--color-navy); line-height: 1.45;">
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 4px;">
+          <span>📧</span> Check Your Email Inbox
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="color: var(--color-text-muted); font-size: 0.75rem;">Code:</span>
-          <span class="demo-code-text" id="demoCodeDisplay" style="font-size: 1.125rem; letter-spacing: 0.15em;">------</span>
-        </div>
-        <div id="emailPreviewLinkContainer" style="display: none; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #D2E4EC; font-size: 0.75rem;">
-          <a href="#" id="emailPreviewLink" target="_blank" rel="noopener noreferrer" style="color: var(--color-baltic); text-decoration: underline; font-weight: 600;">
-            📨 Open Email in Test Inbox ↗
-          </a>
+        <div style="color: var(--color-text-muted); font-size: 0.75rem;">
+          We dispatched a 6-digit verification code to <span id="verifyModalEmailTargetDisplay" style="font-weight: 600; color: var(--color-navy);"></span>. Please check your inbox (and spam folder) and enter the code below to complete account creation.
         </div>
       </div>
 
@@ -344,8 +337,7 @@
       pendingSignupData = {
         name: name,
         email: email,
-        password: pass,
-        code: ''
+        password: pass
       };
 
       try {
@@ -368,18 +360,27 @@
           return;
         }
 
-        if (result.demoCode) {
-          pendingSignupData.code = result.demoCode;
+        if (!response.ok) {
+          regBtn.disabled = false;
+          regBtn.textContent = 'Sign Up';
+          alertBox.innerHTML = `
+            <div style="background: var(--color-error-bg); border: 1px solid var(--color-error); color: var(--color-error); padding: 10px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 14px;">
+              ${result.message || 'Registration failed. Please try again.'}
+            </div>
+          `;
+          return;
         }
 
-        // Show verification modal
-        openVerifyModal(email, result.demoCode, result.previewUrl);
+        // Show verification modal — code is in recipient's email inbox only
+        openVerifyModal(email);
 
       } catch (err) {
-        console.warn('Backend signup network fallback, opening verification modal:', err.message);
-        const fallbackCode = Math.floor(100000 + Math.random() * 900000).toString();
-        pendingSignupData.code = fallbackCode;
-        openVerifyModal(email, fallbackCode, null);
+        console.warn('Backend signup network error:', err.message);
+        alertBox.innerHTML = `
+          <div style="background: var(--color-error-bg); border: 1px solid var(--color-error); color: var(--color-error); padding: 10px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 14px;">
+            Unable to connect to registration server. Please ensure the backend is running.
+          </div>
+        `;
       } finally {
         regBtn.disabled = false;
         regBtn.textContent = 'Sign Up';
@@ -387,21 +388,12 @@
     });
 
     // Verification Modal Controls
-    function openVerifyModal(email, code, previewUrl) {
+    function openVerifyModal(email) {
       document.getElementById('verifyModalEmailTarget').textContent = email;
-      const demoCodeEl = document.getElementById('demoCodeDisplay');
-      if (demoCodeEl) demoCodeEl.textContent = code || '------';
+      const targetDisplay = document.getElementById('verifyModalEmailTargetDisplay');
+      if (targetDisplay) targetDisplay.textContent = email;
       document.getElementById('verifyCodeInput').value = '';
       document.getElementById('verifyFeedback').innerHTML = '';
-
-      const previewBox = document.getElementById('emailPreviewLinkContainer');
-      const previewLink = document.getElementById('emailPreviewLink');
-      if (previewUrl && previewBox && previewLink) {
-        previewLink.href = previewUrl;
-        previewBox.style.display = 'block';
-      } else if (previewBox) {
-        previewBox.style.display = 'none';
-      }
 
       document.getElementById('emailVerifyModal').classList.add('open');
       document.getElementById('verifyCodeInput').focus();
@@ -409,12 +401,6 @@
 
     function closeVerifyModal() {
       document.getElementById('emailVerifyModal').classList.remove('open');
-    }
-
-    function autoFillVerificationCode() {
-      if (pendingSignupData && pendingSignupData.code) {
-        document.getElementById('verifyCodeInput').value = pendingSignupData.code;
-      }
     }
 
     async function submitEmailVerification(e) {
@@ -426,15 +412,17 @@
 
       if (!pendingSignupData) return;
 
+      if (!code || code.length !== 6) {
+        feedback.innerHTML = `
+          <div style="background: var(--color-error-bg); border: 1px solid var(--color-error); color: var(--color-error); padding: 8px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 12px;">
+            Please enter the complete 6-digit verification code from your email.
+          </div>
+        `;
+        return;
+      }
+
       verifyBtn.disabled = true;
       verifyBtn.textContent = 'Verifying code...';
-
-      let verifiedUser = {
-        id: 'usr-' + Date.now(),
-        name: pendingSignupData.name,
-        email: pendingSignupData.email,
-        role: 'USER'
-      };
 
       try {
         const response = await fetch('http://localhost:5000/api/auth/verify', {
@@ -446,70 +434,67 @@
         const result = await response.json();
 
         if (!response.ok) {
-          // If code does not match and not in fallback match
-          if (code !== pendingSignupData.code) {
-            feedback.innerHTML = `
-              <div style="background: var(--color-error-bg); border: 1px solid var(--color-error); color: var(--color-error); padding: 8px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 12px;">
-                ${result.message || 'Invalid verification code.'}
-              </div>
-            `;
-            verifyBtn.disabled = false;
-            verifyBtn.textContent = 'Verify & Activate Account';
-            return;
-          }
-        }
-
-        if (result.user) verifiedUser = result.user;
-
-      } catch (err) {
-        // Fallback check against pending code
-        if (code !== pendingSignupData.code) {
           feedback.innerHTML = `
             <div style="background: var(--color-error-bg); border: 1px solid var(--color-error); color: var(--color-error); padding: 8px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 12px;">
-              Invalid verification code. Please check code.
+              ${result.message || 'Invalid verification code. Please check your email inbox and try again.'}
             </div>
           `;
           verifyBtn.disabled = false;
           verifyBtn.textContent = 'Verify & Activate Account';
           return;
         }
+
+        const verifiedUser = result.user || {
+          id: 'usr-' + Date.now(),
+          name: pendingSignupData.name,
+          email: pendingSignupData.email,
+          role: 'USER'
+        };
+
+        // Persist in local storage
+        const localUsers = JSON.parse(localStorage.getItem('skyline_registered_users') || '[]');
+        localUsers.push({
+          id: verifiedUser.id,
+          name: pendingSignupData.name,
+          email: pendingSignupData.email,
+          password: pendingSignupData.password
+        });
+        localStorage.setItem('skyline_registered_users', JSON.stringify(localUsers));
+
+        // Close modal and transition to Sign In tab with prefilled credentials
+        closeVerifyModal();
+        document.getElementById('userSignUpForm').reset();
+        switchAuthMode('signin');
+
+        document.getElementById('userEmail').value = pendingSignupData.email;
+        document.getElementById('userPassword').value = pendingSignupData.password;
+
+        alertBox.innerHTML = `
+          <div style="background: #DEF7EC; border: 1px solid #84E1BC; color: #03543F; padding: 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 14px; line-height: 1.45;">
+            ✓ <strong>Email Verified & Account Activated!</strong><br />
+            Your account <strong>${pendingSignupData.email}</strong> is ready. Click <strong>Sign In</strong> below to enter.
+          </div>
+        `;
+
+        document.getElementById('userSubmitBtn').focus();
+      } catch (err) {
+        feedback.innerHTML = `
+          <div style="background: var(--color-error-bg); border: 1px solid var(--color-error); color: var(--color-error); padding: 8px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 12px;">
+            Connection error while verifying code. Please check your network and try again.
+          </div>
+        `;
+      } finally {
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = 'Verify & Activate Account';
       }
-
-      // Persist in local storage
-      const localUsers = JSON.parse(localStorage.getItem('skyline_registered_users') || '[]');
-      localUsers.push({
-        id: verifiedUser.id,
-        name: pendingSignupData.name,
-        email: pendingSignupData.email,
-        password: pendingSignupData.password
-      });
-      localStorage.setItem('skyline_registered_users', JSON.stringify(localUsers));
-
-      // Close modal and transition to Sign In tab with prefilled credentials
-      closeVerifyModal();
-      document.getElementById('userSignUpForm').reset();
-      switchAuthMode('signin');
-
-      document.getElementById('userEmail').value = pendingSignupData.email;
-      document.getElementById('userPassword').value = pendingSignupData.password;
-
-      alertBox.innerHTML = `
-        <div style="background: #DEF7EC; border: 1px solid #84E1BC; color: #03543F; padding: 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 14px; line-height: 1.45;">
-          ✓ <strong>Email Verified & Account Activated!</strong><br />
-          Your account <strong>${pendingSignupData.email}</strong> is ready. Click <strong>Sign In</strong> below to enter.
-        </div>
-      `;
-
-      verifyBtn.disabled = false;
-      verifyBtn.textContent = 'Verify & Activate Account';
-      document.getElementById('userSubmitBtn').focus();
     }
 
     async function resendVerificationCode() {
       if (!pendingSignupData) return;
       const resendBtn = document.getElementById('resendCodeBtn');
+      const feedback = document.getElementById('verifyFeedback');
       resendBtn.disabled = true;
-      resendBtn.textContent = 'Sending...';
+      resendBtn.textContent = 'Resending...';
 
       try {
         const response = await fetch('http://localhost:5000/api/auth/resend-code', {
@@ -518,16 +503,25 @@
           body: JSON.stringify({ email: pendingSignupData.email })
         });
         const result = await response.json();
-        if (result.demoCode) {
-          pendingSignupData.code = result.demoCode;
-          document.getElementById('demoCodeDisplay').textContent = result.demoCode;
-          alert(`New verification code dispatched: ${result.demoCode}`);
+        if (response.ok) {
+          feedback.innerHTML = `
+            <div style="background: #DEF7EC; border: 1px solid #84E1BC; color: #03543F; padding: 8px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 12px;">
+              ✓ ${result.message || 'A new verification code has been dispatched to your email inbox.'}
+            </div>
+          `;
+        } else {
+          feedback.innerHTML = `
+            <div style="background: var(--color-error-bg); border: 1px solid var(--color-error); color: var(--color-error); padding: 8px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 12px;">
+              ${result.message || 'Failed to resend verification code.'}
+            </div>
+          `;
         }
       } catch (err) {
-        const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-        pendingSignupData.code = newCode;
-        document.getElementById('demoCodeDisplay').textContent = newCode;
-        alert(`New verification code generated: ${newCode}`);
+        feedback.innerHTML = `
+          <div style="background: var(--color-error-bg); border: 1px solid var(--color-error); color: var(--color-error); padding: 8px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 12px;">
+            Network error trying to resend verification code.
+          </div>
+        `;
       } finally {
         resendBtn.disabled = false;
         resendBtn.textContent = 'Resend Code';

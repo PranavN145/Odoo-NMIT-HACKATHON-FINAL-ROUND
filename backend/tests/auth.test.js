@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const app = require('../src/app');
+const { pendingVerifications } = require('../src/lib/email');
 
 test('Backend Auth API Integration Tests', async (t) => {
   let server;
@@ -22,7 +23,7 @@ test('Backend Auth API Integration Tests', async (t) => {
   const testEmail = `student_${timestamp}@skyline.edu`;
   let verificationCode = null;
 
-  await t.test('POST /api/auth/register dispatches verification email and returns code', async () => {
+  await t.test('POST /api/auth/register dispatches email without exposing verification code in response', async () => {
     const res = await fetch(`${baseUrl}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -37,8 +38,13 @@ test('Backend Auth API Integration Tests', async (t) => {
     const data = await res.json();
     assert.strictEqual(data.success, true);
     assert.strictEqual(data.verificationRequired, true);
-    assert.ok(data.demoCode);
-    verificationCode = data.demoCode;
+    // Security check: Code must NOT be returned in API response to website
+    assert.strictEqual(data.demoCode, undefined);
+
+    // Retrieve server-side code dispatched in email
+    verificationCode = pendingVerifications.get(testEmail.toLowerCase())?.code;
+    assert.ok(verificationCode, 'Verification code should be stored server-side in pending store');
+    assert.strictEqual(verificationCode.length, 6);
   });
 
   await t.test('POST /api/auth/verify fails with invalid code', async () => {

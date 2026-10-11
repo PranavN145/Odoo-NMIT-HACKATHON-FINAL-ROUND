@@ -10,10 +10,22 @@ let isEthereal = false;
 async function getTransporter() {
   if (transporter) return transporter;
 
-  // Check for custom SMTP configuration
-  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+  // Check for custom SMTP / Gmail configuration
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+    if (process.env.SMTP_SERVICE === 'gmail' || (process.env.SMTP_HOST && process.env.SMTP_HOST.includes('gmail'))) {
+      transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS
+        }
+      });
+      console.log('Real Gmail SMTP transporter initialized for:', process.env.SMTP_USER);
+      return transporter;
+    }
+
     transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: parseInt(process.env.SMTP_PORT || '587', 10),
       secure: process.env.SMTP_SECURE === 'true',
       auth: {
@@ -21,10 +33,11 @@ async function getTransporter() {
         pass: process.env.SMTP_PASS
       }
     });
+    console.log('Real SMTP transporter initialized with host:', process.env.SMTP_HOST);
     return transporter;
   }
 
-  // Development / Demo mode: Create an Ethereal test inbox
+  // Development fallback: Create an Ethereal test inbox or local logger
   try {
     const testAccount = await nodemailer.createTestAccount();
     transporter = nodemailer.createTransport({
@@ -43,7 +56,7 @@ async function getTransporter() {
     console.warn('Could not initialize ethereal transporter, falling back to mock logger:', err.message);
     transporter = {
       sendMail: async (options) => {
-        console.log(`[MOCK EMAIL TO ${options.to}]:`, options.subject);
+        console.log(`[MOCK EMAIL DISPATCH TO ${options.to}]:`, options.subject);
         return { messageId: `mock-${Date.now()}` };
       }
     };
@@ -72,8 +85,12 @@ async function sendVerificationEmail({ name, email, password }) {
 
   const activeTransporter = await getTransporter();
 
+  const sender = process.env.SMTP_FROM || (process.env.SMTP_USER 
+    ? `"Skyline Student Association" <${process.env.SMTP_USER}>` 
+    : '"Skyline Student Association" <no-reply@skyline.edu>');
+
   const mailOptions = {
-    from: '"Skyline Student Association" <no-reply@skyline.edu>',
+    from: sender,
     to: normalizedEmail,
     subject: `Verify your Skyline Student Account - Code: ${verificationCode}`,
     text: `Hello ${name},\n\nWelcome to Skyline Student Association! Your account verification code is:\n\n${verificationCode}\n\nThis code will expire in 15 minutes.\n\nBest regards,\nSkyline Student Association Team`,
