@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +9,379 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../home-page/styles.css" />
+  <style>
+    /* Manager Portal Specific Enhancements */
+    .manager-nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .manager-tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 10px 18px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .manager-tab-btn:hover {
+      color: var(--color-navy);
+      background-color: rgba(0, 100, 148, 0.04);
+    }
+
+    .manager-tab-btn.active {
+      color: var(--color-baltic);
+      border-bottom-color: var(--color-baltic);
+      background-color: rgba(0, 100, 148, 0.06);
+    }
+
+    .tab-badge {
+      background: #E8EFF2;
+      color: var(--color-navy);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 9999px;
+    }
+
+    .manager-tab-btn.active .tab-badge {
+      background: var(--color-baltic);
+      color: #FFFFFF;
+    }
+
+    .tab-content-panel {
+      display: none;
+    }
+
+    .tab-content-panel.active {
+      display: block;
+      animation: fadeIn 200ms ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Cards & Containers */
+    .manager-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(19, 41, 61, 0.04);
+    }
+
+    /* Modal Styles */
+    .manager-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(19, 41, 61, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .manager-modal-backdrop.open {
+      display: flex;
+    }
+
+    .manager-modal-box {
+      background: #FFFFFF;
+      border-radius: 14px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: var(--shadow-modal);
+      padding: 28px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalPop 180ms ease-out;
+    }
+
+    @keyframes modalPop {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .modal-close-x {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .modal-close-x:hover {
+      background: var(--color-surface-subtle);
+      color: var(--color-navy);
+    }
+
+    /* Action Buttons */
+    .btn-action-sm {
+      height: 30px;
+      padding: 0 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+      transition: all 140ms ease;
+    }
+
+    .btn-action-primary {
+      background: var(--color-baltic);
+      color: #FFFFFF;
+      border-color: var(--color-baltic);
+    }
+
+    .btn-action-primary:hover {
+      background: var(--color-baltic-hover);
+    }
+
+    .btn-action-outline {
+      background: #FFFFFF;
+      color: var(--color-navy);
+      border-color: var(--color-border);
+    }
+
+    .btn-action-outline:hover {
+      background: var(--color-surface-subtle);
+      border-color: var(--color-navy);
+    }
+
+    .btn-action-danger {
+      background: #FFFFFF;
+      color: var(--color-error);
+      border-color: #F8B4B4;
+    }
+
+    .btn-action-danger:hover {
+      background: var(--color-error-bg);
+      border-color: var(--color-error);
+    }
+
+    /* Badges & Pills */
+    .role-badge {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .role-badge.manager {
+      background: #E8F3F7;
+      color: var(--color-baltic);
+      border: 1px solid #C4DFE8;
+    }
+
+    .role-badge.member {
+      background: #DEF7EC;
+      color: #03543F;
+      border: 1px solid #84E1BC;
+    }
+
+    .role-badge.volunteer {
+      background: #FEF9E7;
+      color: #9A7D0A;
+      border: 1px solid #F9E79F;
+    }
+
+    .role-badge.guest {
+      background: #F3F4F6;
+      color: #4B5563;
+      border: 1px solid #E5E7EB;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .status-badge.active {
+      background: #DEF7EC;
+      color: #03543F;
+    }
+
+    .status-badge.pending {
+      background: #FEF9E7;
+      color: #9A7D0A;
+    }
+
+    /* Toast Notification Container */
+    #managerToastContainer {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .manager-toast {
+      background: #FFFFFF;
+      color: var(--color-navy);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--color-baltic);
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 0.84375rem;
+      font-weight: 500;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: toastSlide 200ms ease;
+      pointer-events: auto;
+      max-width: 380px;
+    }
+
+    .manager-toast.success {
+      border-left-color: #0E9F6E;
+    }
+
+    .manager-toast.warning {
+      border-left-color: #F59E0B;
+    }
+
+    .manager-toast.error {
+      border-left-color: #E02424;
+    }
+
+    @keyframes toastSlide {
+      from {
+        transform: translateX(50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Product Grid Cards */
+    .manager-merch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .manager-merch-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    .manager-merch-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px -2px rgba(19, 41, 61, 0.08);
+      border-color: var(--color-baltic);
+    }
+
+    .merch-thumb-wrap {
+      height: 160px;
+      background: var(--color-canvas);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .merch-thumb-wrap img {
+      max-height: 140px;
+      max-width: 90%;
+      object-fit: contain;
+    }
+
+    .merch-badge-pill {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* Event Catalog Cards */
+    .manager-event-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    .manager-event-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 140ms ease;
+    }
+
+    .manager-event-card:hover {
+      border-color: var(--color-baltic);
+    }
+  </style>
 </head>
+
 <body style="min-height: 100vh; display: flex; flex-direction: column; background-color: var(--color-canvas);">
 
   <!-- Manager Platform Topbar -->
@@ -17,64 +390,95 @@
       <div style="display: flex; align-items: center; gap: 14px;">
         <img src="../home-page/assets/logo.png" alt="Skyline Logo" class="brand-logo-img" />
         <span class="brand-title-text">Skyline Manager Platform</span>
-        <span style="background: var(--color-baltic); color: #FFFFFF; font-size: 0.6875rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;">Manager</span>
+        <span
+          style="background: var(--color-baltic); color: #FFFFFF; font-size: 0.6875rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;">Manager</span>
       </div>
 
       <div style="display: flex; align-items: center; gap: 14px;">
-        <span style="font-size: 0.8125rem; color: var(--color-navy); font-weight: 600;">manager@demo.in</span>
-        <button type="button" onclick="handleLogout()" class="btn-white-action" style="padding: 6px 14px; font-size: 0.8125rem;">
-          Sign Out
-        </button>
+        <<<<<<< HEAD <span style="font-size: 0.8125rem; color: var(--color-navy); font-weight: 600;">
+          manager@demo.in</span>
+          <button type="button" onclick="handleLogout()" class="btn-white-action"
+            style="padding: 6px 14px; font-size: 0.8125rem;">
+            =======
+            <div style="text-align: right; line-height: 1.2;">
+              <div id="managerDisplayEmail" style="font-size: 0.8125rem; color: var(--color-navy); font-weight: 600;">
+                manager@demo.in</div>
+              <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Operations Manager</div>
+            </div>
+            <a href="../home-page/index.html" class="btn-white-action"
+              style="padding: 6px 14px; font-size: 0.8125rem; width: auto; height: 32px;">
+              Public Site
+            </a>
+            <button type="button" onclick="handleLogout()" class="btn-white-action"
+              style="padding: 6px 14px; font-size: 0.8125rem; width: auto; height: 32px;">
+              >>>>>>> disha/manager
+              Sign Out
+            </button>
       </div>
     </div>
   </header>
 
   <!-- Manager Main Workspace -->
-  <main class="public-main-container" style="padding-top: 32px;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+  <<<<<<< HEAD <main class="public-main-container" style="padding-top: 32px;">
+
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
       <div>
-        <h1 style="font-size: 1.75rem; font-weight: 700; color: var(--color-navy); margin-bottom: 4px;">Campus Operations & Events Console</h1>
-        <p style="color: var(--color-text-muted); font-size: 0.875rem;">Coordinate club event attendees, process merchandise orders, and oversee entry passes.</p>
+        <h1 style="font-size: 1.75rem; font-weight: 700; color: var(--color-navy); margin-bottom: 4px;">Campus
+          Operations & Events Console</h1>
+        <p style="color: var(--color-text-muted); font-size: 0.875rem;">Coordinate club event attendees, process
+          merchandise orders, and oversee entry passes.</p>
       </div>
       <div style="display: flex; gap: 10px;">
         <a href="../home-page/index.html" class="btn-white-action" style="padding: 8px 16px; font-size: 0.8125rem;">
           View Public Site
         </a>
-        <button type="button" onclick="showNewEventModal()" class="btn-baltic-primary" style="height: 38px; padding: 0 16px; font-size: 0.8125rem;">
+        <button type="button" onclick="showNewEventModal()" class="btn-baltic-primary"
+          style="height: 38px; padding: 0 16px; font-size: 0.8125rem;">
           + New Event
         </button>
       </div>
     </div>
 
     <!-- Quick Stats Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px;">
+    <div
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px;">
       <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
-        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Active Events</span>
+        <span
+          style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Active
+          Events</span>
         <h3 style="font-size: 1.625rem; font-weight: 700; color: var(--color-navy); margin-top: 4px;">3</h3>
         <span style="font-size: 0.75rem; color: #03543F; font-weight: 600;">Spring Gala · Workshop · Concert</span>
       </div>
       <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
-        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Confirmed Bookings</span>
+        <span
+          style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Confirmed
+          Bookings</span>
         <h3 style="font-size: 1.625rem; font-weight: 700; color: var(--color-baltic); margin-top: 4px;">342</h3>
         <span style="font-size: 0.75rem; color: #03543F; font-weight: 600;">+24 today</span>
       </div>
       <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
-        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Hoodie Stock</span>
+        <span
+          style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Hoodie
+          Stock</span>
         <h3 style="font-size: 1.625rem; font-weight: 700; color: var(--color-navy); margin-top: 4px;">86 / 100</h3>
         <span style="font-size: 0.75rem; color: var(--color-text-muted);">Navy Hoodie Duo Edition</span>
       </div>
       <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
-        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Revenue Collected</span>
+        <span
+          style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Revenue
+          Collected</span>
         <h3 style="font-size: 1.625rem; font-weight: 700; color: #03543F; margin-top: 4px;">$6,840</h3>
         <span style="font-size: 0.75rem; color: var(--color-text-muted);">Passes & Apparel</span>
       </div>
     </div>
 
     <!-- Event Attendees Section -->
-    <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
+    <div
+      style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Event Registrations & Ticket Roster</h3>
+        <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Event Registrations &
+          Ticket Roster</h3>
         <span style="font-size: 0.8125rem; color: var(--color-text-muted);">Real-time check-in ledger</span>
       </div>
       <div style="overflow-x: auto;">
@@ -93,17 +497,23 @@
             <tr style="border-bottom: 1px solid var(--color-border-subtle);">
               <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Alex Mercer</td>
               <td style="padding: 12px 14px;">Annual Spring Gala</td>
-              <td style="padding: 12px 14px;"><span style="background: #DEF7EC; color: #03543F; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Member ($15.00)</span></td>
+              <td style="padding: 12px 14px;"><span
+                  style="background: #DEF7EC; color: #03543F; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Member
+                  ($15.00)</span></td>
               <td style="padding: 12px 14px; font-family: monospace;">#TKT-89241</td>
               <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Verified Paid</td>
               <td style="padding: 12px 14px; text-align: right;">
-                <button type="button" class="btn-baltic-primary" style="height: 28px; padding: 0 10px; font-size: 0.75rem;" onclick="markCheckedIn(this)">Check In</button>
+                <button type="button" class="btn-baltic-primary"
+                  style="height: 28px; padding: 0 10px; font-size: 0.75rem;" onclick="markCheckedIn(this)">Check
+                  In</button>
               </td>
             </tr>
             <tr style="border-bottom: 1px solid var(--color-border-subtle);">
               <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Samantha Reed</td>
               <td style="padding: 12px 14px;">Open Source Git & GitHub Workshop</td>
-              <td style="padding: 12px 14px;"><span style="background: #F0F6F9; color: var(--color-navy); font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Guest ($5.00)</span></td>
+              <td style="padding: 12px 14px;"><span
+                  style="background: #F0F6F9; color: var(--color-navy); font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Guest
+                  ($5.00)</span></td>
               <td style="padding: 12px 14px; font-family: monospace;">#TKT-74102</td>
               <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Verified Paid</td>
               <td style="padding: 12px 14px; text-align: right;">
@@ -113,11 +523,15 @@
             <tr style="border-bottom: 1px solid var(--color-border-subtle);">
               <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Jordan Lee</td>
               <td style="padding: 12px 14px;">Indie Rock & Jazz Campus Concert</td>
-              <td style="padding: 12px 14px;"><span style="background: #F0F6F9; color: var(--color-navy); font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Guest ($20.00)</span></td>
+              <td style="padding: 12px 14px;"><span
+                  style="background: #F0F6F9; color: var(--color-navy); font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Guest
+                  ($20.00)</span></td>
               <td style="padding: 12px 14px; font-family: monospace;">#TKT-63019</td>
               <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Verified Paid</td>
               <td style="padding: 12px 14px; text-align: right;">
-                <button type="button" class="btn-baltic-primary" style="height: 28px; padding: 0 10px; font-size: 0.75rem;" onclick="markCheckedIn(this)">Check In</button>
+                <button type="button" class="btn-baltic-primary"
+                  style="height: 28px; padding: 0 10px; font-size: 0.75rem;" onclick="markCheckedIn(this)">Check
+                  In</button>
               </td>
             </tr>
           </tbody>
@@ -126,9 +540,11 @@
     </div>
 
     <!-- Merchandise Orders Section -->
-    <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
+    <div
+      style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Merchandise Orders & Fulfillment</h3>
+        <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Merchandise Orders &
+          Fulfillment</h3>
         <span style="font-size: 0.8125rem; color: var(--color-text-muted);">Skyline Official Navy Hoodie</span>
       </div>
       <div style="overflow-x: auto;">
@@ -149,9 +565,12 @@
               <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Priya Sharma</td>
               <td style="padding: 12px 14px;">Navy Hoodie · Size M</td>
               <td style="padding: 12px 14px; font-weight: 600;">$32.00</td>
-              <td style="padding: 12px 14px;"><span style="background: #FEF9E7; color: #9A7D0A; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Preparing for Dispatch</span></td>
+              <td style="padding: 12px 14px;"><span
+                  style="background: #FEF9E7; color: #9A7D0A; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Preparing
+                  for Dispatch</span></td>
               <td style="padding: 12px 14px; text-align: right;">
-                <button type="button" class="btn-white-action" style="padding: 4px 10px; font-size: 0.75rem;" onclick="markFulfilled(this)">Mark Ready</button>
+                <button type="button" class="btn-white-action" style="padding: 4px 10px; font-size: 0.75rem;"
+                  onclick="markFulfilled(this)">Mark Ready</button>
               </td>
             </tr>
             <tr style="border-bottom: 1px solid var(--color-border-subtle);">
@@ -159,7 +578,9 @@
               <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Liam Walker</td>
               <td style="padding: 12px 14px;">Navy Hoodie · Size L</td>
               <td style="padding: 12px 14px; font-weight: 600;">$32.00</td>
-              <td style="padding: 12px 14px;"><span style="background: #DEF7EC; color: #03543F; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Fulfilled & Collected</span></td>
+              <td style="padding: 12px 14px;"><span
+                  style="background: #DEF7EC; color: #03543F; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Fulfilled
+                  & Collected</span></td>
               <td style="padding: 12px 14px; text-align: right;">
                 <span style="font-size: 0.75rem; color: var(--color-text-muted);">Completed</span>
               </td>
@@ -167,35 +588,1480 @@
           </tbody>
         </table>
       </div>
-    </div>
+      =======
+      <main class="public-main-container" style="padding-top: 28px;">
 
-  </main>
+        <!-- Workspace Title Row -->
+        <div
+          style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h1 style="font-size: 1.75rem; font-weight: 700; color: var(--color-navy); margin-bottom: 4px;">Campus
+              Operations & Events Console</h1>
+            <p style="color: var(--color-text-muted); font-size: 0.875rem;">Coordinate club event attendees, process
+              merchandise orders, oversee entry passes, and manage users.</p>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" onclick="showNewEventModal()" class="btn-baltic-primary"
+              style="height: 38px; padding: 0 16px; font-size: 0.8125rem; width: auto;">
+              + New Event
+            </button>
+            <button type="button" onclick="showNewMerchModal()" class="btn-white-action"
+              style="height: 38px; padding: 0 16px; font-size: 0.8125rem; width: auto;">
+              + Add Merchandise
+            </button>
+            <button type="button" onclick="showNewUserModal()" class="btn-white-action"
+              style="height: 38px; padding: 0 16px; font-size: 0.8125rem; width: auto;">
+              + Create User
+            </button>
+          </div>
+        </div>
 
-  <footer class="workspace-footer" style="padding: 16px 28px; margin-top: auto;">
-    <span>Skyline Student Association · Manager Platform</span>
-    <span>© 2026 Skyline Student Association</span>
-  </footer>
+        <!-- Navigation Tabs -->
+        <nav class="manager-nav-tabs" aria-label="Manager Platform Navigation">
+          <button type="button" class="manager-tab-btn active" data-tab="overview" onclick="switchTab('overview')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            Overview & Check-ins
+          </button>
+          <button type="button" class="manager-tab-btn" data-tab="events" onclick="switchTab('events')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Events Management
+            <span class="tab-badge" id="tabEventsCountBadge">3</span>
+          </button>
+          <button type="button" class="manager-tab-btn" data-tab="merchandise" onclick="switchTab('merchandise')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            Merchandise & Pricing
+            <span class="tab-badge" id="tabMerchCountBadge">2</span>
+          </button>
+          <button type="button" class="manager-tab-btn" data-tab="users" onclick="switchTab('users')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            User Management System
+            <span class="tab-badge" id="tabUsersCountBadge">6</span>
+          </button>
+        </nav>
 
-  <script>
-    function handleLogout() {
-      sessionStorage.removeItem('skyline_manager_auth');
-      window.location.href = './login.html';
-    }
+        <!-- Quick Stats Grid (Always Visible summary) -->
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+            <span
+              style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Active
+              Events</span>
+            <h3 id="statActiveEvents"
+              style="font-size: 1.625rem; font-weight: 700; color: var(--color-navy); margin-top: 4px;">3</h3>
+            <span id="statActiveEventsSubtitle" style="font-size: 0.75rem; color: #03543F; font-weight: 600;">Published
+              & Open for Booking</span>
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+            <span
+              style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Confirmed
+              Bookings</span>
+            <h3 id="statConfirmedBookings"
+              style="font-size: 1.625rem; font-weight: 700; color: var(--color-baltic); margin-top: 4px;">342</h3>
+            <span style="font-size: 0.75rem; color: #03543F; font-weight: 600;">+24 today · Verified</span>
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+            <span
+              style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Merchandise
+              SKUs</span>
+            <h3 id="statMerchStock"
+              style="font-size: 1.625rem; font-weight: 700; color: var(--color-navy); margin-top: 4px;">86 Units</h3>
+            <span style="font-size: 0.75rem; color: var(--color-text-muted);">Active apparel inventory</span>
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+            <span
+              style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">User
+              Accounts</span>
+            <h3 id="statTotalUsers" style="font-size: 1.625rem; font-weight: 700; color: #03543F; margin-top: 4px;">6
+              Accounts</h3>
+            <span style="font-size: 0.75rem; color: var(--color-text-muted);">Members, Managers & Staff</span>
+          </div>
+        </div>
 
-    function markCheckedIn(btn) {
-      btn.outerHTML = '<span style="color: #03543F; font-weight: 600; font-size: 0.75rem;">✓ Admitted</span>';
-    }
+        <!-- ========================================================================= -->
+        <!-- TAB 1: OVERVIEW & CHECK-INS                                              -->
+        <!-- ========================================================================= -->
+        <div id="tab-overview" class="tab-content-panel active">
 
-    function markFulfilled(btn) {
-      const row = btn.closest('tr');
-      const statusCell = row.cells[4];
-      statusCell.innerHTML = '<span style="background: #DEF7EC; color: #03543F; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Ready for Pickup</span>';
-      btn.outerHTML = '<span style="font-size: 0.75rem; color: var(--color-text-muted);">Notified</span>';
-    }
+          <!-- Event Attendees Section -->
+          <div class="manager-card">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Event
+                  Registrations & Ticket Roster</h3>
+                <span style="font-size: 0.8125rem; color: var(--color-text-muted);">Real-time check-in ledger for active
+                  campus entries</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="rosterSearchInput" oninput="filterRoster()"
+                  placeholder="Search attendee or ticket #..." class="modal-input-field"
+                  style="height: 32px; font-size: 0.78125rem; width: 230px;" />
+              </div>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.84375rem; text-align: left;">
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">
+                    <th style="padding: 10px 14px;">Attendee</th>
+                    <th style="padding: 10px 14px;">Event</th>
+                    <th style="padding: 10px 14px;">Tier</th>
+                    <th style="padding: 10px 14px;">Ticket Ref</th>
+                    <th style="padding: 10px 14px;">Payment</th>
+                    <th style="padding: 10px 14px; text-align: right;">Check-in Status</th>
+                  </tr>
+                </thead>
+                <tbody id="rosterTableBody">
+                  <!-- Dynamically rendered or pre-seeded rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-    function showNewEventModal() {
-      alert('Event creation dialog opened. Fill out event details to publish.');
-    }
-  </script>
+          <!-- Merchandise Orders Section -->
+          <div class="manager-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div>
+                <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Merchandise
+                  Orders & Fulfillment</h3>
+                <span style="font-size: 0.8125rem; color: var(--color-text-muted);">Skyline Official Branded Apparel
+                  Orders</span>
+              </div>
+              <span
+                style="font-size: 0.75rem; font-weight: 600; color: var(--color-baltic); background: #E8F3F7; padding: 4px 10px; border-radius: 9999px;">
+                Pickup Desk 3 Active
+              </span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.84375rem; text-align: left;">
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">
+                    <th style="padding: 10px 14px;">Order ID</th>
+                    <th style="padding: 10px 14px;">Customer</th>
+                    <th style="padding: 10px 14px;">Item & Size</th>
+                    <th style="padding: 10px 14px;">Amount</th>
+                    <th style="padding: 10px 14px;">Status</th>
+                    <th style="padding: 10px 14px; text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                  <!-- Dynamically populated orders -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 2: EVENTS MANAGEMENT                                                  -->
+        <!-- ========================================================================= -->
+        <div id="tab-events" class="tab-content-panel">
+          <div class="manager-card">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Campus Events
+                  Roster</h3>
+                <span style="font-size: 0.8125rem; color: var(--color-text-muted);">Create new events, oversee seat
+                  allocations, set member ticket prices, or unpublish.</span>
+              </div>
+              <button type="button" onclick="showNewEventModal()" class="btn-baltic-primary"
+                style="height: 36px; padding: 0 16px; font-size: 0.8125rem; width: auto;">
+                + Create New Event
+              </button>
+            </div>
+
+            <div class="manager-event-grid" id="eventsGridContainer">
+              <!-- Dynamic Event Cards -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 3: MERCHANDISE & PRICING                                             -->
+        <!-- ========================================================================= -->
+        <div id="tab-merchandise" class="tab-content-panel">
+          <div class="manager-card">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Merchandise
+                  Catalog & Price Control</h3>
+                <span style="font-size: 0.8125rem; color: var(--color-text-muted);">Add new merchandise products,
+                  configure base prices, and manage size inventory.</span>
+              </div>
+              <button type="button" onclick="showNewMerchModal()" class="btn-baltic-primary"
+                style="height: 36px; padding: 0 16px; font-size: 0.8125rem; width: auto;">
+                + Add New Product
+              </button>
+            </div>
+
+            <div class="manager-merch-grid" id="merchGridContainer">
+              <!-- Dynamic Merch Product Cards -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 4: USER MANAGEMENT SYSTEM                                             -->
+        <!-- ========================================================================= -->
+        <div id="tab-users" class="tab-content-panel">
+
+          <!-- Metrics Bar -->
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px;">
+            <div
+              style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 8px; padding: 14px 18px;">
+              <span
+                style="font-size: 0.6875rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Total
+                Users</span>
+              <h4 id="userMetricTotal"
+                style="font-size: 1.35rem; font-weight: 700; color: var(--color-navy); margin-top: 2px;">6 Accounts</h4>
+            </div>
+            <div
+              style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 8px; padding: 14px 18px;">
+              <span
+                style="font-size: 0.6875rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Active
+                Members</span>
+              <h4 id="userMetricActive" style="font-size: 1.35rem; font-weight: 700; color: #03543F; margin-top: 2px;">4
+                Active</h4>
+            </div>
+            <div
+              style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 8px; padding: 14px 18px;">
+              <span
+                style="font-size: 0.6875rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Managers
+                & Staff</span>
+              <h4 id="userMetricManagers"
+                style="font-size: 1.35rem; font-weight: 700; color: var(--color-baltic); margin-top: 2px;">2 Managers
+              </h4>
+            </div>
+            <div
+              style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 8px; padding: 14px 18px;">
+              <span
+                style="font-size: 0.6875rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Pending
+                Approval</span>
+              <h4 id="userMetricPending" style="font-size: 1.35rem; font-weight: 700; color: #9A7D0A; margin-top: 2px;">
+                1 Pending</h4>
+            </div>
+          </div>
+
+          <div class="manager-card">
+            <!-- Controls Bar -->
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn-action-sm btn-action-primary" data-role-filter="all"
+                  onclick="filterUsersRole('all', this)">All</button>
+                <button type="button" class="btn-action-sm btn-action-outline" data-role-filter="MANAGER"
+                  onclick="filterUsersRole('MANAGER', this)">Managers</button>
+                <button type="button" class="btn-action-sm btn-action-outline" data-role-filter="MEMBER"
+                  onclick="filterUsersRole('MEMBER', this)">Members</button>
+                <button type="button" class="btn-action-sm btn-action-outline" data-role-filter="VOLUNTEER"
+                  onclick="filterUsersRole('VOLUNTEER', this)">Volunteers</button>
+                <button type="button" class="btn-action-sm btn-action-outline" data-role-filter="GUEST"
+                  onclick="filterUsersRole('GUEST', this)">Guests</button>
+              </div>
+
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="userSearchInput" oninput="handleUserSearch()"
+                  placeholder="Search by name, email, or #SSA..." class="modal-input-field"
+                  style="height: 36px; width: 240px; font-size: 0.8125rem;" />
+                <button type="button" onclick="showNewUserModal()" class="btn-baltic-primary"
+                  style="height: 36px; padding: 0 14px; font-size: 0.8125rem; width: auto; white-space: nowrap;">
+                  + Create User
+                </button>
+              </div>
+            </div>
+
+            <!-- Users Table -->
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.84375rem; text-align: left;">
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">
+                    <th style="padding: 10px 14px;">Account / Member</th>
+                    <th style="padding: 10px 14px;">Contact</th>
+                    <th style="padding: 10px 14px;">Role</th>
+                    <th style="padding: 10px 14px;">Tier & Status</th>
+                    <th style="padding: 10px 14px;">Joined Date</th>
+                    <th style="padding: 10px 14px; text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <!-- Dynamically populated users -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          >>>>>>> disha/manager
+        </div>
+
+      </main>
+
+      <<<<<<< HEAD=======<!--=========================================================================-->
+        <!-- MODALS                                                                   -->
+        <!-- ========================================================================= -->
+
+        <!-- 1. Create Event Modal -->
+        <div class="manager-modal-backdrop" id="createEventModal">
+          <div class="manager-modal-box">
+            <button type="button" class="modal-close-x" onclick="closeModal('createEventModal')">×</button>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--color-navy); margin-bottom: 4px;">Publish New
+              Campus Event</h3>
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 20px;">
+              Publish an official student association event with attendee limits and member discounted pricing.
+            </p>
+
+            <form id="createEventForm" onsubmit="handleCreateEvent(event)"
+              style="display: flex; flex-direction: column; gap: 14px;">
+              <div>
+                <label class="form-field-label">Event Title *</label>
+                <input type="text" id="evTitle" required placeholder="e.g. AI Innovation Summit & Showcase"
+                  class="modal-input-field" />
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label class="form-field-label">Category *</label>
+                  <div class="custom-select-wrapper">
+                    <select id="evCategory" class="modal-select-field" required>
+                      <option value="academic">Academic & Tech</option>
+                      <option value="cultural">Cultural & Arts</option>
+                      <option value="networking">Networking</option>
+                      <option value="workshop">Workshop</option>
+                      <option value="social">Social & Gala</option>
+                    </select>
+                    <span class="select-arrow-icon">▼</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-field-label">Capacity (Seats) *</label>
+                  <input type="number" id="evCapacity" min="10" max="1000" value="200" required
+                    class="modal-input-field" />
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label class="form-field-label">Date & Time *</label>
+                  <input type="text" id="evDate" required placeholder="e.g. Nov 20, 2026 • 2:00 PM"
+                    class="modal-input-field" />
+                </div>
+                <div>
+                  <label class="form-field-label">Venue Location *</label>
+                  <input type="text" id="evVenue" required placeholder="e.g. Innovation Hall A"
+                    class="modal-input-field" />
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label class="form-field-label">Standard Ticket ($) *</label>
+                  <input type="number" id="evStdPrice" step="0.5" min="0" value="25.00" required
+                    class="modal-input-field" />
+                </div>
+                <div>
+                  <label class="form-field-label">Member Ticket ($) *</label>
+                  <input type="number" id="evMemPrice" step="0.5" min="0" value="10.00" required
+                    class="modal-input-field" />
+                </div>
+              </div>
+
+              <div>
+                <label class="form-field-label">Event Description</label>
+                <textarea id="evDesc" rows="3" class="modal-input-field" style="height: auto; padding: 10px;"
+                  placeholder="Brief details about keynote speakers, agenda, or guidelines..."></textarea>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button type="button" class="btn-action-outline" style="height: 38px; padding: 0 16px;"
+                  onclick="closeModal('createEventModal')">Cancel</button>
+                <button type="submit" class="btn-baltic-primary"
+                  style="height: 38px; padding: 0 20px; width: auto;">Publish Event</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- 2. Create Merchandise Product Modal -->
+        <div class="manager-modal-backdrop" id="createMerchModal">
+          <div class="manager-modal-box">
+            <button type="button" class="modal-close-x" onclick="closeModal('createMerchModal')">×</button>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--color-navy); margin-bottom: 4px;">Add
+              Merchandise Product</h3>
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 20px;">
+              Add new official apparel or gear, set product pricing, and allocate size inventory.
+            </p>
+
+            <form id="createMerchForm" onsubmit="handleCreateMerch(event)"
+              style="display: flex; flex-direction: column; gap: 14px;">
+              <div>
+                <label class="form-field-label">Product Name *</label>
+                <input type="text" id="merchName" required placeholder="e.g. Skyline Collegiate Crewneck Sweatshirt"
+                  class="modal-input-field" />
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label class="form-field-label">Base Product Price ($) *</label>
+                  <input type="number" id="merchPrice" step="0.5" min="1" value="32.00" required
+                    class="modal-input-field" />
+                </div>
+                <div>
+                  <label class="form-field-label">Badge Tag</label>
+                  <input type="text" id="merchBadge" placeholder="e.g. NEW DROP, BESTSELLER" value="NEW DROP"
+                    class="modal-input-field" />
+                </div>
+              </div>
+
+              <div>
+                <label class="form-field-label">Product Image</label>
+                <div class="custom-select-wrapper" style="margin-bottom: 8px;">
+                  <select id="merchImagePreset" class="modal-select-field"
+                    onchange="handleMerchImagePresetChange(this.value)">
+                    <option value="../home-page/assets/Navy Hoodie Logo Mockup Duo.png">Official Skyline Navy Hoodie Duo
+                      Mockup</option>
+                    <option value="../home-page/assets/navy-hoodie.jpg">Skyline Navy Hoodie (Solo Edition)</option>
+                    <option value="custom">Custom Image URL</option>
+                  </select>
+                  <span class="select-arrow-icon">▼</span>
+                </div>
+                <input type="text" id="merchCustomImage" placeholder="Enter image URL..." class="modal-input-field"
+                  style="display: none;" />
+              </div>
+
+              <div>
+                <label class="form-field-label">Size Inventory Stock Allocation</label>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+                  <div>
+                    <span style="font-size: 0.6875rem; font-weight: 600; color: var(--color-text-muted);">Size S</span>
+                    <input type="number" id="stockS" min="0" value="15" class="modal-input-field"
+                      style="height: 36px; padding: 0 8px; text-align: center;" />
+                  </div>
+                  <div>
+                    <span style="font-size: 0.6875rem; font-weight: 600; color: var(--color-text-muted);">Size M</span>
+                    <input type="number" id="stockM" min="0" value="30" class="modal-input-field"
+                      style="height: 36px; padding: 0 8px; text-align: center;" />
+                  </div>
+                  <div>
+                    <span style="font-size: 0.6875rem; font-weight: 600; color: var(--color-text-muted);">Size L</span>
+                    <input type="number" id="stockL" min="0" value="25" class="modal-input-field"
+                      style="height: 36px; padding: 0 8px; text-align: center;" />
+                  </div>
+                  <div>
+                    <span style="font-size: 0.6875rem; font-weight: 600; color: var(--color-text-muted);">Size XL</span>
+                    <input type="number" id="stockXL" min="0" value="10" class="modal-input-field"
+                      style="height: 36px; padding: 0 8px; text-align: center;" />
+                  </div>
+                  <div>
+                    <span style="font-size: 0.6875rem; font-weight: 600; color: var(--color-text-muted);">Size
+                      XXL</span>
+                    <input type="number" id="stockXXL" min="0" value="6" class="modal-input-field"
+                      style="height: 36px; padding: 0 8px; text-align: center;" />
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button type="button" class="btn-action-outline" style="height: 38px; padding: 0 16px;"
+                  onclick="closeModal('createMerchModal')">Cancel</button>
+                <button type="submit" class="btn-baltic-primary" style="height: 38px; padding: 0 20px; width: auto;">Add
+                  Product</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- 3. Edit Product Price Modal -->
+        <div class="manager-modal-backdrop" id="editPriceModal">
+          <div class="manager-modal-box" style="max-width: 440px;">
+            <button type="button" class="modal-close-x" onclick="closeModal('editPriceModal')">×</button>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--color-navy); margin-bottom: 4px;">Update
+              Product Price</h3>
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 20px;">
+              Adjust the base retail price for this merchandise item across all sizes.
+            </p>
+
+            <form id="editPriceForm" onsubmit="handleUpdatePrice(event)"
+              style="display: flex; flex-direction: column; gap: 14px;">
+              <input type="hidden" id="editProductId" />
+
+              <div>
+                <label class="form-field-label">Product Name</label>
+                <div id="editProductNameDisplay"
+                  style="font-weight: 600; color: var(--color-navy); padding: 8px 12px; background: var(--color-canvas); border-radius: 6px; font-size: 0.875rem;">
+                  --
+                </div>
+              </div>
+
+              <div>
+                <label class="form-field-label">New Base Price ($) *</label>
+                <input type="number" id="editProductPriceInput" step="0.5" min="1" required class="modal-input-field" />
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button type="button" class="btn-action-outline" style="height: 38px; padding: 0 16px;"
+                  onclick="closeModal('editPriceModal')">Cancel</button>
+                <button type="submit" class="btn-baltic-primary"
+                  style="height: 38px; padding: 0 20px; width: auto;">Update Price</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- 4. Create User Account Modal -->
+        <div class="manager-modal-backdrop" id="createUserModal">
+          <div class="manager-modal-box">
+            <button type="button" class="modal-close-x" onclick="closeModal('createUserModal')">×</button>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--color-navy); margin-bottom: 4px;">Create User
+              / Member Account</h3>
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 20px;">
+              Provision a new platform user with system role, tier, and auto-generated association ID.
+            </p>
+
+            <form id="createUserForm" onsubmit="handleCreateUser(event)"
+              style="display: flex; flex-direction: column; gap: 14px;">
+              <div>
+                <label class="form-field-label">Full Name *</label>
+                <input type="text" id="usrName" required placeholder="e.g. Jordan Martinez" class="modal-input-field" />
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label class="form-field-label">Email Address *</label>
+                  <input type="email" id="usrEmail" required placeholder="jordan.m@skyline.edu"
+                    class="modal-input-field" />
+                </div>
+                <div>
+                  <label class="form-field-label">Phone Number *</label>
+                  <input type="tel" id="usrPhone" required placeholder="+1 (555) 420-1928" class="modal-input-field" />
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label class="form-field-label">Role *</label>
+                  <div class="custom-select-wrapper">
+                    <select id="usrRole" class="modal-select-field" required>
+                      <option value="MEMBER">Member</option>
+                      <option value="MANAGER">Manager</option>
+                      <option value="VOLUNTEER">Volunteer</option>
+                      <option value="GUEST">Guest</option>
+                    </select>
+                    <span class="select-arrow-icon">▼</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-field-label">Membership Tier *</label>
+                  <div class="custom-select-wrapper">
+                    <select id="usrTier" class="modal-select-field" required>
+                      <option value="Student Regular">Student Regular</option>
+                      <option value="VIP Scholar">VIP Scholar</option>
+                      <option value="Faculty Associate">Faculty Associate</option>
+                      <option value="General Guest">General Guest</option>
+                    </select>
+                    <span class="select-arrow-icon">▼</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="form-field-label">Initial Status *</label>
+                <div class="custom-select-wrapper">
+                  <select id="usrStatus" class="modal-select-field" required>
+                    <option value="ACTIVE">ACTIVE (Authorized)</option>
+                    <option value="PENDING">PENDING (Review needed)</option>
+                  </select>
+                  <span class="select-arrow-icon">▼</span>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button type="button" class="btn-action-outline" style="height: 38px; padding: 0 16px;"
+                  onclick="closeModal('createUserModal')">Cancel</button>
+                <button type="submit" class="btn-baltic-primary"
+                  style="height: 38px; padding: 0 20px; width: auto;">Create Account</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Toast Notification Host -->
+        <div id="managerToastContainer"></div>
+
+        <!-- Footer -->
+        >>>>>>> disha/manager
+        <footer class="workspace-footer" style="padding: 16px 28px; margin-top: auto;">
+          <span>Skyline Student Association · Manager Platform</span>
+          <span>© 2026 Skyline Student Association</span>
+        </footer>
+
+        <<<<<<< HEAD <script>
+          =======
+          <!-- Interactive Manager Logic Script -->
+          <script>
+            // Manager Platform State
+            const managerState = {
+              user: {
+                role: 'MANAGER',
+                email: 'manager@demo.in',
+                name: 'Operations Manager'
+              },
+
+              events: [
+                {
+                  id: "ev-1",
+                  title: "Annual Tech Symposium 2026",
+                  category: "academic",
+                  categoryLabel: "Academic & Tech",
+                  dateFormatted: "Nov 15, 2026 • 10:00 AM",
+                  venue: "Campus Auditorium Hall A",
+                  capacity: 200,
+                  ticketsSold: 145,
+                  standardPrice: 25.00,
+                  memberPrice: 10.00,
+                  description: "Keynote lectures, alumni showcases, and enterprise networking."
+                },
+                {
+                  id: "ev-2",
+                  title: "Autumn Cultural Gala & Showcase",
+                  category: "cultural",
+                  categoryLabel: "Cultural & Arts",
+                  dateFormatted: "Dec 05, 2026 • 6:30 PM",
+                  venue: "Great Hall, Student Center",
+                  capacity: 350,
+                  ticketsSold: 280,
+                  standardPrice: 35.00,
+                  memberPrice: 15.00,
+                  description: "Student music ensembles, multicultural dining, and awards."
+                },
+                {
+                  id: "ev-3",
+                  title: "Alumni & Industry Networking Night",
+                  category: "networking",
+                  categoryLabel: "Networking",
+                  dateFormatted: "Jan 18, 2027 • 5:00 PM",
+                  venue: "Student Union Level 3 Ballroom",
+                  capacity: 120,
+                  ticketsSold: 88,
+                  standardPrice: 20.00,
+                  memberPrice: 5.00,
+                  description: "Connect with graduates working in software, hardware, and design."
+                }
+              ],
+
+              merch: [
+                {
+                  id: "prod-1",
+                  name: "Skyline Navy Hoodie Duo Edition",
+                  basePrice: 32.00,
+                  badge: "BESTSELLER",
+                  image: "../home-page/assets/Navy Hoodie Logo Mockup Duo.png",
+                  stock: { S: 15, M: 30, L: 25, XL: 10, XXL: 6 }
+                },
+                {
+                  id: "prod-2",
+                  name: "Official Skyline Navy Hoodie (Solo)",
+                  basePrice: 29.00,
+                  badge: "OFFICIAL",
+                  image: "../home-page/assets/navy-hoodie.jpg",
+                  stock: { S: 8, M: 18, L: 14, XL: 6, XXL: 2 }
+                }
+              ],
+
+              attendees: [
+                {
+                  id: "att-1",
+                  name: "Alex Mercer",
+                  event: "Annual Tech Symposium 2026",
+                  tier: "Member ($10.00)",
+                  ticketRef: "#TKT-89241",
+                  payment: "Verified Paid",
+                  admitted: false
+                },
+                {
+                  id: "att-2",
+                  name: "Samantha Reed",
+                  event: "Autumn Cultural Gala & Showcase",
+                  tier: "Guest ($35.00)",
+                  ticketRef: "#TKT-74102",
+                  payment: "Verified Paid",
+                  admitted: true
+                },
+                {
+                  id: "att-3",
+                  name: "Jordan Lee",
+                  event: "Alumni & Industry Networking Night",
+                  tier: "Member ($5.00)",
+                  ticketRef: "#TKT-63019",
+                  payment: "Verified Paid",
+                  admitted: false
+                }
+              ],
+
+              orders: [
+                {
+                  id: "#ORD-9821",
+                  customer: "Priya Sharma",
+                  item: "Navy Hoodie Duo · Size M",
+                  amount: 32.00,
+                  status: "Preparing for Dispatch",
+                  notified: false
+                },
+                {
+                  id: "#ORD-9820",
+                  customer: "Liam Walker",
+                  item: "Navy Hoodie Solo · Size L",
+                  amount: 29.00,
+                  status: "Fulfilled & Collected",
+                  notified: true
+                }
+              ],
+
+              users: [
+                {
+                  id: "usr-1",
+                  memberId: "SSA-2026-8924",
+                  name: "Alex Mercer",
+                  email: "alex.mercer@skyline.edu",
+                  phone: "+1 (555) 234-8924",
+                  role: "MANAGER",
+                  tier: "Student Regular",
+                  status: "ACTIVE",
+                  joinedDate: "Sep 01, 2026"
+                },
+                {
+                  id: "usr-2",
+                  memberId: "SSA-2026-1042",
+                  name: "Jane Doe",
+                  email: "jane.doe@skyline.edu",
+                  phone: "+1 (555) 872-1042",
+                  role: "MEMBER",
+                  tier: "Student Regular",
+                  status: "ACTIVE",
+                  joinedDate: "Sep 04, 2026"
+                },
+                {
+                  id: "usr-3",
+                  memberId: "SSA-2026-3391",
+                  name: "Liam Chen",
+                  email: "liam.chen@skyline.edu",
+                  phone: "+1 (555) 491-3391",
+                  role: "MEMBER",
+                  tier: "VIP Scholar",
+                  status: "ACTIVE",
+                  joinedDate: "Sep 12, 2026"
+                },
+                {
+                  id: "usr-4",
+                  memberId: "SSA-2026-5510",
+                  name: "Sophia Martinez",
+                  email: "sophia.m@skyline.edu",
+                  phone: "+1 (555) 602-5510",
+                  role: "VOLUNTEER",
+                  tier: "Student Regular",
+                  status: "ACTIVE",
+                  joinedDate: "Sep 18, 2026"
+                },
+                {
+                  id: "usr-5",
+                  memberId: "SSA-2026-7822",
+                  name: "Marcus Vance",
+                  email: "marcus.v@skyline.edu",
+                  phone: "+1 (555) 718-7822",
+                  role: "MANAGER",
+                  tier: "Faculty Associate",
+                  status: "ACTIVE",
+                  joinedDate: "Aug 20, 2026"
+                },
+                {
+                  id: "usr-6",
+                  memberId: "SSA-2026-9034",
+                  name: "Elena Rostova",
+                  email: "elena.r@skyline.edu",
+                  phone: "+1 (555) 934-9034",
+                  role: "MEMBER",
+                  tier: "Student Regular",
+                  status: "PENDING",
+                  joinedDate: "Oct 05, 2026"
+                }
+              ],
+
+              activeUserRoleFilter: 'all',
+              userSearchQuery: '',
+              rosterSearchQuery: ''
+            };
+
+            // Initialize session and views on page load
+            document.addEventListener('DOMContentLoaded', () => {
+              // 1. Session verify
+              try {
+                const storedAuth = sessionStorage.getItem('skyline_manager_auth');
+                if (storedAuth) {
+                  const parsed = JSON.parse(storedAuth);
+                  managerState.user = parsed;
+                } else {
+                  // Setup fallback demo session
+                  sessionStorage.setItem('skyline_manager_auth', JSON.stringify(managerState.user));
+                }
+              } catch (e) {
+                console.warn('Session verification note:', e);
+              }
+
+              const emailEl = document.getElementById('managerDisplayEmail');
+              if (emailEl && managerState.user.email) {
+                emailEl.textContent = managerState.user.email;
+              }
+
+              // 2. Render all platform modules
+              renderOverviewRosters();
+              renderEvents();
+              renderMerchandise();
+              renderUsers();
+              updateAllStats();
+            });
+
+            // Logout
+>>>>>>> disha/manager
+            function handleLogout() {
+              sessionStorage.removeItem('skyline_manager_auth');
+              window.location.href = './login.html';
+            }
+
+            // Tab Switching
+            function switchTab(tabId) {
+              document.querySelectorAll('.manager-tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
+              });
+              document.querySelectorAll('.tab-content-panel').forEach(panel => {
+                panel.classList.toggle('active', panel.id === `tab-${tabId}`);
+              });
+            }
+
+            // Toast Notifications
+            function showToast(message, type = 'success') {
+              const host = document.getElementById('managerToastContainer');
+              if (!host) return;
+
+              const toast = document.createElement('div');
+              toast.className = `manager-toast ${type}`;
+              toast.innerHTML = `
+        <span style="font-weight:700;">${type === 'success' ? '✓' : type === 'warning' ? '⚠' : 'ℹ'}</span>
+        <span>${message}</span>
+      `;
+              host.appendChild(toast);
+
+              setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                toast.style.transition = 'all 180ms ease';
+                setTimeout(() => toast.remove(), 200);
+              }, 3500);
+            }
+
+            // Modal Control Helpers
+            function openModal(modalId) {
+              const modal = document.getElementById(modalId);
+              if (modal) {
+                modal.classList.add('open');
+              }
+            }
+
+            function closeModal(modalId) {
+              const modal = document.getElementById(modalId);
+              if (modal) {
+                modal.classList.remove('open');
+              }
+            }
+
+            // Keyboard support for closing modals
+            document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape') {
+                document.querySelectorAll('.manager-modal-backdrop.open').forEach(m => m.classList.remove('open'));
+              }
+            });
+
+            // Close on backdrop click
+            document.querySelectorAll('.manager-modal-backdrop').forEach(backdrop => {
+              backdrop.addEventListener('click', (e) => {
+                if (e.target === backdrop) backdrop.classList.remove('open');
+              });
+            });
+
+            // -------------------------------------------------------------------------
+            // Stats Synchronizer
+            // -------------------------------------------------------------------------
+            function updateAllStats() {
+              // Events stat
+              const evCount = managerState.events.length;
+              const statEv = document.getElementById('statActiveEvents');
+              if (statEv) statEv.textContent = evCount;
+              const badgeEv = document.getElementById('tabEventsCountBadge');
+              if (badgeEv) badgeEv.textContent = evCount;
+
+              // Merch stock stat
+              let totalUnits = 0;
+              managerState.merch.forEach(m => {
+                if (m.stock) {
+                  totalUnits += Object.values(m.stock).reduce((a, b) => a + Number(b), 0);
+                }
+              });
+              const statMerch = document.getElementById('statMerchStock');
+              if (statMerch) statMerch.textContent = `${totalUnits} Units`;
+              const badgeMerch = document.getElementById('tabMerchCountBadge');
+              if (badgeMerch) badgeMerch.textContent = managerState.merch.length;
+
+              // Users stat
+              const usrCount = managerState.users.length;
+              const statUsr = document.getElementById('statTotalUsers');
+              if (statUsr) statUsr.textContent = `${usrCount} Accounts`;
+              const badgeUsr = document.getElementById('tabUsersCountBadge');
+              if (badgeUsr) badgeUsr.textContent = usrCount;
+
+              // User Management Metrics
+              const totalAccounts = managerState.users.length;
+              const activeMembers = managerState.users.filter(u => u.status === 'ACTIVE' && u.role === 'MEMBER').length;
+              const managersCount = managerState.users.filter(u => u.role === 'MANAGER').length;
+              const pendingCount = managerState.users.filter(u => u.status === 'PENDING').length;
+
+              const mTotal = document.getElementById('userMetricTotal');
+              const mActive = document.getElementById('userMetricActive');
+              const mManagers = document.getElementById('userMetricManagers');
+              const mPending = document.getElementById('userMetricPending');
+
+              if (mTotal) mTotal.textContent = `${totalAccounts} Accounts`;
+              if (mActive) mActive.textContent = `${activeMembers} Active`;
+              if (mManagers) mManagers.textContent = `${managersCount} Managers`;
+              if (mPending) mPending.textContent = `${pendingCount} Pending`;
+            }
+
+            // -------------------------------------------------------------------------
+            // FEATURE 1: EVENTS MANAGEMENT
+            // -------------------------------------------------------------------------
+            function showNewEventModal() {
+              const form = document.getElementById('createEventForm');
+              if (form) form.reset();
+              openModal('createEventModal');
+            }
+
+            function handleCreateEvent(e) {
+              e.preventDefault();
+              const title = document.getElementById('evTitle').value.trim();
+              const category = document.getElementById('evCategory').value;
+              const capacity = parseInt(document.getElementById('evCapacity').value, 10) || 150;
+              const dateFormatted = document.getElementById('evDate').value.trim();
+              const venue = document.getElementById('evVenue').value.trim();
+              const standardPrice = parseFloat(document.getElementById('evStdPrice').value) || 0;
+              const memberPrice = parseFloat(document.getElementById('evMemPrice').value) || 0;
+              const description = document.getElementById('evDesc').value.trim();
+
+              const categoryLabels = {
+                academic: "Academic & Tech",
+                cultural: "Cultural & Arts",
+                networking: "Networking",
+                workshop: "Workshop",
+                social: "Social & Gala"
+              };
+
+              const newEvent = {
+                id: `ev-${Date.now()}`,
+                title,
+                category,
+                categoryLabel: categoryLabels[category] || "Special Event",
+                dateFormatted,
+                venue,
+                capacity,
+                ticketsSold: 0,
+                standardPrice,
+                memberPrice,
+                description
+              };
+
+              managerState.events.unshift(newEvent);
+              closeModal('createEventModal');
+              renderEvents();
+              updateAllStats();
+              showToast(`Event "${title}" published live to campus!`, 'success');
+            }
+
+            function deleteEvent(eventId) {
+              const ev = managerState.events.find(e => e.id === eventId);
+              if (!ev) return;
+              if (confirm(`Are you sure you want to permanently delete "${ev.title}"? This cannot be undone.`)) {
+                managerState.events = managerState.events.filter(e => e.id !== eventId);
+                renderEvents();
+                updateAllStats();
+                showToast(`Event "${ev.title}" deleted from portal.`, 'warning');
+              }
+            }
+
+            function renderEvents() {
+              const container = document.getElementById('eventsGridContainer');
+              if (!container) return;
+
+              if (managerState.events.length === 0) {
+                container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 48px; color: var(--color-text-muted);">
+            No active campus events published. Click "+ Create New Event" to publish one.
+          </div>
+        `;
+                return;
+              }
+
+              container.innerHTML = managerState.events.map(ev => {
+                const percent = Math.min(100, Math.round((ev.ticketsSold / ev.capacity) * 100));
+                return `
+          <div class="manager-event-card">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <span class="card-cat-pill">${ev.categoryLabel}</span>
+                <span style="font-size: 0.6875rem; font-weight: 700; color: #03543F; background: #DEF7EC; padding: 2px 7px; border-radius: 4px;">ACTIVE</span>
+              </div>
+              <h4 style="font-size: 1.0625rem; font-weight: 700; color: var(--color-navy); margin-bottom: 6px; line-height: 1.3;">
+                ${ev.title}
+              </h4>
+              <div style="font-size: 0.78125rem; color: var(--color-text-muted); margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px;">
+                <span>📅 ${ev.dateFormatted}</span>
+                <span>📍 ${ev.venue}</span>
+              </div>
+              <p style="font-size: 0.8125rem; color: var(--color-text-muted); line-height: 1.4; margin-bottom: 14px;">
+                ${ev.description || 'Official Skyline Association student event.'}
+              </p>
+            </div>
+
+            <div>
+              <!-- Capacity Bar -->
+              <div style="margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.71875rem; color: var(--color-text-muted); margin-bottom: 4px;">
+                  <span>Bookings: <strong>${ev.ticketsSold} / ${ev.capacity}</strong></span>
+                  <span>${percent}%</span>
+                </div>
+                <div style="width: 100%; height: 6px; background: var(--color-canvas); border-radius: 9999px; overflow: hidden;">
+                  <div style="width: ${percent}%; height: 100%; background: var(--color-baltic); border-radius: 9999px;"></div>
+                </div>
+              </div>
+
+              <!-- Price & Action Row -->
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border-subtle); padding-top: 12px;">
+                <div>
+                  <span style="font-size: 0.875rem; font-weight: 700; color: var(--color-navy);">$${ev.standardPrice.toFixed(2)}</span>
+                  <span style="font-size: 0.6875rem; color: #03543F; font-weight: 600; margin-left: 4px;">($${ev.memberPrice.toFixed(2)} Member)</span>
+                </div>
+                <button type="button" class="btn-action-sm btn-action-danger" onclick="deleteEvent('${ev.id}')">
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+              }).join('');
+            }
+
+            // -------------------------------------------------------------------------
+            // FEATURE 2: MERCHANDISE & PRICING
+            // -------------------------------------------------------------------------
+            function showNewMerchModal() {
+              const form = document.getElementById('createMerchForm');
+              if (form) form.reset();
+              document.getElementById('merchCustomImage').style.display = 'none';
+              openModal('createMerchModal');
+            }
+
+            function handleMerchImagePresetChange(val) {
+              const customInput = document.getElementById('merchCustomImage');
+              if (val === 'custom') {
+                customInput.style.display = 'block';
+                customInput.required = true;
+              } else {
+                customInput.style.display = 'none';
+                customInput.required = false;
+              }
+            }
+
+            function handleCreateMerch(e) {
+              e.preventDefault();
+              const name = document.getElementById('merchName').value.trim();
+              const basePrice = parseFloat(document.getElementById('merchPrice').value) || 25.00;
+              const badge = document.getElementById('merchBadge').value.trim() || 'OFFICIAL';
+
+              const preset = document.getElementById('merchImagePreset').value;
+              const image = preset === 'custom'
+                ? (document.getElementById('merchCustomImage').value.trim() || '../home-page/assets/Navy Hoodie Logo Mockup Duo.png')
+                : preset;
+
+              const stock = {
+                S: parseInt(document.getElementById('stockS').value, 10) || 0,
+                M: parseInt(document.getElementById('stockM').value, 10) || 0,
+                L: parseInt(document.getElementById('stockL').value, 10) || 0,
+                XL: parseInt(document.getElementById('stockXL').value, 10) || 0,
+                XXL: parseInt(document.getElementById('stockXXL').value, 10) || 0
+              };
+
+              const newProduct = {
+                id: `prod-${Date.now()}`,
+                name,
+                basePrice,
+                badge,
+                image,
+                stock
+              };
+
+              managerState.merch.unshift(newProduct);
+              closeModal('createMerchModal');
+              renderMerchandise();
+              updateAllStats();
+              showToast(`Merchandise "${name}" added at $${basePrice.toFixed(2)}!`, 'success');
+            }
+
+            function openEditPriceModal(prodId) {
+              const prod = managerState.merch.find(p => p.id === prodId);
+              if (!prod) return;
+
+              document.getElementById('editProductId').value = prod.id;
+              document.getElementById('editProductNameDisplay').textContent = prod.name;
+              document.getElementById('editProductPriceInput').value = prod.basePrice.toFixed(2);
+              openModal('editPriceModal');
+            }
+
+            function handleUpdatePrice(e) {
+              e.preventDefault();
+              const prodId = document.getElementById('editProductId').value;
+              const newPrice = parseFloat(document.getElementById('editProductPriceInput').value);
+              if (isNaN(newPrice) || newPrice <= 0) return;
+
+              const prod = managerState.merch.find(p => p.id === prodId);
+              if (prod) {
+                prod.basePrice = newPrice;
+                closeModal('editPriceModal');
+                renderMerchandise();
+                showToast(`Updated price for "${prod.name}" to $${newPrice.toFixed(2)}.`, 'success');
+              }
+            }
+
+            function deleteProduct(prodId) {
+              const prod = managerState.merch.find(p => p.id === prodId);
+              if (!prod) return;
+
+              if (confirm(`Are you sure you want to delete "${prod.name}" from the store?`)) {
+                managerState.merch = managerState.merch.filter(p => p.id !== prodId);
+                renderMerchandise();
+                updateAllStats();
+                showToast(`Product "${prod.name}" removed from merchandise catalog.`, 'warning');
+              }
+            }
+
+            function renderMerchandise() {
+              const container = document.getElementById('merchGridContainer');
+              if (!container) return;
+
+              if (managerState.merch.length === 0) {
+                container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 48px; color: var(--color-text-muted);">
+            No merchandise items in the store. Click "+ Add New Product" to configure apparel.
+          </div>
+        `;
+                return;
+              }
+
+              container.innerHTML = managerState.merch.map(prod => {
+                const totalStock = prod.stock ? Object.values(prod.stock).reduce((a, b) => a + Number(b), 0) : 0;
+                return `
+          <div class="manager-merch-card">
+            <div class="merch-thumb-wrap">
+              <span class="merch-badge-pill">${prod.badge || 'OFFICIAL'}</span>
+              <img src="${prod.image}" alt="${prod.name}" onerror="this.src='../home-page/assets/logo.png'" />
+            </div>
+            <div style="padding: 16px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+              <div>
+                <h4 style="font-size: 1rem; font-weight: 700; color: var(--color-navy); margin-bottom: 6px;">
+                  ${prod.name}
+                </h4>
+                <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px;">
+                  <span style="font-size: 1.25rem; font-weight: 700; color: var(--color-navy);">$${prod.basePrice.toFixed(2)}</span>
+                  <span style="font-size: 0.75rem; color: var(--color-text-muted);">Total In Stock: <strong>${totalStock}</strong></span>
+                </div>
+
+                <!-- Sizes Allocation -->
+                <div style="display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap;">
+                  ${prod.stock ? Object.entries(prod.stock).map(([sz, count]) => `
+                    <span style="background: var(--color-surface-subtle); border: 1px solid var(--color-border); font-size: 0.6875rem; padding: 2px 6px; border-radius: 4px;">
+                      <strong>${sz}</strong>: ${count}
+                    </span>
+                  `).join('') : ''}
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 8px; border-top: 1px solid var(--color-border-subtle); padding-top: 12px;">
+                <button type="button" class="btn-action-sm btn-action-outline" style="flex: 1;" onclick="openEditPriceModal('${prod.id}')">
+                  Set Price
+                </button>
+                <button type="button" class="btn-action-sm btn-action-danger" onclick="deleteProduct('${prod.id}')">
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+              }).join('');
+            }
+
+            // -------------------------------------------------------------------------
+            // FEATURE 3: USER MANAGEMENT SYSTEM
+            // -------------------------------------------------------------------------
+            function showNewUserModal() {
+              const form = document.getElementById('createUserForm');
+              if (form) form.reset();
+              openModal('createUserModal');
+            }
+
+            function handleCreateUser(e) {
+              e.preventDefault();
+              const name = document.getElementById('usrName').value.trim();
+              const email = document.getElementById('usrEmail').value.trim();
+              const phone = document.getElementById('usrPhone').value.trim();
+              const role = document.getElementById('usrRole').value;
+              const tier = document.getElementById('usrTier').value;
+              const status = document.getElementById('usrStatus').value;
+
+              const randomId = Math.floor(1000 + Math.random() * 9000);
+              const memberId = `SSA-2026-${randomId}`;
+              const now = new Date();
+              const joinedDate = now.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+
+              const newUser = {
+                id: `usr-${Date.now()}`,
+                memberId,
+                name,
+                email,
+                phone,
+                role,
+                tier,
+                status,
+                joinedDate
+              };
+
+              managerState.users.unshift(newUser);
+              closeModal('createUserModal');
+              renderUsers();
+              updateAllStats();
+              showToast(`Account for ${name} (${memberId}) registered successfully!`, 'success');
+            }
+
+            function deleteUser(userId) {
+              const u = managerState.users.find(usr => usr.id === userId);
+              if (!u) return;
+
+              if (confirm(`Are you sure you want to permanently delete the account for ${u.name} (${u.memberId})? This action cannot be undone.`)) {
+                managerState.users = managerState.users.filter(usr => usr.id !== userId);
+                renderUsers();
+                updateAllStats();
+                showToast(`Account for ${u.name} removed permanently.`, 'warning');
+              }
+            }
+
+            function toggleUserStatus(userId) {
+              const u = managerState.users.find(usr => usr.id === userId);
+              if (!u) return;
+
+              u.status = u.status === 'ACTIVE' ? 'PENDING' : 'ACTIVE';
+              renderUsers();
+              updateAllStats();
+              showToast(`Status for ${u.name} toggled to ${u.status}.`, 'info');
+            }
+
+            function filterUsersRole(role, btn) {
+              managerState.activeUserRoleFilter = role;
+              document.querySelectorAll('[data-role-filter]').forEach(b => {
+                b.className = (b === btn) ? 'btn-action-sm btn-action-primary' : 'btn-action-sm btn-action-outline';
+              });
+              renderUsers();
+            }
+
+            function handleUserSearch() {
+              const q = document.getElementById('userSearchInput').value;
+              managerState.userSearchQuery = q;
+              renderUsers();
+            }
+
+            function renderUsers() {
+              const tbody = document.getElementById('usersTableBody');
+              if (!tbody) return;
+
+              let list = managerState.users;
+
+              // Filter by role
+              if (managerState.activeUserRoleFilter !== 'all') {
+                list = list.filter(u => u.role === managerState.activeUserRoleFilter);
+              }
+
+              // Filter by search query
+              if (managerState.userSearchQuery.trim() !== '') {
+                const q = managerState.userSearchQuery.toLowerCase();
+                list = list.filter(u =>
+                  u.name.toLowerCase().includes(q) ||
+                  u.email.toLowerCase().includes(q) ||
+                  u.memberId.toLowerCase().includes(q)
+                );
+              }
+
+              if (list.length === 0) {
+                tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="padding: 32px; text-align: center; color: var(--color-text-muted);">
+              No user accounts found matching the current criteria.
+            </td>
+          </tr>
+        `;
+                return;
+              }
+
+              tbody.innerHTML = list.map(u => {
+                const initials = u.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                return `
+          <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+            <td style="padding: 12px 14px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: #F0F6F9; color: var(--color-baltic); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem;">
+                  ${initials}
+                </div>
+                <div>
+                  <div style="font-weight: 600; color: var(--color-navy);">${u.name}</div>
+                  <div style="font-family: monospace; font-size: 0.75rem; color: var(--color-text-muted);">${u.memberId}</div>
+                </div>
+              </div>
+            </td>
+            <td style="padding: 12px 14px;">
+              <div style="color: var(--color-navy);">${u.email}</div>
+              <div style="font-size: 0.75rem; color: var(--color-text-muted);">${u.phone}</div>
+            </td>
+            <td style="padding: 12px 14px;">
+              <span class="role-badge ${u.role.toLowerCase()}">${u.role}</span>
+            </td>
+            <td style="padding: 12px 14px;">
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span class="status-badge ${u.status.toLowerCase()}">${u.status}</span>
+                <span style="font-size: 0.71875rem; color: var(--color-text-muted);">${u.tier}</span>
+              </div>
+            </td>
+            <td style="padding: 12px 14px; font-size: 0.78125rem; color: var(--color-text-muted);">
+              ${u.joinedDate}
+            </td>
+            <td style="padding: 12px 14px; text-align: right;">
+              <div style="display: inline-flex; gap: 6px;">
+                <button type="button" class="btn-action-sm btn-action-outline" onclick="toggleUserStatus('${u.id}')">
+                  ${u.status === 'ACTIVE' ? 'Set Pending' : 'Activate'}
+                </button>
+                <button type="button" class="btn-action-sm btn-action-danger" onclick="deleteUser('${u.id}')">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+              }).join('');
+            }
+
+            // -------------------------------------------------------------------------
+            // OVERVIEW ROSTERS & CHECK-IN
+            // -------------------------------------------------------------------------
+            function filterRoster() {
+              managerState.rosterSearchQuery = document.getElementById('rosterSearchInput').value.toLowerCase();
+              renderOverviewRosters();
+            }
+
+            function markAttendeeCheckIn(attId) {
+              const att = managerState.attendees.find(a => a.id === attId);
+              if (att) {
+                att.admitted = true;
+                renderOverviewRosters();
+                showToast(`Checked in attendee: ${att.name}`, 'success');
+              }
+            }
+
+            function markOrderReady(orderId) {
+              const ord = managerState.orders.find(o => o.id === orderId);
+              if (ord) {
+                ord.status = 'Ready for Pickup';
+                ord.notified = true;
+                renderOverviewRosters();
+                showToast(`Order ${ord.id} marked ready for pickup! Customer notified.`, 'success');
+              }
+            }
+
+            function renderOverviewRosters() {
+              // 1. Attendees table
+              const rBody = document.getElementById('rosterTableBody');
+              if (rBody) {
+                let list = managerState.attendees;
+                if (managerState.rosterSearchQuery) {
+                  list = list.filter(a =>
+                    a.name.toLowerCase().includes(managerState.rosterSearchQuery) ||
+                    a.ticketRef.toLowerCase().includes(managerState.rosterSearchQuery) ||
+                    a.event.toLowerCase().includes(managerState.rosterSearchQuery)
+                  );
+                }
+
+                rBody.innerHTML = list.map(a => `
+          <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+            <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">${a.name}</td>
+            <td style="padding: 12px 14px;">${a.event}</td>
+            <td style="padding: 12px 14px;"><span style="background: #DEF7EC; color: #03543F; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">${a.tier}</span></td>
+            <td style="padding: 12px 14px; font-family: monospace;">${a.ticketRef}</td>
+            <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">${a.payment}</td>
+            <td style="padding: 12px 14px; text-align: right;">
+              ${a.admitted
+                    ? '<span style="color: #03543F; font-weight: 600; font-size: 0.75rem;">✓ Admitted</span>'
+                    : `<button type="button" class="btn-action-sm btn-action-primary" onclick="markAttendeeCheckIn('${a.id}')">Check In</button>`
+                  }
+            </td>
+          </tr>
+        `).join('');
+              }
+
+              // 2. Orders table
+              const oBody = document.getElementById('ordersTableBody');
+              if (oBody) {
+                oBody.innerHTML = managerState.orders.map(o => `
+          <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+            <td style="padding: 12px 14px; font-family: monospace;">${o.id}</td>
+            <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">${o.customer}</td>
+            <td style="padding: 12px 14px;">${o.item}</td>
+            <td style="padding: 12px 14px; font-weight: 600;">$${o.amount.toFixed(2)}</td>
+            <td style="padding: 12px 14px;">
+              <span style="background: ${o.notified ? '#DEF7EC' : '#FEF9E7'}; color: ${o.notified ? '#03543F' : '#9A7D0A'}; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">
+                ${o.status}
+              </span>
+            </td>
+            <td style="padding: 12px 14px; text-align: right;">
+              ${o.notified
+                    ? '<span style="font-size: 0.75rem; color: var(--color-text-muted);">Notified</span>'
+                    : `<button type="button" class="btn-action-sm btn-action-outline" onclick="markOrderReady('${o.id}')">Mark Ready</button>`
+                  }
+            </td>
+          </tr>
+        `).join('');
+              }
+            }
+          </script>
 </body>
+
 </html>
