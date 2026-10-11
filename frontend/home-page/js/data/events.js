@@ -68,9 +68,10 @@ export async function fetchEventsData() {
     const res = await fetch("http://localhost:5000/api/events", { method: "GET" });
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
+      const list = Array.isArray(data) ? data : (data.data?.items || data.items || (Array.isArray(data.data) ? data.data : []));
+      if (Array.isArray(list) && list.length > 0) {
         return {
-          events: data.map((item, idx) => ({
+          events: list.map((item, idx) => ({
             id: item.id || `evt-${idx + 1}`,
             title: item.title || "College Event",
             category: item.category || "tech",

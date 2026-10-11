@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+<<<<<<< HEAD
 const { prisma, memoryUsers } = require('../lib/db');
 const { sendVerificationEmail, verifyCode, pendingVerifications } = require('../lib/email');
 
@@ -285,5 +286,23 @@ router.get('/users', (req, res) => {
   }));
   res.status(200).json({ users });
 });
+=======
+const authController = require('../controllers/auth.controller');
+const { authenticate } = require('../middleware/auth.middleware');
+const { loginRateLimiter } = require('../middleware/rateLimiter');
+
+/**
+ * Public Authentication Endpoints
+ */
+router.post('/register', authController.register);
+router.post('/login', loginRateLimiter, authController.login);
+
+/**
+ * Protected Authentication Endpoints
+ * Require valid Bearer token
+ */
+router.post('/logout', authenticate, authController.logout);
+router.get('/me', authenticate, authController.getMe);
+>>>>>>> khushi/backend
 
 module.exports = router;

@@ -1,4 +1,14 @@
 require('dotenv').config();
+const { assertJwtSecretConfigured } = require('./src/services/auth.service');
+
+// Fail safely at startup if mandatory security configuration is missing
+try {
+  assertJwtSecretConfigured();
+} catch (err) {
+  console.error(`FATAL STARTUP ERROR: ${err.message}`);
+  process.exit(1);
+}
+
 const app = require('./src/app');
 
 const PORT = process.env.PORT || 5000;
