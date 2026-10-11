@@ -206,6 +206,7 @@ function renderParticipationTable() {
   const tbody = document.getElementById('participationTableBody');
   if (!tbody) return;
 
+<<<<<<< HEAD
   tbody.innerHTML = userParticipations.map(p => `
     <tr style="border-bottom: 1px solid var(--color-border-subtle);">
       <td style="padding: 14px; font-weight: 600; color: var(--color-navy);">${p.eventTitle}</td>
@@ -215,6 +216,189 @@ function renderParticipationTable() {
       <td style="padding: 14px;">
         <span style="background: ${p.status.includes('Confirmed') ? '#DEF7EC' : '#F1F5F9'}; color: ${p.status.includes('Confirmed') ? '#03543F' : 'var(--color-navy)'}; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">
           ${p.status}
+=======
+  const filtered = PARTICIPANTS.filter((p) => {
+    const matchesQuery =
+      checkinFilterQuery === "" ||
+      p.name.toLowerCase().includes(checkinFilterQuery) ||
+      p.rollNo.toLowerCase().includes(checkinFilterQuery) ||
+      p.ticketId.toLowerCase().includes(checkinFilterQuery);
+
+    const matchesStatus =
+      checkinStatusFilter === "all" ||
+      (checkinStatusFilter === "checked" && p.checkedIn) ||
+      (checkinStatusFilter === "pending" && !p.checkedIn);
+
+    return matchesQuery && matchesStatus;
+  });
+
+  // Update counters
+  const total = PARTICIPANTS.length;
+  const checked = PARTICIPANTS.filter((p) => p.checkedIn).length;
+  const statEl = document.getElementById("terminalCheckinRatio");
+  if (statEl) statEl.textContent = `${checked} / ${total} Checked in (${Math.round((checked / total) * 100)}%)`;
+
+  if (filtered.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; padding: 36px; color: var(--color-text-muted);">
+          No participant records matched your search query.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tableBody.innerHTML = filtered
+    .map(
+      (p) => `
+      <tr>
+        <td><strong style="color: var(--color-text-main); font-variant-numeric: tabular-nums;">${p.ticketId}</strong></td>
+        <td>
+          <div style="font-weight: 600; color: var(--color-text-main);">${p.name}</div>
+          <div style="font-size: 0.75rem; color: var(--color-text-muted);">${p.email}</div>
+        </td>
+        <td><span style="font-size: 0.8125rem; font-weight: 500;">${p.rollNo}</span></td>
+        <td>
+          <span class="badge-status ${p.type === "Member" ? "badge-member" : "badge-guest"}">${p.type}</span>
+        </td>
+        <td>
+          ${
+            p.checkedIn
+              ? `<span class="badge-status badge-checked-in">&#10003; Checked in (${p.checkInTime})</span>`
+              : `<span class="badge-status badge-pending">&bull; Awaiting Entrance</span>`
+          }
+        </td>
+        <td>
+          ${
+            p.checkedIn
+              ? `<button class="btn btn-outline btn-sm" onclick="toggleCheckin('${p.ticketId}', false)">Undo</button>`
+              : `<button class="btn btn-primary btn-sm" onclick="toggleCheckin('${p.ticketId}', true)">Check In</button>`
+          }
+        </td>
+      </tr>
+    `
+    )
+    .join("");
+}
+
+window.toggleCheckin = function (ticketId, markChecked) {
+  const p = PARTICIPANTS.find((item) => item.ticketId === ticketId);
+  if (!p) return;
+
+  p.checkedIn = markChecked;
+  if (markChecked) {
+    const now = new Date();
+    p.checkInTime = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    showToast(`Checked in: ${p.name} (${ticketId})`);
+
+    // Synchronize with backend API
+    fetch("http://localhost:5000/api/tickets/check-in", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ticketCode: ticketId })
+    }).catch(() => {
+      // Backend offline or mock ticket; client operates smoothly
+    });
+  } else {
+    p.checkInTime = null;
+    showToast(`Check-in reversed for ${p.name}`);
+  }
+
+  renderCheckinRoster();
+  renderDashboard();
+};
+
+// Scan Simulation via prompt / modal
+window.openScanPrompt = function () {
+  const ticketInput = prompt("Simulate Scanner: Enter or scan Ticket ID (e.g. TIC-2026-5512):", "TIC-2026-5512");
+  if (!ticketInput) return;
+
+  const found = PARTICIPANTS.find((p) => p.ticketId.toUpperCase() === ticketInput.trim().toUpperCase());
+  if (found) {
+    if (found.checkedIn) {
+      alert(`⚠️ Already Checked In!\nAttendee: ${found.name}\nChecked in at: ${found.checkInTime}`);
+    } else {
+      toggleCheckin(found.ticketId, true);
+      alert(`✅ Verified Pass!\nAttendee: ${found.name}\nRoll No: ${found.rollNo}\nStatus: Marked Checked In.`);
+    }
+  } else {
+    alert("❌ Invalid Ticket: No attendee found matching this Ticket ID.");
+  }
+};
+
+/* ==========================================================================
+   5. Walk-in Participant Registration Form
+   ========================================================================== */
+function initRegistrationForm() {
+  const form = document.getElementById("participantRegistrationForm");
+  if (!form) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("regFullName").value.trim();
+    const rollNo = document.getElementById("regRollNo").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const type = document.getElementById("regType").value;
+    const event = document.getElementById("regEventSelect").value;
+    const autoCheckin = document.getElementById("regAutoCheckin").checked;
+
+    const newTicketId = `TIC-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const newParticipant = {
+      ticketId: newTicketId,
+      name,
+      rollNo,
+      email,
+      type,
+      event,
+      checkedIn: autoCheckin,
+      checkInTime: autoCheckin ? new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : null
+    };
+
+    PARTICIPANTS.unshift(newParticipant);
+    renderCheckinRoster();
+    renderDashboard();
+
+    // Show Pass Modal
+    showGeneratedPass(newParticipant);
+    form.reset();
+  });
+}
+
+function showGeneratedPass(participant) {
+  const modal = document.getElementById("passModal");
+  const body = document.getElementById("passModalBody");
+  if (!modal || !body) return;
+
+  body.innerHTML = `
+    <div style="text-align: center; margin-bottom: 20px;">
+      <div style="width: 48px; height: 48px; background: var(--color-success-bg); color: var(--color-success); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
+        ✓
+      </div>
+      <h3 style="color: var(--color-text-main); margin-bottom: 4px;">Participant Registered!</h3>
+      <p style="font-size: 0.875rem; color: var(--color-text-muted);">Pass verified for desk entrance.</p>
+    </div>
+
+    <div style="background: var(--color-canvas); border: 1px dashed var(--color-border); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span style="color: var(--color-text-muted); font-size: 0.8125rem;">TICKET PASS ID:</span>
+        <strong style="color: var(--color-primary); font-variant-numeric: tabular-nums;">${participant.ticketId}</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span style="color: var(--color-text-muted); font-size: 0.8125rem;">ATTENDEE:</span>
+        <strong style="color: var(--color-text-main);">${participant.name} (${participant.rollNo})</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span style="color: var(--color-text-muted); font-size: 0.8125rem;">EVENT:</span>
+        <strong style="color: var(--color-text-main);">${participant.event}</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--color-text-muted); font-size: 0.8125rem;">STATUS:</span>
+        <span class="badge-status ${participant.checkedIn ? "badge-checked-in" : "badge-pending"}">
+          ${participant.checkedIn ? "Checked In" : "Pending Check-in"}
+>>>>>>> khushi/backend
         </span>
       </td>
       <td style="padding: 14px; text-align: right;">
