@@ -55,7 +55,7 @@
         </div>
         <div class="user-details">
           <span class="user-name">Alex Mercer</span>
-          <span class="user-role">Member</span>
+          <span class="user-role" style="color:#007A99; font-weight:600;">Manager & Member</span>
         </div>
         <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
           stroke-width="2">
@@ -130,6 +130,19 @@
             <line x1="16" y1="17" x2="8" y2="17"></line>
           </svg>
           <span class="nav-label">My Passes & Orders</span>
+        </button>
+
+        <!-- 6. User Management (Manager Controls) -->
+        <button class="nav-item" data-tab="users" id="navItemUsers">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span class="nav-label">User Management</span>
+          <span class="nav-counter-pill" id="navUsersCountBadge">6</span>
         </button>
       </nav>
 
@@ -369,6 +382,38 @@
                 </button>
               </div>
 
+              <!-- Manager Quick Operations Panel -->
+              <div class="manager-shortcuts-group" style="margin-top:14px; padding-top:14px; border-top:1px dashed var(--color-border); display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:0.72rem; font-weight:700; letter-spacing:0.04em; color:#006494; text-transform:uppercase;">Manager Operations</span>
+                  <span class="role-pill manager">Manager</span>
+                </div>
+                <button class="btn-action-primary" id="qaCreateEventModalBtn" style="background:#004E7C; justify-content:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  <span>+ Create New Event</span>
+                </button>
+                <button class="btn-action-secondary" id="qaCreateMerchModalBtn" style="justify-content:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                  <span>+ Add Product & Set Price</span>
+                </button>
+                <button class="btn-action-secondary" id="qaCreateUserModalBtn" style="justify-content:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                  </svg>
+                  <span>+ Create Member / Account</span>
+                </button>
+              </div>
+
               <!-- Quick Action Note with Info icon & Keyboard Shortcut Badge -->
               <div class="quick-action-footnote">
                 <div class="footnote-left">
@@ -442,11 +487,20 @@
               <h1 class="page-headline">Events & Booking</h1>
               <p class="page-subheadline">Reserve your digital entry ticket with exclusive member discount pricing.</p>
             </div>
-            <div class="filter-group">
-              <button class="filter-btn active" data-event-filter="all">All Events</button>
-              <button class="filter-btn" data-event-filter="academic">Academic & Tech</button>
-              <button class="filter-btn" data-event-filter="cultural">Cultural & Arts</button>
-              <button class="filter-btn" data-event-filter="networking">Networking</button>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <button class="btn-action-primary-compact" id="openCreateEventModalBtn" title="Manager: Create a new event">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>+ Create Event</span>
+              </button>
+              <div class="filter-group">
+                <button class="filter-btn active" data-event-filter="all">All Events</button>
+                <button class="filter-btn" data-event-filter="academic">Academic & Tech</button>
+                <button class="filter-btn" data-event-filter="cultural">Cultural & Arts</button>
+                <button class="filter-btn" data-event-filter="networking">Networking</button>
+              </div>
             </div>
           </div>
 
@@ -466,21 +520,28 @@
               <p class="page-subheadline">Official Skyline student apparel. Live inventory tracked per size variant.</p>
             </div>
             <div class="store-actions-bar">
+              <button class="btn-action-primary-compact" id="openCreateMerchModalBtn" title="Manager: Add product and set price">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>+ Add Product</span>
+              </button>
               <div class="store-info-pill">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="12" y1="16" x2="12" y2="12"></line>
                   <line x1="12" y1="8" x2="12.01" y2="8"></line>
                 </svg>
-                <span>Free pickup at Student Association Desk (Room 204)</span>
+                <span>Free pickup at Desk 204</span>
               </div>
-              <button class="btn-action-primary-compact" id="viewCartHeaderBtn">
+              <button class="btn-action-secondary-compact" id="viewCartHeaderBtn" style="background:#FFFFFF; border:1px solid var(--color-border-dark); padding:6px 14px; border-radius:6px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="9" cy="21" r="1"></circle>
                   <circle cx="20" cy="21" r="1"></circle>
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
-                <span>View Cart (<span id="cartCountBtnLabel">0</span>)</span>
+                <span>Cart (<span id="cartCountBtnLabel">0</span>)</span>
               </button>
             </div>
           </div>
@@ -559,6 +620,140 @@
                 </tbody>
               </table>
             </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 6: USER MANAGEMENT SYSTEM (MANAGER CONTROLS)                   -->
+        <!-- =================================================================== -->
+        <section id="tab-users" class="tab-panel">
+          <div class="section-title-bar">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <h1 class="page-headline">User Management</h1>
+                <span class="activity-badge-pill" style="background:#E1F2F6; color:#006494; font-weight:700;">Manager Control</span>
+              </div>
+              <p class="page-subheadline">Manage registered accounts, configure membership roles, and create or delete member accounts.</p>
+            </div>
+            <div class="user-mgmt-actions">
+              <button class="btn-action-primary-compact" id="openCreateUserModalBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <line x1="20" y1="8" x2="20" y2="14"></line>
+                  <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+                <span>+ Create Account</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- User Management Summary Metric Cards -->
+          <div class="metrics-grid" style="margin-bottom:18px;">
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Total accounts</span>
+                <div class="metric-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#007A99" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-value" id="mgmtTotalUsers">6 Accounts</span>
+              </div>
+              <div class="metric-footer-text">Registered student roster</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Active members</span>
+                <div class="metric-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-value text-success" id="mgmtActiveUsers">5 Active</span>
+              </div>
+              <div class="metric-footer-text text-success">Good standing with full perks</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Council & managers</span>
+                <div class="metric-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#007A99" stroke-width="2">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-value" id="mgmtManagersCount">2 Managers</span>
+              </div>
+              <div class="metric-footer-text">Council admin privileges</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Pending validation</span>
+                <div class="metric-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-value text-warning" id="mgmtPendingUsers">1 Pending</span>
+              </div>
+              <div class="metric-footer-text text-warning">Awaiting annual fee / ID review</div>
+            </div>
+          </div>
+
+          <!-- Controls Bar: Search & Filter -->
+          <div class="mgmt-controls-bar">
+            <div class="search-input-box" style="flex:1; max-width:380px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="userMgmtSearchInput" placeholder="Search members by name, email, or ID...">
+            </div>
+
+            <div class="filter-group">
+              <button class="user-role-filter-btn active" data-user-filter="all">All Roles</button>
+              <button class="user-role-filter-btn" data-user-filter="MEMBER">Members</button>
+              <button class="user-role-filter-btn" data-user-filter="MANAGER">Managers</button>
+              <button class="user-role-filter-btn" data-user-filter="VOLUNTEER">Volunteers</button>
+              <button class="user-role-filter-btn" data-user-filter="ADMIN">Admins</button>
+            </div>
+          </div>
+
+          <!-- Users Table Container -->
+          <div class="orders-table-wrapper" style="margin-top:16px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Member / User</th>
+                  <th>Contact Info</th>
+                  <th>Role</th>
+                  <th>Tier & Status</th>
+                  <th>Joined Date</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
           </div>
         </section>
 
@@ -738,6 +933,262 @@
         </button>
         <p class="pickup-notice">Pickup at Student Association Desk (Room 204) Mon-Fri 10am-4pm.</p>
       </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: MANAGER CREATE EVENT                                              -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="createEventModal" aria-hidden="true">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-eyebrow">MANAGER CONTROLS</span>
+          <h2 class="modal-title">Create New Association Event</h2>
+        </div>
+        <button class="modal-close-btn" id="closeCreateEventModalBtn">&times;</button>
+      </div>
+
+      <form id="createEventForm">
+        <div class="form-group">
+          <label class="form-label" for="newEventTitle">Event Title *</label>
+          <input type="text" id="newEventTitle" class="form-input" required placeholder="e.g., Annual Tech Symposium 2026">
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="newEventCategory">Category *</label>
+            <select id="newEventCategory" class="form-input form-select" required>
+              <option value="academic">Academic & Tech</option>
+              <option value="cultural">Cultural & Arts</option>
+              <option value="networking">Networking</option>
+              <option value="workshop">Workshop</option>
+              <option value="social">Social & Gala</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newEventDate">Date & Time *</label>
+            <input type="text" id="newEventDate" class="form-input" required placeholder="e.g., Nov 28, 2026 • 2:00 PM">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="newEventVenue">Venue / Location *</label>
+            <input type="text" id="newEventVenue" class="form-input" required placeholder="e.g., Campus Auditorium">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newEventCapacity">Total Capacity *</label>
+            <input type="number" id="newEventCapacity" class="form-input" min="1" required value="200" placeholder="200">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="newEventStdPrice">Standard Ticket Price ($) *</label>
+            <input type="number" id="newEventStdPrice" class="form-input" step="0.5" min="0" required value="25.00" placeholder="25.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newEventMemPrice">Member Discounted Price ($) *</label>
+            <input type="number" id="newEventMemPrice" class="form-input" step="0.5" min="0" required value="10.00" placeholder="10.00">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="newEventDesc">Event Description *</label>
+          <textarea id="newEventDesc" class="form-input form-textarea" rows="3" required placeholder="Describe agenda, guest speakers, refreshments, or activities..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelCreateEventBtn">Cancel</button>
+          <button type="submit" class="btn-action-primary-compact">
+            <span>Publish Event</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: MANAGER CREATE MERCHANDISE / SET PRODUCT PRICE                    -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="createMerchModal" aria-hidden="true">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-eyebrow">STORE MANAGER CONTROLS</span>
+          <h2 class="modal-title">Add Product & Set Merchandise Price</h2>
+        </div>
+        <button class="modal-close-btn" id="closeCreateMerchModalBtn">&times;</button>
+      </div>
+
+      <form id="createMerchForm">
+        <div class="form-group">
+          <label class="form-label" for="newMerchName">Product Name *</label>
+          <input type="text" id="newMerchName" class="form-input" required placeholder="e.g., Skyline Embroidered Fleece Hoodie">
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="newMerchPrice">Set Product Price ($) *</label>
+            <input type="number" id="newMerchPrice" class="form-input" step="0.5" min="0" required value="35.00" placeholder="35.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newMerchBadge">Badge / Tag</label>
+            <input type="text" id="newMerchBadge" class="form-input" value="NEW DROP" placeholder="e.g., NEW DROP, BESTSELLER, LIMITED">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="newMerchImage">Product Image URL</label>
+          <input type="text" id="newMerchImage" class="form-input" placeholder="Image URL or choose a preset below" value="../assets/navy-hoodie-mockup-duo.png">
+          <div class="preset-img-row mt-2">
+            <button type="button" class="preset-pill" onclick="document.getElementById('newMerchImage').value='../assets/navy-hoodie-mockup-duo.png'">Navy Hoodie Duo</button>
+            <button type="button" class="preset-pill" onclick="document.getElementById('newMerchImage').value='https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80'">Classic Hoodie</button>
+            <button type="button" class="preset-pill" onclick="document.getElementById('newMerchImage').value='https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=600&q=80'">Crewneck</button>
+            <button type="button" class="preset-pill" onclick="document.getElementById('newMerchImage').value='https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=600&q=80'">Varsity Cap</button>
+            <button type="button" class="preset-pill" onclick="document.getElementById('newMerchImage').value='https://images.unsplash.com/photo-1614036417651-efe5912149d8?auto=format&fit=crop&w=600&q=80'">Enamel Pins</button>
+            <button type="button" class="preset-pill" onclick="document.getElementById('newMerchImage').value='https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80'">Canvas Tote</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Initial Stock by Size Variant</label>
+          <div class="stock-inputs-grid">
+            <div class="stock-input-cell">
+              <label>S</label>
+              <input type="number" id="stockS" class="form-input" min="0" value="10">
+            </div>
+            <div class="stock-input-cell">
+              <label>M</label>
+              <input type="number" id="stockM" class="form-input" min="0" value="25">
+            </div>
+            <div class="stock-input-cell">
+              <label>L</label>
+              <input type="number" id="stockL" class="form-input" min="0" value="20">
+            </div>
+            <div class="stock-input-cell">
+              <label>XL</label>
+              <input type="number" id="stockXL" class="form-input" min="0" value="10">
+            </div>
+            <div class="stock-input-cell">
+              <label>XXL</label>
+              <input type="number" id="stockXXL" class="form-input" min="0" value="5">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelCreateMerchBtn">Cancel</button>
+          <button type="submit" class="btn-action-primary-compact">
+            <span>Add Product to Store</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: MANAGER CREATE ACCOUNT / MEMBER                                   -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="createUserModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-eyebrow">USER MANAGEMENT SYSTEM</span>
+          <h2 class="modal-title">Create User / Member Account</h2>
+        </div>
+        <button class="modal-close-btn" id="closeCreateUserModalBtn">&times;</button>
+      </div>
+
+      <form id="createUserForm">
+        <div class="form-group">
+          <label class="form-label" for="newUserName">Full Name *</label>
+          <input type="text" id="newUserName" class="form-input" required placeholder="e.g., Jordan Hayes">
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="newUserEmail">University Email *</label>
+            <input type="email" id="newUserEmail" class="form-input" required placeholder="jordan.h@skyline.edu">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newUserPhone">Phone Number *</label>
+            <input type="tel" id="newUserPhone" class="form-input" required placeholder="+1 (555) 901-2345">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="newUserRole">Account Role *</label>
+            <select id="newUserRole" class="form-input form-select" required>
+              <option value="MEMBER">Member (Student)</option>
+              <option value="MANAGER">Manager (Council officer)</option>
+              <option value="VOLUNTEER">Volunteer (Event staff)</option>
+              <option value="ADMIN">Admin (Full access)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newUserTier">Membership Tier *</label>
+            <select id="newUserTier" class="form-input form-select" required>
+              <option value="Student Regular">Student Regular ($25/yr)</option>
+              <option value="VIP Scholar">VIP Scholar ($40/yr)</option>
+              <option value="Faculty Associate">Faculty Associate ($50/yr)</option>
+              <option value="Complimentary Free">Complimentary / Free</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="newUserStatus">Account Status *</label>
+          <select id="newUserStatus" class="form-input form-select" required>
+            <option value="ACTIVE">Active (Verified)</option>
+            <option value="PENDING">Pending Approval</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelCreateUserBtn">Cancel</button>
+          <button type="submit" class="btn-action-primary-compact">
+            <span>Create Account</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: MANAGER SET / UPDATE PRODUCT PRICE                                -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="editPriceModal" aria-hidden="true">
+    <div class="modal-card" style="max-width:440px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-eyebrow">PRODUCT PRICING CONTROL</span>
+          <h2 class="modal-title">Set Product Price</h2>
+        </div>
+        <button class="modal-close-btn" id="closeEditPriceModalBtn">&times;</button>
+      </div>
+
+      <form id="editPriceForm">
+        <input type="hidden" id="editPriceProductId">
+        <div class="form-group">
+          <label class="form-label">Product Name</label>
+          <div id="editPriceProductName" style="font-weight:600; color:var(--color-text-main); margin-bottom:8px; font-size:1rem;"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editProductPriceInput">New Product Price ($) *</label>
+          <input type="number" id="editProductPriceInput" class="form-input" step="0.5" min="0" required placeholder="35.00">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelEditPriceBtn">Cancel</button>
+          <button type="submit" class="btn-action-primary-compact">
+            <span>Update Price</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "start": "node frontend/serve.js",
+    "start:frontend": "node frontend/serve.js",
+    "start:backend": "node backend/server.js",
+    "test": "npm --prefix backend test"
+  },
   "devDependencies": {
     "prisma": "^6.19.3"
   },
