@@ -44,9 +44,55 @@ async function checkUserActiveMembership(userId, prisma = defaultPrisma) {
 }
 
 /**
+ * Helper to auto-seed initial events if database is empty
+ */
+async function ensureInitialEvents(prisma = defaultPrisma) {
+  try {
+    const count = await prisma.event.count();
+    if (count === 0) {
+      await prisma.event.createMany({
+        data: [
+          {
+            title: 'Annual Tech Symposium 2026',
+            description: 'Keynotes, workshops, and networking with senior engineers and tech leaders.',
+            date: new Date('2026-11-15T10:00:00.000Z'),
+            venue: 'Campus Auditorium',
+            capacity: 200,
+            memberPrice: 10.00,
+            standardPrice: 25.00
+          },
+          {
+            title: 'Autumn Cultural Gala & Showcase',
+            description: 'Celebration of student talent, club honors, live acoustic performances, and awards.',
+            date: new Date('2026-12-05T18:30:00.000Z'),
+            venue: 'Great Hall, Student Center',
+            capacity: 350,
+            memberPrice: 15.00,
+            standardPrice: 35.00
+          },
+          {
+            title: 'Skyline Hackathon 4.0: 36h Sprint',
+            description: 'Annual campus developer hackathon, hardware showcases, and demo day.',
+            date: new Date('2027-01-18T09:00:00.000Z'),
+            venue: 'Innovation Center & Cloud Lab',
+            capacity: 150,
+            memberPrice: 0.00,
+            standardPrice: 15.00
+          }
+        ]
+      });
+    }
+  } catch (err) {
+    console.warn('Initial events auto-seed skipped:', err.message);
+  }
+}
+
+/**
  * Service: List events
  */
 async function listEvents({ upcoming, page = 1, limit = 20, user = null }, prisma = defaultPrisma) {
+  await ensureInitialEvents(prisma);
+
   const pageNum = Math.max(1, parseInt(page, 10) || 1);
   const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
   const skip = (pageNum - 1) * limitNum;

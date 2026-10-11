@@ -31,9 +31,10 @@ export async function fetchMerchandiseData() {
     const res = await fetch("http://localhost:5000/api/products", { method: "GET" });
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
+      const list = Array.isArray(data) ? data : (data.data?.items || data.items || (Array.isArray(data.data) ? data.data : []));
+      if (Array.isArray(list) && list.length > 0) {
         return {
-          merchandise: data.map((item, idx) => ({
+          merchandise: list.map((item, idx) => ({
             id: item.id || `m-${idx + 1}`,
             name: item.name || "Skyline Navy Hoodie",
             category: item.category || "apparel",

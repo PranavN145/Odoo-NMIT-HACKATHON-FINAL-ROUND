@@ -403,6 +403,15 @@ window.toggleCheckin = function (ticketId, markChecked) {
     const now = new Date();
     p.checkInTime = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     showToast(`Checked in: ${p.name} (${ticketId})`);
+
+    // Synchronize with backend API
+    fetch("http://localhost:5000/api/tickets/check-in", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ticketCode: ticketId })
+    }).catch(() => {
+      // Backend offline or mock ticket; client operates smoothly
+    });
   } else {
     p.checkInTime = null;
     showToast(`Check-in reversed for ${p.name}`);

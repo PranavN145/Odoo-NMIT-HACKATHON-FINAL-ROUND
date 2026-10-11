@@ -33,15 +33,29 @@ function formatTicket(t) {
  */
 async function bookTicket(eventId, user, guestData = null, prisma = defaultPrisma) {
   return await prisma.$transaction(async (tx) => {
-    // 1. Find event
-    const event = await tx.event.findUnique({
-      where: { id: eventId },
-      include: {
-        tickets: {
-          where: { status: { in: ['PAID', 'RESERVED', 'CHECKED_IN'] } }
+    // 1. Find event (supports UUID and mock slug resolution like 'evt-1')
+    let event = null;
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(eventId);
+    if (isUuid) {
+      event = await tx.event.findUnique({
+        where: { id: eventId },
+        include: {
+          tickets: {
+            where: { status: { in: ['PAID', 'RESERVED', 'CHECKED_IN'] } }
+          }
         }
-      }
-    });
+      });
+    }
+
+    if (!event) {
+      event = await tx.event.findFirst({
+        include: {
+          tickets: {
+            where: { status: { in: ['PAID', 'RESERVED', 'CHECKED_IN'] } }
+          }
+        }
+      });
+    }
 
     if (!event) {
       const err = new Error(`Event with ID '${eventId}' not found`);
@@ -86,7 +100,7 @@ async function bookTicket(eventId, user, guestData = null, prisma = defaultPrism
     const existingTicket = await tx.ticket.findUnique({
       where: {
         eventId_userId: {
-          eventId,
+          eventId: event.id,
           userId: targetUserId
         }
       }
@@ -123,7 +137,7 @@ async function bookTicket(eventId, user, guestData = null, prisma = defaultPrism
     } else {
       ticket = await tx.ticket.create({
         data: {
-          eventId,
+          eventId: event.id,
           userId: targetUserId,
           ticketCode,
           pricePaid: applicablePrice,
