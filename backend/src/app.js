@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const healthRoutes = require('./routes/health.routes');
 const authRoutes = require('./routes/auth.routes');
+const usersRoutes = require('./routes/users.routes');
+const membershipsRoutes = require('./routes/memberships.routes');
 const eventsRoutes = require('./routes/events.routes');
 const productsRoutes = require('./routes/products.routes');
 const notFoundHandler = require('./middleware/notFoundHandler');
@@ -17,6 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/memberships', membershipsRoutes);
 app.use('/api/events', eventsRoutes);
 app.use('/api', productsRoutes);
 

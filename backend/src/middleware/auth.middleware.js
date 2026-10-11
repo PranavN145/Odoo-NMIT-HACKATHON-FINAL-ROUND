@@ -122,7 +122,51 @@ const authorize = (...allowedRoles) => {
   };
 };
 
+/**
+ * Optional Authentication Middleware
+ * If Authorization header with valid Bearer token is present, attaches req.user.
+ * Otherwise, lets the request proceed with req.user = null.
+ */
+const optionalAuthenticate = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || typeof authHeader !== 'string' || !authHeader.startsWith('Bearer ')) {
+    req.user = null;
+    return next();
+  }
+
+  const token = authHeader.slice(7).trim();
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+
+  try {
+    const secret = getJwtSecret();
+    const decoded = jwt.verify(token, secret);
+    if (!decoded || !decoded.id) {
+      req.user = null;
+      return next();
+    }
+
+    const prisma = req.app?.get('prisma') || defaultPrisma;
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id }
+    });
+
+    if (user) {
+      req.user = sanitizeUser(user, true);
+    } else {
+      req.user = null;
+    }
+    next();
+  } catch (_) {
+    req.user = null;
+    next();
+  }
+};
+
 module.exports = {
   authenticate,
+  optionalAuthenticate,
   authorize
 };
