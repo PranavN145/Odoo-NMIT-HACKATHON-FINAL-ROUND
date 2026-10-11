@@ -9,16 +9,12 @@ const eventsRoutes = require('./routes/events.routes');
 const ticketsRoutes = require('./routes/tickets.routes');
 const paymentsRoutes = require('./routes/payments.routes');
 const productsRoutes = require('./routes/products.routes');
-<<<<<<< HEAD
-const authRoutes = require('./routes/auth.routes');
-=======
 const ordersRoutes = require('./routes/orders.routes');
 const tasksRoutes = require('./routes/tasks.routes');
 const announcementsRoutes = require('./routes/announcements.routes');
 const financeRoutes = require('./routes/finance.routes');
 const reimbursementsRoutes = require('./routes/reimbursements.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
->>>>>>> khushi/backend
 const notFoundHandler = require('./middleware/notFoundHandler');
 const errorHandler = require('./middleware/errorHandler');
 
