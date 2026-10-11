@@ -51,15 +51,13 @@ router.post('/register', async (req, res, next) => {
     }
 
     // Send verification email with 6-digit code
-    const mailResult = await sendVerificationEmail({ name, email, password });
+    await sendVerificationEmail({ name, email, password });
 
     return res.status(200).json({
       success: true,
       verificationRequired: true,
-      message: `A 6-digit verification code has been dispatched to ${normalizedEmail}.`,
-      email: normalizedEmail,
-      demoCode: mailResult.code,
-      previewUrl: mailResult.previewUrl
+      message: `A 6-digit verification code has been dispatched to ${normalizedEmail}. Please check your email inbox to verify.`,
+      email: normalizedEmail
     });
   } catch (err) {
     next(err);
@@ -182,7 +180,7 @@ router.post('/resend-code', async (req, res, next) => {
       });
     }
 
-    const mailResult = await sendVerificationEmail({
+    await sendVerificationEmail({
       name: pending.name,
       email: pending.email,
       password: pending.password
@@ -190,9 +188,7 @@ router.post('/resend-code', async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      message: `A new verification code has been dispatched to ${normalizedEmail}.`,
-      demoCode: mailResult.code,
-      previewUrl: mailResult.previewUrl
+      message: `A new verification code has been dispatched to ${normalizedEmail}. Please check your email inbox.`
     });
   } catch (err) {
     next(err);
