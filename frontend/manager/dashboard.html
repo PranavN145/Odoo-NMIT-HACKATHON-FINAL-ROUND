@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manager Operations Platform | Skyline Student Association</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../home-page/styles.css" />
+</head>
+<body style="min-height: 100vh; display: flex; flex-direction: column; background-color: var(--color-canvas);">
+
+  <!-- Manager Platform Topbar -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="../home-page/assets/logo.png" alt="Skyline Logo" class="brand-logo-img" />
+        <span class="brand-title-text">Skyline Manager Platform</span>
+        <span style="background: var(--color-baltic); color: #FFFFFF; font-size: 0.6875rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;">Manager</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span style="font-size: 0.8125rem; color: var(--color-navy); font-weight: 600;">manager@demo.in</span>
+        <button type="button" onclick="handleLogout()" class="btn-white-action" style="padding: 6px 14px; font-size: 0.8125rem;">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Manager Main Workspace -->
+  <main class="public-main-container" style="padding-top: 32px;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <h1 style="font-size: 1.75rem; font-weight: 700; color: var(--color-navy); margin-bottom: 4px;">Campus Operations & Events Console</h1>
+        <p style="color: var(--color-text-muted); font-size: 0.875rem;">Coordinate club event attendees, process merchandise orders, and oversee entry passes.</p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <a href="../home-page/index.html" class="btn-white-action" style="padding: 8px 16px; font-size: 0.8125rem;">
+          View Public Site
+        </a>
+        <button type="button" onclick="showNewEventModal()" class="btn-baltic-primary" style="height: 38px; padding: 0 16px; font-size: 0.8125rem;">
+          + New Event
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px;">
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Active Events</span>
+        <h3 style="font-size: 1.625rem; font-weight: 700; color: var(--color-navy); margin-top: 4px;">3</h3>
+        <span style="font-size: 0.75rem; color: #03543F; font-weight: 600;">Spring Gala · Workshop · Concert</span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Confirmed Bookings</span>
+        <h3 style="font-size: 1.625rem; font-weight: 700; color: var(--color-baltic); margin-top: 4px;">342</h3>
+        <span style="font-size: 0.75rem; color: #03543F; font-weight: 600;">+24 today</span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Hoodie Stock</span>
+        <h3 style="font-size: 1.625rem; font-weight: 700; color: var(--color-navy); margin-top: 4px;">86 / 100</h3>
+        <span style="font-size: 0.75rem; color: var(--color-text-muted);">Navy Hoodie Duo Edition</span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Revenue Collected</span>
+        <h3 style="font-size: 1.625rem; font-weight: 700; color: #03543F; margin-top: 4px;">$6,840</h3>
+        <span style="font-size: 0.75rem; color: var(--color-text-muted);">Passes & Apparel</span>
+      </div>
+    </div>
+
+    <!-- Event Attendees Section -->
+    <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Event Registrations & Ticket Roster</h3>
+        <span style="font-size: 0.8125rem; color: var(--color-text-muted);">Real-time check-in ledger</span>
+      </div>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.84375rem; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">
+              <th style="padding: 10px 14px;">Attendee</th>
+              <th style="padding: 10px 14px;">Event</th>
+              <th style="padding: 10px 14px;">Tier</th>
+              <th style="padding: 10px 14px;">Ticket Ref</th>
+              <th style="padding: 10px 14px;">Payment</th>
+              <th style="padding: 10px 14px; text-align: right;">Check-in Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Alex Mercer</td>
+              <td style="padding: 12px 14px;">Annual Spring Gala</td>
+              <td style="padding: 12px 14px;"><span style="background: #DEF7EC; color: #03543F; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Member ($15.00)</span></td>
+              <td style="padding: 12px 14px; font-family: monospace;">#TKT-89241</td>
+              <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Verified Paid</td>
+              <td style="padding: 12px 14px; text-align: right;">
+                <button type="button" class="btn-baltic-primary" style="height: 28px; padding: 0 10px; font-size: 0.75rem;" onclick="markCheckedIn(this)">Check In</button>
+              </td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Samantha Reed</td>
+              <td style="padding: 12px 14px;">Open Source Git & GitHub Workshop</td>
+              <td style="padding: 12px 14px;"><span style="background: #F0F6F9; color: var(--color-navy); font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Guest ($5.00)</span></td>
+              <td style="padding: 12px 14px; font-family: monospace;">#TKT-74102</td>
+              <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Verified Paid</td>
+              <td style="padding: 12px 14px; text-align: right;">
+                <span style="color: #03543F; font-weight: 600; font-size: 0.75rem;">✓ Admitted</span>
+              </td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Jordan Lee</td>
+              <td style="padding: 12px 14px;">Indie Rock & Jazz Campus Concert</td>
+              <td style="padding: 12px 14px;"><span style="background: #F0F6F9; color: var(--color-navy); font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Guest ($20.00)</span></td>
+              <td style="padding: 12px 14px; font-family: monospace;">#TKT-63019</td>
+              <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Verified Paid</td>
+              <td style="padding: 12px 14px; text-align: right;">
+                <button type="button" class="btn-baltic-primary" style="height: 28px; padding: 0 10px; font-size: 0.75rem;" onclick="markCheckedIn(this)">Check In</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Merchandise Orders Section -->
+    <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin: 0;">Merchandise Orders & Fulfillment</h3>
+        <span style="font-size: 0.8125rem; color: var(--color-text-muted);">Skyline Official Navy Hoodie</span>
+      </div>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.84375rem; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">
+              <th style="padding: 10px 14px;">Order ID</th>
+              <th style="padding: 10px 14px;">Customer</th>
+              <th style="padding: 10px 14px;">Item & Size</th>
+              <th style="padding: 10px 14px;">Amount</th>
+              <th style="padding: 10px 14px;">Status</th>
+              <th style="padding: 10px 14px; text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+              <td style="padding: 12px 14px; font-family: monospace;">#ORD-9821</td>
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Priya Sharma</td>
+              <td style="padding: 12px 14px;">Navy Hoodie · Size M</td>
+              <td style="padding: 12px 14px; font-weight: 600;">$32.00</td>
+              <td style="padding: 12px 14px;"><span style="background: #FEF9E7; color: #9A7D0A; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Preparing for Dispatch</span></td>
+              <td style="padding: 12px 14px; text-align: right;">
+                <button type="button" class="btn-white-action" style="padding: 4px 10px; font-size: 0.75rem;" onclick="markFulfilled(this)">Mark Ready</button>
+              </td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+              <td style="padding: 12px 14px; font-family: monospace;">#ORD-9820</td>
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Liam Walker</td>
+              <td style="padding: 12px 14px;">Navy Hoodie · Size L</td>
+              <td style="padding: 12px 14px; font-weight: 600;">$32.00</td>
+              <td style="padding: 12px 14px;"><span style="background: #DEF7EC; color: #03543F; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Fulfilled & Collected</span></td>
+              <td style="padding: 12px 14px; text-align: right;">
+                <span style="font-size: 0.75rem; color: var(--color-text-muted);">Completed</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="workspace-footer" style="padding: 16px 28px; margin-top: auto;">
+    <span>Skyline Student Association · Manager Platform</span>
+    <span>© 2026 Skyline Student Association</span>
+  </footer>
+
+  <script>
+    function handleLogout() {
+      sessionStorage.removeItem('skyline_manager_auth');
+      window.location.href = './login.html';
+    }
+
+    function markCheckedIn(btn) {
+      btn.outerHTML = '<span style="color: #03543F; font-weight: 600; font-size: 0.75rem;">✓ Admitted</span>';
+    }
+
+    function markFulfilled(btn) {
+      const row = btn.closest('tr');
+      const statusCell = row.cells[4];
+      statusCell.innerHTML = '<span style="background: #DEF7EC; color: #03543F; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Ready for Pickup</span>';
+      btn.outerHTML = '<span style="font-size: 0.75rem; color: var(--color-text-muted);">Notified</span>';
+    }
+
+    function showNewEventModal() {
+      alert('Event creation dialog opened. Fill out event details to publish.');
+    }
+  </script>
+</body>
+</html>

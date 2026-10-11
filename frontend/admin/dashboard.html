@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Platform | Skyline Student Association</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../home-page/styles.css" />
+</head>
+<body style="min-height: 100vh; display: flex; flex-direction: column; background-color: var(--color-canvas);">
+
+  <!-- Admin Platform Topbar -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="../home-page/assets/logo.png" alt="Skyline Logo" class="brand-logo-img" />
+        <span class="brand-title-text">Skyline Administration Platform</span>
+        <span style="background: #13293D; color: #FFFFFF; font-size: 0.6875rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;">Admin</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span style="font-size: 0.8125rem; color: var(--color-navy); font-weight: 600;">admin@demo.in</span>
+        <button type="button" onclick="handleLogout()" class="btn-white-action" style="padding: 6px 14px; font-size: 0.8125rem;">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Admin Main Workspace -->
+  <main class="public-main-container" style="padding-top: 32px;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+      <div>
+        <h1 style="font-size: 1.75rem; font-weight: 700; color: var(--color-navy); margin-bottom: 4px;">System Administration Dashboard</h1>
+        <p style="color: var(--color-text-muted); font-size: 0.875rem;">Manage global access permissions, campus event approvals, and association memberships.</p>
+      </div>
+      <a href="../home-page/index.html" class="btn-baltic-primary" style="height: 38px; padding: 0 16px; font-size: 0.8125rem;">
+        View Public Events
+      </a>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px;">
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Total Users</span>
+        <h3 style="font-size: 1.625rem; font-weight: 700; color: var(--color-navy); margin-top: 4px;">1,420</h3>
+        <span style="font-size: 0.75rem; color: #03543F; font-weight: 600;">↑ 12% this month</span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Active Members</span>
+        <h3 style="font-size: 1.625rem; font-weight: 700; color: var(--color-baltic); margin-top: 4px;">384</h3>
+        <span style="font-size: 0.75rem; color: var(--color-text-muted);">Verified Passes</span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Published Events</span>
+        <h3 style="font-size: 1.625rem; font-weight: 700; color: var(--color-navy); margin-top: 4px;">3</h3>
+        <span style="font-size: 0.75rem; color: var(--color-text-muted);">2 Open · 1 Sold Out</span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">System Health</span>
+        <h3 style="font-size: 1.625rem; font-weight: 700; color: #03543F; margin-top: 4px;">99.98%</h3>
+        <span style="font-size: 0.75rem; color: #03543F; font-weight: 600;">API Gateway Online</span>
+      </div>
+    </div>
+
+    <!-- User & Role Management Table -->
+    <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
+      <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy); margin-bottom: 16px;">System Role Directory</h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.84375rem; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">
+              <th style="padding: 10px 14px;">User</th>
+              <th style="padding: 10px 14px;">Email</th>
+              <th style="padding: 10px 14px;">Assigned Role</th>
+              <th style="padding: 10px 14px;">Status</th>
+              <th style="padding: 10px 14px; text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">System Administrator</td>
+              <td style="padding: 12px 14px; color: var(--color-text-muted);">admin@demo.in</td>
+              <td style="padding: 12px 14px;"><span style="background: #13293D; color: #FFF; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">ADMIN</span></td>
+              <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Active</td>
+              <td style="padding: 12px 14px; text-align: right;"><span style="color: var(--color-text-muted);">Master</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Alex Mercer</td>
+              <td style="padding: 12px 14px; color: var(--color-text-muted);">manager@demo.in</td>
+              <td style="padding: 12px 14px;"><span style="background: #005B82; color: #FFF; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">MANAGER</span></td>
+              <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Active</td>
+              <td style="padding: 12px 14px; text-align: right;"><a href="../manager/login.html" style="color: var(--color-baltic); font-weight: 500;">View</a></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Pranav Narkhede</td>
+              <td style="padding: 12px 14px; color: var(--color-text-muted);">member@demo.in</td>
+              <td style="padding: 12px 14px;"><span style="background: #EAF5FB; color: #006494; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">MEMBER</span></td>
+              <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Active</td>
+              <td style="padding: 12px 14px; text-align: right;"><a href="../member/login.html" style="color: var(--color-baltic); font-weight: 500;">View</a></td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--color-navy);">Jordan Lee</td>
+              <td style="padding: 12px 14px; color: var(--color-text-muted);">user@demo.in</td>
+              <td style="padding: 12px 14px;"><span style="background: #F1F5F9; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">USER</span></td>
+              <td style="padding: 12px 14px; color: #03543F; font-weight: 600;">Active</td>
+              <td style="padding: 12px 14px; text-align: right;"><a href="../user/login.html" style="color: var(--color-baltic); font-weight: 500;">View</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="workspace-footer" style="padding: 16px 28px; margin-top: auto;">
+    <span>Skyline Student Association · Admin Platform</span>
+    <span>© 2026 Skyline Student Association</span>
+  </footer>
+
+  <script>
+    function handleLogout() {
+      sessionStorage.removeItem('skyline_admin_auth');
+      window.location.href = './login.html';
+    }
+  </script>
+</body>
+</html>

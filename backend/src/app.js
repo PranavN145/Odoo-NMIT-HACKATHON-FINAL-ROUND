@@ -3,6 +3,7 @@ const cors = require('cors');
 const healthRoutes = require('./routes/health.routes');
 const eventsRoutes = require('./routes/events.routes');
 const productsRoutes = require('./routes/products.routes');
+const authRoutes = require('./routes/auth.routes');
 const notFoundHandler = require('./middleware/notFoundHandler');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', healthRoutes);
 app.use('/api/events', eventsRoutes);
 app.use('/api', productsRoutes);
+app.use('/api/auth', authRoutes);
 
 // 404 Handler for undefined routes
 app.use(notFoundHandler);

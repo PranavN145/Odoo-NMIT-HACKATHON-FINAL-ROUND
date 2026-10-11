@@ -1958,4 +1958,150 @@ body {
   color: var(--color-navy, #13293D);
 }
 
+/* ==========================================================================
+   Clean Simple Sign In & Sign Up Pages
+   ========================================================================== */
+.auth-page-wrapper {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  background-color: var(--color-canvas);
+}
+
+.auth-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel, 12px);
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 4px 20px rgba(19, 41, 61, 0.06);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.auth-subtitle {
+  font-size: 0.84375rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
+.demo-credentials-badge {
+  background-color: #F0F6F9;
+  border: 1px solid #D2E4EC;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 0.8125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.demo-credentials-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.demo-credentials-label {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.demo-fill-btn {
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-baltic);
+  color: var(--color-baltic);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.demo-fill-btn:hover {
+  background-color: var(--color-baltic);
+  color: #FFFFFF;
+}
+
+.demo-code-text {
+  font-family: monospace;
+  font-size: 0.8125rem;
+  color: var(--color-navy);
+  font-weight: 600;
+}
+
+.forgot-pass-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-baltic);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+.forgot-pass-link:hover {
+  text-decoration: underline;
+  color: var(--color-navy);
+}
+
+.auth-tabs-toggle {
+  display: flex;
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 20px;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 0.84375rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.auth-tab-btn.active {
+  background-color: #FFFFFF;
+  color: var(--color-navy);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.auth-toggle-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+
 

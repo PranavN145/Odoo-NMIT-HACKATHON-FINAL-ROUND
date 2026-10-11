@@ -114,10 +114,46 @@ const memoryProducts = [
 const memoryTickets = [];
 const memoryOrders = [];
 
+const memoryUsers = [
+  {
+    id: "usr-admin",
+    name: "System Administrator",
+    email: "admin@demo.in",
+    password: "pass@123",
+    role: "ADMIN",
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: "usr-manager",
+    name: "Operations Manager",
+    email: "manager@demo.in",
+    password: "pass@123",
+    role: "MANAGER",
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: "usr-member",
+    name: "Alex Mercer",
+    email: "member@demo.in",
+    password: "pass@123",
+    role: "MEMBER",
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: "usr-user",
+    name: "Jordan Lee",
+    email: "user@demo.in",
+    password: "pass@123",
+    role: "USER",
+    createdAt: new Date().toISOString()
+  }
+];
+
 module.exports = {
   prisma,
   memoryEvents,
   memoryProducts,
   memoryTickets,
-  memoryOrders
+  memoryOrders,
+  memoryUsers
 };

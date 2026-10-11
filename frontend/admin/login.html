@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Sign In | Skyline Student Association</title>
+  <meta name="description" content="System Administrator Sign In for Skyline Student Association." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../home-page/styles.css" />
+</head>
+<body style="min-height: 100vh; display: flex; flex-direction: column; background-color: var(--color-canvas);">
+
+  <!-- Minimal Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../home-page/index.html" class="header-brand" aria-label="Skyline Student Association">
+        <img src="../home-page/assets/logo.png" alt="Skyline Logo" class="brand-logo-img" />
+        <span class="brand-title-text">Skyline Student Association</span>
+      </a>
+      <a href="../home-page/index.html" class="btn-white-action" style="width: auto; padding: 7px 16px; font-size: 0.8125rem;">
+        ← Back to Events
+      </a>
+    </div>
+  </header>
+
+  <!-- Clean Sign In Card Container -->
+  <main class="auth-page-wrapper">
+    <div class="auth-card">
+      
+      <div class="auth-header">
+        <h2 class="auth-title">Admin Sign In</h2>
+        <p class="auth-subtitle">Sign in to access system administration and platform controls.</p>
+      </div>
+
+      <!-- Demo Credentials Helper -->
+      <div class="demo-credentials-badge">
+        <div class="demo-credentials-row">
+          <span class="demo-credentials-label">Demo Credentials</span>
+          <button type="button" class="demo-fill-btn" onclick="fillAdminDemo()">Auto Fill</button>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--color-text-muted);">Mail ID:</span>
+          <span class="demo-code-text">admin@demo.in</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--color-text-muted);">Password:</span>
+          <span class="demo-code-text">pass@123</span>
+        </div>
+      </div>
+
+      <!-- Feedback Area -->
+      <div id="authAlertBox"></div>
+
+      <!-- Sign In Form -->
+      <form id="adminSignInForm" style="display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <label for="adminEmail" class="form-field-label">Email ID *</label>
+          <input type="email" id="adminEmail" class="modal-input-field" placeholder="admin@demo.in" required />
+        </div>
+
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label for="adminPassword" class="form-field-label" style="margin-bottom: 0;">Password *</label>
+            <button type="button" class="forgot-pass-link" onclick="openForgotModal()">Forgot Password?</button>
+          </div>
+          <input type="password" id="adminPassword" class="modal-input-field" placeholder="••••••••" required />
+        </div>
+
+        <button type="submit" id="adminSubmitBtn" class="btn-baltic-primary" style="width: 100%; height: 44px; justify-content: center; font-weight: 600; margin-top: 6px;">
+          Sign In
+        </button>
+      </form>
+
+    </div>
+  </main>
+
+  <!-- Forgot Password Dialog -->
+  <div class="modal-scrim" id="forgotPassModal" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+    <div class="modal-surface" style="max-width: 400px; padding: 24px;">
+      <button type="button" class="modal-close-icon" onclick="closeForgotModal()">×</button>
+      <h3 id="forgotTitle" style="color: var(--color-navy); font-size: 1.25rem; font-weight: 700; margin-bottom: 6px;">Reset Password</h3>
+      <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 16px;">
+        Enter your administrator email ID to receive a secure password reset link.
+      </p>
+      <div id="forgotFeedback"></div>
+      <form id="forgotForm" onsubmit="handleForgotSubmit(event)" style="display: flex; flex-direction: column; gap: 12px;">
+        <input type="email" id="forgotEmailInput" required placeholder="admin@demo.in" class="modal-input-field" />
+        <button type="submit" class="btn-baltic-primary" style="width: 100%; justify-content: center; height: 40px; font-weight: 600;">
+          Send Reset Link
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="workspace-footer" style="padding: 16px 28px; margin-top: 0;">
+    <span>Skyline Student Association · Admin Platform</span>
+    <span>© 2026 Skyline Student Association</span>
+  </footer>
+
+  <script>
+    function fillAdminDemo() {
+      document.getElementById('adminEmail').value = 'admin@demo.in';
+      document.getElementById('adminPassword').value = 'pass@123';
+      const alertBox = document.getElementById('authAlertBox');
+      if (alertBox) alertBox.innerHTML = '';
+    }
+
+    document.getElementById('adminSignInForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('adminEmail').value.trim();
+      const pass = document.getElementById('adminPassword').value.trim();
+      const submitBtn = document.getElementById('adminSubmitBtn');
+      const alertBox = document.getElementById('authAlertBox');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verifying credentials...';
+
+      setTimeout(() => {
+        if (email.toLowerCase() === 'admin@demo.in' && pass === 'pass@123') {
+          sessionStorage.setItem('skyline_admin_auth', JSON.stringify({
+            role: 'ADMIN',
+            email: 'admin@demo.in',
+            name: 'System Administrator'
+          }));
+          window.location.href = './dashboard.html';
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
+          alertBox.innerHTML = `
+            <div style="background: var(--color-error-bg); border: 1px solid var(--color-error); color: var(--color-error); padding: 10px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 14px;">
+              Invalid credentials. For demo, use <strong>admin@demo.in</strong> / <strong>pass@123</strong>.
+            </div>
+          `;
+        }
+      }, 400);
+    });
+
+    function openForgotModal() {
+      document.getElementById('forgotPassModal').classList.add('open');
+      const email = document.getElementById('adminEmail').value.trim();
+      if (email) document.getElementById('forgotEmailInput').value = email;
+    }
+
+    function closeForgotModal() {
+      document.getElementById('forgotPassModal').classList.remove('open');
+    }
+
+    function handleForgotSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('forgotEmailInput').value.trim();
+      const fb = document.getElementById('forgotFeedback');
+      fb.innerHTML = `
+        <div style="background: #DEF7EC; border: 1px solid #84E1BC; color: #03543F; padding: 10px 12px; border-radius: 6px; font-size: 0.8125rem; margin-bottom: 14px;">
+          Password reset instructions dispatched to <strong>${email}</strong>.
+        </div>
+      `;
+      setTimeout(() => {
+        closeForgotModal();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
