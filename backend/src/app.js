@@ -34,16 +34,12 @@ app.use('/api/events', eventsRoutes);
 app.use('/api/tickets', ticketsRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api', productsRoutes);
-<<<<<<< HEAD
-app.use('/api/auth', authRoutes);
-=======
 app.use('/api/orders', ordersRoutes);
 app.use('/api/tasks', tasksRoutes);
 app.use('/api/announcements', announcementsRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/reimbursements', reimbursementsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
->>>>>>> khushi/backend
 
 // 404 Handler for undefined routes
 app.use(notFoundHandler);
