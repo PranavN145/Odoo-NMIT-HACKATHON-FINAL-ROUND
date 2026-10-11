@@ -192,6 +192,75 @@ const state = {
     }
   ],
 
+  users: [
+    {
+      id: "usr-1",
+      memberId: "SSA-2026-8924",
+      name: "Alex Mercer",
+      email: "alex.mercer@skyline.edu",
+      phone: "+1 (555) 234-8924",
+      role: "MANAGER",
+      tier: "Student Regular",
+      status: "ACTIVE",
+      joinedDate: "Sep 01, 2026"
+    },
+    {
+      id: "usr-2",
+      memberId: "SSA-2026-1042",
+      name: "Jane Doe",
+      email: "jane.doe@skyline.edu",
+      phone: "+1 (555) 872-1042",
+      role: "MEMBER",
+      tier: "Student Regular",
+      status: "ACTIVE",
+      joinedDate: "Sep 04, 2026"
+    },
+    {
+      id: "usr-3",
+      memberId: "SSA-2026-3391",
+      name: "Liam Chen",
+      email: "liam.chen@skyline.edu",
+      phone: "+1 (555) 491-3391",
+      role: "MEMBER",
+      tier: "VIP Scholar",
+      status: "ACTIVE",
+      joinedDate: "Sep 12, 2026"
+    },
+    {
+      id: "usr-4",
+      memberId: "SSA-2026-5510",
+      name: "Sophia Martinez",
+      email: "sophia.m@skyline.edu",
+      phone: "+1 (555) 602-5510",
+      role: "VOLUNTEER",
+      tier: "Student Regular",
+      status: "ACTIVE",
+      joinedDate: "Sep 18, 2026"
+    },
+    {
+      id: "usr-5",
+      memberId: "SSA-2026-7822",
+      name: "Marcus Vance",
+      email: "marcus.v@skyline.edu",
+      phone: "+1 (555) 718-7822",
+      role: "MANAGER",
+      tier: "Faculty Associate",
+      status: "ACTIVE",
+      joinedDate: "Aug 20, 2026"
+    },
+    {
+      id: "usr-6",
+      memberId: "SSA-2026-9034",
+      name: "Elena Rostova",
+      email: "elena.r@skyline.edu",
+      phone: "+1 (555) 934-9034",
+      role: "MEMBER",
+      tier: "Student Regular",
+      status: "PENDING",
+      joinedDate: "Oct 05, 2026"
+    }
+  ],
+
   cart: [],
   selectedMerchVariants: {}, // productId -> variantId
   bookingEventTarget: null
@@ -259,6 +328,10 @@ function initApp() {
   setupHistorySubnav();
   setupAnnouncementsSearch();
   setupEventFilters();
+  setupCreateEventModal();
+  setupCreateMerchModal();
+  setupEditPriceModal();
+  setupUserManagement();
 
   renderDashboard();
   renderEvents();
@@ -266,6 +339,7 @@ function initApp() {
   renderAnnouncements();
   renderMyTickets();
   renderMyOrders();
+  renderUsers();
   updateCartUI();
 
   // Try fetching live data from backend if running
@@ -434,6 +508,15 @@ function renderEvents(filter = 'all') {
                  </button>`
           }
         </div>
+
+        <!-- Manager Controls Bar -->
+        <div class="card-manager-bar">
+          <span class="manager-label-tag">Council Manager</span>
+          <button class="card-action-btn-xs danger" onclick="deleteEvent('${ev.id}')" title="Delete event">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:2px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Delete Event
+          </button>
+        </div>
       </div>
     `;
   }).join('');
@@ -508,6 +591,19 @@ function renderMerchandise() {
                   </button>
                 `;
               }).join('')}
+            </div>
+          </div>
+
+          <!-- Manager Controls: Set Price & Delete Product -->
+          <div class="card-manager-bar" style="margin-bottom:12px;">
+            <span class="manager-label-tag">Price: $${item.basePrice.toFixed(2)}</span>
+            <div style="display:flex; gap:6px;">
+              <button class="card-action-btn-xs" onclick="openEditPriceModal('${item.id}')" title="Set Product Price">
+                Set Price
+              </button>
+              <button class="card-action-btn-xs danger" onclick="deleteProduct('${item.id}')" title="Delete Product">
+                Delete
+              </button>
             </div>
           </div>
 
@@ -983,6 +1079,469 @@ function showToast(message, type = "info") {
     toast.style.transition = 'all 180ms ease';
     setTimeout(() => toast.remove(), 200);
   }, 3500);
+}
+
+// =============================================================================
+// Manager Event Operations (Create & Delete)
+// =============================================================================
+const createEventModal = document.getElementById('createEventModal');
+const closeCreateEventModalBtn = document.getElementById('closeCreateEventModalBtn');
+const cancelCreateEventBtn = document.getElementById('cancelCreateEventBtn');
+const createEventForm = document.getElementById('createEventForm');
+const openCreateEventModalBtn = document.getElementById('openCreateEventModalBtn');
+const qaCreateEventModalBtn = document.getElementById('qaCreateEventModalBtn');
+
+function setupCreateEventModal() {
+  if (openCreateEventModalBtn) {
+    openCreateEventModalBtn.addEventListener('click', openCreateEventModal);
+  }
+  if (qaCreateEventModalBtn) {
+    qaCreateEventModalBtn.addEventListener('click', openCreateEventModal);
+  }
+  if (closeCreateEventModalBtn) {
+    closeCreateEventModalBtn.addEventListener('click', closeCreateEventModal);
+  }
+  if (cancelCreateEventBtn) {
+    cancelCreateEventBtn.addEventListener('click', closeCreateEventModal);
+  }
+  if (createEventModal) {
+    createEventModal.addEventListener('click', (e) => {
+      if (e.target === createEventModal) closeCreateEventModal();
+    });
+  }
+  if (createEventForm) {
+    createEventForm.addEventListener('submit', handleCreateEvent);
+  }
+}
+
+function openCreateEventModal() {
+  if (!createEventModal) return;
+  createEventModal.classList.add('open');
+  createEventModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeCreateEventModal() {
+  if (!createEventModal) return;
+  createEventModal.classList.remove('open');
+  createEventModal.setAttribute('aria-hidden', 'true');
+  if (createEventForm) createEventForm.reset();
+}
+
+function handleCreateEvent(e) {
+  e.preventDefault();
+  const title = document.getElementById('newEventTitle').value.trim();
+  const category = document.getElementById('newEventCategory').value;
+  const dateFormatted = document.getElementById('newEventDate').value.trim();
+  const venue = document.getElementById('newEventVenue').value.trim();
+  const capacity = parseInt(document.getElementById('newEventCapacity').value, 10) || 100;
+  const standardPrice = parseFloat(document.getElementById('newEventStdPrice').value) || 0;
+  const memberPrice = parseFloat(document.getElementById('newEventMemPrice').value) || 0;
+  const description = document.getElementById('newEventDesc').value.trim();
+
+  const categoryLabels = {
+    academic: "Academic & Tech",
+    cultural: "Cultural & Arts",
+    networking: "Networking",
+    workshop: "Workshop",
+    social: "Social & Gala"
+  };
+
+  const newEvent = {
+    id: `ev-${Date.now()}`,
+    title,
+    category,
+    categoryLabel: categoryLabels[category] || "Special Event",
+    dateFormatted,
+    venue,
+    capacity,
+    ticketsSold: 0,
+    standardPrice,
+    memberPrice,
+    description
+  };
+
+  state.events.unshift(newEvent);
+  closeCreateEventModal();
+  renderEvents();
+  renderDashboard();
+  showToast(`Event "${title}" published successfully!`, "success");
+}
+
+function deleteEvent(eventId) {
+  const ev = state.events.find(e => e.id === eventId);
+  if (!ev) return;
+  if (confirm(`Are you sure you want to delete "${ev.title}"? This cannot be undone.`)) {
+    state.events = state.events.filter(e => e.id !== eventId);
+    renderEvents();
+    renderDashboard();
+    showToast(`Event "${ev.title}" deleted.`, "warning");
+  }
+}
+
+// =============================================================================
+// Manager Merchandise Operations (Create, Set Price & Delete)
+// =============================================================================
+const createMerchModal = document.getElementById('createMerchModal');
+const closeCreateMerchModalBtn = document.getElementById('closeCreateMerchModalBtn');
+const cancelCreateMerchBtn = document.getElementById('cancelCreateMerchBtn');
+const createMerchForm = document.getElementById('createMerchForm');
+const openCreateMerchModalBtn = document.getElementById('openCreateMerchModalBtn');
+const qaCreateMerchModalBtn = document.getElementById('qaCreateMerchModalBtn');
+
+const editPriceModal = document.getElementById('editPriceModal');
+const closeEditPriceModalBtn = document.getElementById('closeEditPriceModalBtn');
+const cancelEditPriceBtn = document.getElementById('cancelEditPriceBtn');
+const editPriceForm = document.getElementById('editPriceForm');
+
+function setupCreateMerchModal() {
+  if (openCreateMerchModalBtn) {
+    openCreateMerchModalBtn.addEventListener('click', openCreateMerchModal);
+  }
+  if (qaCreateMerchModalBtn) {
+    qaCreateMerchModalBtn.addEventListener('click', openCreateMerchModal);
+  }
+  if (closeCreateMerchModalBtn) {
+    closeCreateMerchModalBtn.addEventListener('click', closeCreateMerchModal);
+  }
+  if (cancelCreateMerchBtn) {
+    cancelCreateMerchBtn.addEventListener('click', closeCreateMerchModal);
+  }
+  if (createMerchModal) {
+    createMerchModal.addEventListener('click', (e) => {
+      if (e.target === createMerchModal) closeCreateMerchModal();
+    });
+  }
+  if (createMerchForm) {
+    createMerchForm.addEventListener('submit', handleCreateMerch);
+  }
+}
+
+function openCreateMerchModal() {
+  if (!createMerchModal) return;
+  createMerchModal.classList.add('open');
+  createMerchModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeCreateMerchModal() {
+  if (!createMerchModal) return;
+  createMerchModal.classList.remove('open');
+  createMerchModal.setAttribute('aria-hidden', 'true');
+  if (createMerchForm) createMerchForm.reset();
+}
+
+function handleCreateMerch(e) {
+  e.preventDefault();
+  const name = document.getElementById('newMerchName').value.trim();
+  const basePrice = parseFloat(document.getElementById('newMerchPrice').value) || 0;
+  const badge = document.getElementById('newMerchBadge').value.trim() || 'NEW DROP';
+  const image = document.getElementById('newMerchImage').value.trim() || '../assets/navy-hoodie-mockup-duo.png';
+
+  const stockS = parseInt(document.getElementById('stockS').value, 10) || 0;
+  const stockM = parseInt(document.getElementById('stockM').value, 10) || 0;
+  const stockL = parseInt(document.getElementById('stockL').value, 10) || 0;
+  const stockXL = parseInt(document.getElementById('stockXL').value, 10) || 0;
+  const stockXXL = parseInt(document.getElementById('stockXXL').value, 10) || 0;
+
+  const prodId = `prod-${Date.now()}`;
+  const newProduct = {
+    id: prodId,
+    name,
+    basePrice,
+    badge,
+    image,
+    variants: [
+      { id: `${prodId}-s`, size: "S", stockQuantity: stockS },
+      { id: `${prodId}-m`, size: "M", stockQuantity: stockM },
+      { id: `${prodId}-l`, size: "L", stockQuantity: stockL },
+      { id: `${prodId}-xl`, size: "XL", stockQuantity: stockXL },
+      { id: `${prodId}-xxl`, size: "XXL", stockQuantity: stockXXL }
+    ]
+  };
+
+  state.merch.unshift(newProduct);
+  closeCreateMerchModal();
+  renderMerchandise();
+  showToast(`Product "${name}" added with price $${basePrice.toFixed(2)}!`, "success");
+}
+
+function setupEditPriceModal() {
+  if (closeEditPriceModalBtn) {
+    closeEditPriceModalBtn.addEventListener('click', closeEditPriceModal);
+  }
+  if (cancelEditPriceBtn) {
+    cancelEditPriceBtn.addEventListener('click', closeEditPriceModal);
+  }
+  if (editPriceModal) {
+    editPriceModal.addEventListener('click', (e) => {
+      if (e.target === editPriceModal) closeEditPriceModal();
+    });
+  }
+  if (editPriceForm) {
+    editPriceForm.addEventListener('submit', handleEditPrice);
+  }
+}
+
+function openEditPriceModal(productId) {
+  const product = state.merch.find(p => p.id === productId);
+  if (!product || !editPriceModal) return;
+
+  document.getElementById('editPriceProductId').value = product.id;
+  document.getElementById('editPriceProductName').textContent = product.name;
+  document.getElementById('editProductPriceInput').value = product.basePrice.toFixed(2);
+
+  editPriceModal.classList.add('open');
+  editPriceModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeEditPriceModal() {
+  if (!editPriceModal) return;
+  editPriceModal.classList.remove('open');
+  editPriceModal.setAttribute('aria-hidden', 'true');
+}
+
+function handleEditPrice(e) {
+  e.preventDefault();
+  const prodId = document.getElementById('editPriceProductId').value;
+  const newPrice = parseFloat(document.getElementById('editProductPriceInput').value);
+  if (isNaN(newPrice) || newPrice < 0) return;
+
+  const product = state.merch.find(p => p.id === prodId);
+  if (product) {
+    product.basePrice = newPrice;
+
+    // Update cart unitPrice if currently present
+    state.cart.forEach(cartItem => {
+      if (cartItem.productId === prodId) {
+        cartItem.unitPrice = newPrice;
+      }
+    });
+
+    closeEditPriceModal();
+    renderMerchandise();
+    updateCartUI();
+    showToast(`Updated price for "${product.name}" to $${newPrice.toFixed(2)}.`, "success");
+  }
+}
+
+function deleteProduct(productId) {
+  const prod = state.merch.find(p => p.id === productId);
+  if (!prod) return;
+  if (confirm(`Are you sure you want to delete "${prod.name}" from the merchandise store?`)) {
+    state.merch = state.merch.filter(p => p.id !== productId);
+    state.cart = state.cart.filter(item => item.productId !== productId);
+    renderMerchandise();
+    updateCartUI();
+    showToast(`Product "${prod.name}" removed from store.`, "warning");
+  }
+}
+
+// =============================================================================
+// User Management System (Create, Filter, Status Toggle & Delete)
+// =============================================================================
+const createUserModal = document.getElementById('createUserModal');
+const closeCreateUserModalBtn = document.getElementById('closeCreateUserModalBtn');
+const cancelCreateUserBtn = document.getElementById('cancelCreateUserBtn');
+const createUserForm = document.getElementById('createUserForm');
+const openCreateUserModalBtn = document.getElementById('openCreateUserModalBtn');
+const qaCreateUserModalBtn = document.getElementById('qaCreateUserModalBtn');
+const userMgmtSearchInput = document.getElementById('userMgmtSearchInput');
+let currentUserFilterRole = 'all';
+
+function setupUserManagement() {
+  if (openCreateUserModalBtn) {
+    openCreateUserModalBtn.addEventListener('click', openCreateUserModal);
+  }
+  if (qaCreateUserModalBtn) {
+    qaCreateUserModalBtn.addEventListener('click', openCreateUserModal);
+  }
+  if (closeCreateUserModalBtn) {
+    closeCreateUserModalBtn.addEventListener('click', closeCreateUserModal);
+  }
+  if (cancelCreateUserBtn) {
+    cancelCreateUserBtn.addEventListener('click', closeCreateUserModal);
+  }
+  if (createUserModal) {
+    createUserModal.addEventListener('click', (e) => {
+      if (e.target === createUserModal) closeCreateUserModal();
+    });
+  }
+  if (createUserForm) {
+    createUserForm.addEventListener('submit', handleCreateUser);
+  }
+
+  // Filter buttons
+  document.querySelectorAll('.user-role-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.user-role-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentUserFilterRole = btn.getAttribute('data-user-filter');
+      renderUsers(currentUserFilterRole, userMgmtSearchInput ? userMgmtSearchInput.value : '');
+    });
+  });
+
+  // Search input
+  if (userMgmtSearchInput) {
+    userMgmtSearchInput.addEventListener('input', (e) => {
+      renderUsers(currentUserFilterRole, e.target.value);
+    });
+  }
+}
+
+function openCreateUserModal() {
+  if (!createUserModal) return;
+  createUserModal.classList.add('open');
+  createUserModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeCreateUserModal() {
+  if (!createUserModal) return;
+  createUserModal.classList.remove('open');
+  createUserModal.setAttribute('aria-hidden', 'true');
+  if (createUserForm) createUserForm.reset();
+}
+
+function handleCreateUser(e) {
+  e.preventDefault();
+  const name = document.getElementById('newUserName').value.trim();
+  const email = document.getElementById('newUserEmail').value.trim();
+  const phone = document.getElementById('newUserPhone').value.trim();
+  const role = document.getElementById('newUserRole').value;
+  const tier = document.getElementById('newUserTier').value;
+  const status = document.getElementById('newUserStatus').value;
+
+  const randomId = Math.floor(1000 + Math.random() * 9000);
+  const memberId = `SSA-2026-${randomId}`;
+  const now = new Date();
+  const joinedDate = now.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+
+  const newUser = {
+    id: `usr-${Date.now()}`,
+    memberId,
+    name,
+    email,
+    phone,
+    role,
+    tier,
+    status,
+    joinedDate
+  };
+
+  state.users.unshift(newUser);
+  closeCreateUserModal();
+  renderUsers(currentUserFilterRole, userMgmtSearchInput ? userMgmtSearchInput.value : '');
+  showToast(`Account for ${name} (${memberId}) created successfully!`, "success");
+}
+
+function deleteUser(userId) {
+  const user = state.users.find(u => u.id === userId);
+  if (!user) return;
+
+  if (confirm(`Are you sure you want to permanently delete the account for ${user.name} (${user.memberId})? This action cannot be undone.`)) {
+    state.users = state.users.filter(u => u.id !== userId);
+    renderUsers(currentUserFilterRole, userMgmtSearchInput ? userMgmtSearchInput.value : '');
+    showToast(`Account for ${user.name} deleted.`, "warning");
+  }
+}
+
+function toggleUserStatus(userId) {
+  const user = state.users.find(u => u.id === userId);
+  if (!user) return;
+
+  user.status = user.status === 'ACTIVE' ? 'PENDING' : 'ACTIVE';
+  renderUsers(currentUserFilterRole, userMgmtSearchInput ? userMgmtSearchInput.value : '');
+  showToast(`Account status for ${user.name} set to ${user.status}.`, "info");
+}
+
+function renderUsers(filterRole = 'all', searchQuery = '') {
+  const tbody = document.getElementById('usersTableBody');
+  if (!tbody) return;
+
+  // Update summary metrics
+  const totalCount = state.users.length;
+  const activeCount = state.users.filter(u => u.status === 'ACTIVE').length;
+  const managersCount = state.users.filter(u => u.role === 'MANAGER' || u.role === 'ADMIN').length;
+  const pendingCount = state.users.filter(u => u.status === 'PENDING').length;
+
+  const totalEl = document.getElementById('mgmtTotalUsers');
+  const activeEl = document.getElementById('mgmtActiveUsers');
+  const managersEl = document.getElementById('mgmtManagersCount');
+  const pendingEl = document.getElementById('mgmtPendingUsers');
+  const badgeEl = document.getElementById('navUsersCountBadge');
+
+  if (totalEl) totalEl.textContent = `${totalCount} Accounts`;
+  if (activeEl) activeEl.textContent = `${activeCount} Active`;
+  if (managersEl) managersEl.textContent = `${managersCount} Managers`;
+  if (pendingEl) pendingEl.textContent = `${pendingCount} Pending`;
+  if (badgeEl) badgeEl.textContent = totalCount;
+
+  // Filter list
+  let list = state.users;
+  if (filterRole !== 'all') {
+    list = list.filter(u => u.role.toUpperCase() === filterRole.toUpperCase());
+  }
+
+  if (searchQuery.trim() !== '') {
+    const q = searchQuery.toLowerCase();
+    list = list.filter(u => 
+      u.name.toLowerCase().includes(q) || 
+      u.email.toLowerCase().includes(q) || 
+      u.memberId.toLowerCase().includes(q)
+    );
+  }
+
+  if (list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="text-muted p-4" style="text-align:center;">No accounts match the current filter or search criteria.</td></tr>`;
+    return;
+  }
+
+  const getInitials = (nameStr) => {
+    return nameStr.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+  };
+
+  tbody.innerHTML = list.map(u => `
+    <tr>
+      <td>
+        <div class="user-cell">
+          <div class="user-avatar-badge ${u.role.toLowerCase()}">
+            ${getInitials(u.name)}
+          </div>
+          <div class="user-cell-meta">
+            <span class="user-cell-name">${u.name}</span>
+            <span class="user-cell-id">${u.memberId}</span>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="contact-meta-col">
+          <span class="contact-email">${u.email}</span>
+          <span class="contact-phone">${u.phone}</span>
+        </div>
+      </td>
+      <td>
+        <span class="role-pill ${u.role.toLowerCase()}">${u.role}</span>
+      </td>
+      <td>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <span class="status-pill ${u.status.toLowerCase()}">${u.status}</span>
+          <span style="font-size:0.75rem; color:var(--color-text-muted);">${u.tier}</span>
+        </div>
+      </td>
+      <td>
+        <span style="font-size:0.82rem; color:var(--color-text-muted);">${u.joinedDate}</span>
+      </td>
+      <td style="text-align:right;">
+        <div style="display:inline-flex; gap:6px;">
+          <button class="action-btn-secondary" onclick="toggleUserStatus('${u.id}')" title="Toggle active/pending status">
+            ${u.status === 'ACTIVE' ? 'Set Pending' : 'Activate'}
+          </button>
+          <button class="action-btn-danger" onclick="deleteUser('${u.id}')" title="Permanently delete user account">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Delete
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
 }
 
 /**
