@@ -9,6 +9,7 @@ import { initHeaderComponent } from "./js/components/header.js";
 import { renderEventsGrid } from "./js/components/eventCard.js";
 import { renderMerchGrid } from "./js/components/merchCard.js";
 import { initRegistrationModal, openRegistrationModal } from "./js/components/registrationModal.js";
+import { initMerchandiseModal, openMerchandiseModal } from "./js/components/merchandiseModal.js";
 import { initCartDrawer, addToCart, removeFromCart, handleCheckout } from "./js/components/cartDrawer.js";
 
 // State Management
@@ -22,6 +23,7 @@ let isEventsLoading = true;
 document.addEventListener("DOMContentLoaded", async () => {
   initHeaderComponent();
   initRegistrationModal();
+  initMerchandiseModal();
   initCartDrawer();
   initSearch();
   initEventFilters();
@@ -63,6 +65,23 @@ function renderMerchandise() {
 }
 
 function initEventFilters() {
+  const programSelect = document.getElementById("programFilterSelect");
+  const modeSelect = document.getElementById("modeFilterSelect");
+
+  if (programSelect) {
+    programSelect.addEventListener("change", (e) => {
+      currentEventCategory = e.target.value;
+      renderEvents();
+    });
+  }
+
+  if (modeSelect) {
+    modeSelect.addEventListener("change", (e) => {
+      const modeVal = e.target.value;
+      renderEvents();
+    });
+  }
+
   const filterBtns = document.querySelectorAll("#eventFilterBar .pill-filter-btn");
   filterBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -110,11 +129,14 @@ function initGlobalEventDelegation() {
       return;
     }
 
-    // Merch card "Add to Bag" click
+    // Merch card click: open details and purchase modal
     const merchBtn = e.target.closest("[data-merch-id]");
     if (merchBtn) {
       const merchId = merchBtn.getAttribute("data-merch-id");
-      addToCart(merchId, merchList);
+      const targetMerch = merchList.find((m) => m.id === merchId);
+      if (targetMerch) {
+        openMerchandiseModal(targetMerch);
+      }
       return;
     }
 
@@ -124,6 +146,30 @@ function initGlobalEventDelegation() {
       const removeId = removeBtn.getAttribute("data-remove-id");
       removeFromCart(removeId);
       return;
+    }
+  });
+
+  // Keyboard accessibility for cards
+  document.addEventListener("keydown", (e) => {
+    if ((e.key === "Enter" || e.key === " ") && e.target && e.target.classList.contains("clickable-card")) {
+      const eventId = e.target.getAttribute("data-event-id");
+      if (eventId) {
+        e.preventDefault();
+        const targetEvent = eventsList.find((ev) => ev.id === eventId);
+        if (targetEvent) {
+          openRegistrationModal(targetEvent);
+        }
+        return;
+      }
+      const merchId = e.target.getAttribute("data-merch-id");
+      if (merchId) {
+        e.preventDefault();
+        const targetMerch = merchList.find((m) => m.id === merchId);
+        if (targetMerch) {
+          openMerchandiseModal(targetMerch);
+        }
+        return;
+      }
     }
   });
 

@@ -1,85 +1,61 @@
 /**
  * Sample Events Dataset & Data Loader Module
- * Skyline Student Association Platform
+ * College Club Events with Discounted Member Prices & Statuses
  */
 
 export const INITIAL_EVENTS_DATA = [
   {
     id: "evt-1",
-    title: "TechFest 2026: AI & Robotics Expo",
-    category: "tech",
-    categoryLabel: "Technology",
-    date: "Nov 14 - 15, 2026",
-    time: "09:00 AM - 06:00 PM",
-    venue: "Main Auditorium & Labs",
-    desc: "Flagship symposium featuring autonomous robotics battleground, student AI demos, and keynote tech panels.",
-    priceMember: "Free",
-    priceGuest: "₹199",
+    title: "GitHub & Open Source Workshop",
+    category: "workshop",
+    categoryLabel: "Tech Workshop",
+    mode: "In Person",
+    dateMonth: "OCT",
+    dateDay: "10",
+    date: "Oct 10, 2026",
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computer Lab 304, Skyline Campus",
+    desc: "Comprehensive hands-on workshop covering Git version control, GitHub team workflows, pull request reviews, and open-source project contribution fundamentals led by senior developers.",
+    priceMember: "₹199",
+    priceGuest: "₹499",
+    statusText: "Open",
+    statusType: "open",
     imageUrl: null
   },
   {
     id: "evt-2",
-    title: "Skyline Hackathon 4.0: 36h Sprint",
-    category: "hackathon",
-    categoryLabel: "Hackathons",
-    date: "Nov 22 - 23, 2026",
-    time: "36-Hour Hackathon",
-    venue: "Innovation Hub & Cloud Lab",
-    desc: "Build next-gen solutions in FinTech, AI, and Sustainability. ₹1.5L prize pool with VC mentoring.",
-    priceMember: "Free",
-    priceGuest: "Free",
+    title: "Annual Spring Gala 2026",
+    category: "cultural",
+    categoryLabel: "College Gala",
+    mode: "In Person",
+    dateMonth: "OCT",
+    dateDay: "12",
+    date: "Oct 12, 2026",
+    time: "06:00 PM - 10:00 PM",
+    venue: "Main Quadrangle, Skyline Campus",
+    desc: "The premier formal evening event of the academic year celebrating student achievements, club honors, live acoustic performances, fine dining, and annual leadership awards.",
+    priceMember: "₹499",
+    priceGuest: "₹999",
+    statusText: "Closing Soon",
+    statusType: "closing-soon",
     imageUrl: null
   },
   {
     id: "evt-3",
-    title: "Symphony: Annual Cultural Night",
+    title: "Skyline Campus Live Concert",
     category: "cultural",
-    categoryLabel: "Cultural",
-    date: "Dec 05, 2026",
-    time: "06:00 PM - 10:30 PM",
-    venue: "Open Air Amphitheatre",
-    desc: "Campus celebration showcasing battle of the bands, classical fusion choreography, and comedy sketches.",
-    priceMember: "Free",
-    priceGuest: "₹99",
-    imageUrl: null
-  },
-  {
-    id: "evt-4",
-    title: "Full-Stack Cloud & DevOps Workshop",
-    category: "workshop",
-    categoryLabel: "Workshops",
-    date: "Dec 12, 2026",
-    time: "10:00 AM - 04:00 PM",
-    venue: "Computer Center, Lab 304",
-    desc: "Hands-on Docker, Kubernetes, and CI/CD pipelines deployment bootcamp led by top cloud architects.",
-    priceMember: "Free",
-    priceGuest: "₹149",
-    imageUrl: null
-  },
-  {
-    id: "evt-5",
-    title: "Inter-Collegiate Sports Carnival",
-    category: "sports",
-    categoryLabel: "Sports",
-    date: "Dec 18 - 20, 2026",
-    time: "All Day",
-    venue: "Campus Athletics Complex",
-    desc: "Annual tournament across football, basketball, badminton, and track athletics. 16 participating teams.",
-    priceMember: "Free",
-    priceGuest: "Free",
-    imageUrl: null
-  },
-  {
-    id: "evt-6",
-    title: "Startup Pitch & Founder Summit",
-    category: "tech",
-    categoryLabel: "Technology",
-    date: "Jan 08, 2027",
-    time: "01:00 PM - 05:30 PM",
-    venue: "Executive Seminar Hall 1",
-    desc: "Present business ideas to active angel investors and network with successful alumni entrepreneurs.",
-    priceMember: "Free",
-    priceGuest: "₹249",
+    categoryLabel: "Live Concert",
+    mode: "In Person",
+    dateMonth: "OCT",
+    dateDay: "15",
+    date: "Oct 15, 2026",
+    time: "06:30 PM - 11:00 PM",
+    venue: "Open Air Amphitheatre, Bangalore",
+    desc: "Annual campus music festival featuring student band showdowns, light shows, and a celebrity guest artist live headline performance.",
+    priceMember: "₹299",
+    priceGuest: "₹599",
+    statusText: "Sold Out",
+    statusType: "sold-out",
     imageUrl: null
   }
 ];
@@ -94,17 +70,22 @@ export async function fetchEventsData() {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
         return {
-          events: data.map((item) => ({
-            id: item.id || `evt-${Math.random()}`,
-            title: item.title || "Campus Event",
+          events: data.map((item, idx) => ({
+            id: item.id || `evt-${idx + 1}`,
+            title: item.title || "College Event",
             category: item.category || "tech",
-            categoryLabel: item.categoryLabel || item.category || "General",
-            date: item.date ? new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Upcoming",
+            categoryLabel: item.categoryLabel || "Event",
+            mode: item.mode || "In Person",
+            dateMonth: item.dateMonth || "OCT",
+            dateDay: item.dateDay || String(10 + idx * 2),
+            date: item.date || "Upcoming",
             time: item.time || "Scheduled",
             venue: item.venue || "Campus Venue",
-            desc: item.description || item.desc || "Skyline Student Association Event",
-            priceMember: item.memberPrice ? `₹${item.memberPrice}` : "Free",
-            priceGuest: item.standardPrice ? `₹${item.standardPrice}` : "Free",
+            desc: item.desc || item.description || "Skyline Club Event",
+            priceMember: item.priceMember || (idx === 0 ? "₹199" : idx === 1 ? "₹499" : "₹299"),
+            priceGuest: item.priceGuest || (idx === 0 ? "₹499" : idx === 1 ? "₹999" : "₹599"),
+            statusText: item.statusText || (idx === 0 ? "Open" : idx === 1 ? "Closing Soon" : "Sold Out"),
+            statusType: item.statusType || (idx === 0 ? "open" : idx === 1 ? "closing-soon" : "sold-out"),
             imageUrl: item.imageUrl || null
           })),
           isFromApi: true
@@ -112,7 +93,7 @@ export async function fetchEventsData() {
       }
     }
   } catch (_) {
-    // API unmounted or backend down, fallback to sample data
+    // Fallback to initial events
   }
 
   return {

@@ -23,6 +23,20 @@ const server = http.createServer((req, res) => {
   }
 
   let filePath = path.join(BASE_DIR, reqPath);
+
+  // If file doesn't exist at direct root, check home-page/ subdirectory or project root
+  if (!fs.existsSync(filePath)) {
+    const homePageFilePath = path.join(BASE_DIR, 'home-page', reqPath);
+    if (fs.existsSync(homePageFilePath)) {
+      filePath = homePageFilePath;
+    } else {
+      const rootRepoFilePath = path.join(BASE_DIR, '..', reqPath);
+      if (fs.existsSync(rootRepoFilePath)) {
+        filePath = rootRepoFilePath;
+      }
+    }
+  }
+
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
     filePath = path.join(filePath, 'index.html');
   }

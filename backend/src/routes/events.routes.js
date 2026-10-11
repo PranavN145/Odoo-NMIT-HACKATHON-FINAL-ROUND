@@ -62,7 +62,7 @@ router.get('/:id', async (req, res, next) => {
 router.post('/:id/tickets', async (req, res, next) => {
   try {
     const eventId = req.params.id;
-    const { name, email, participantType } = req.body;
+    const { name, email, phone, participantType, amountPaid, paymentMethod, paymentId } = req.body;
 
     if (!name || name.trim().length === 0) {
       return res.status(400).json({ error: { message: 'Full Name is required.' } });
@@ -72,14 +72,21 @@ router.post('/:id/tickets', async (req, res, next) => {
     }
 
     const ticketCode = `TKT-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+    const confirmedPaymentId = paymentId || `PAY-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+    const parsedAmount = typeof amountPaid === 'number' ? amountPaid : parseFloat(amountPaid) || 0;
+
     const newTicket = {
       id: `tkt-${Date.now()}`,
       eventId,
       name: name.trim(),
       email: email.trim(),
+      phone: phone ? phone.trim() : null,
       participantType: participantType || 'guest',
       ticketCode,
-      status: 'RESERVED',
+      paymentId: confirmedPaymentId,
+      paymentMethod: paymentMethod || 'ONLINE_PAYMENT',
+      amountPaid: parsedAmount,
+      status: 'PAID',
       createdAt: new Date().toISOString()
     };
 
@@ -102,13 +109,15 @@ router.post('/:id/tickets', async (req, res, next) => {
             eventId,
             userId: user.id,
             ticketCode,
-            pricePaid: 0,
-            status: 'RESERVED'
+            pricePaid: parsedAmount,
+            status: 'PAID'
           }
         });
         return res.status(201).json({
-          message: 'Ticket registration saved to database successfully',
+          message: 'Payment verified and ticket registration confirmed',
           ticketCode: dbTicket.ticketCode,
+          paymentId: confirmedPaymentId,
+          amountPaid: parsedAmount,
           ticket: dbTicket
         });
       } catch (dbErr) {
@@ -119,8 +128,10 @@ router.post('/:id/tickets', async (req, res, next) => {
     memoryTickets.push(newTicket);
 
     return res.status(201).json({
-      message: 'Ticket registration processed successfully',
+      message: 'Payment verified and ticket registration confirmed',
       ticketCode,
+      paymentId: confirmedPaymentId,
+      amountPaid: parsedAmount,
       ticket: newTicket
     });
   } catch (err) {

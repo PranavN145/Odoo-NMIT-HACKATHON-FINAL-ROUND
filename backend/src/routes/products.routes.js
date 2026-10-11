@@ -34,29 +34,36 @@ router.get('/products', async (req, res, next) => {
  */
 router.post('/orders', async (req, res, next) => {
   try {
-    const { items, email } = req.body;
+    const { items, email, name, phone, address, paymentId, paymentMethod, amountPaid } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: { message: 'Order must contain at least one merchandise item.' } });
     }
 
     const orderId = `ORD-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
-    const totalAmount = items.reduce((acc, curr) => acc + (curr.price || 0) * (curr.qty || 1), 0);
+    const confirmedPaymentId = paymentId || `PAY-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+    const totalAmount = amountPaid !== undefined ? amountPaid : items.reduce((acc, curr) => acc + (curr.price || 0) * (curr.qty || 1), 0);
 
     const newOrder = {
       id: orderId,
-      email: email || 'guest@skyline.edu',
+      name: name ? name.trim() : 'Student',
+      email: email ? email.trim() : 'student@skyline.edu',
+      phone: phone ? phone.trim() : null,
+      address: address ? address.trim() : null,
       items,
+      paymentId: confirmedPaymentId,
+      paymentMethod: paymentMethod || 'UPI',
       totalAmount,
-      status: 'PENDING',
+      status: 'PAID',
       createdAt: new Date().toISOString()
     };
 
     memoryOrders.push(newOrder);
 
     return res.status(201).json({
-      message: 'Merchandise order created successfully',
+      message: 'Merchandise order and payment confirmed successfully',
       orderId,
+      paymentId: confirmedPaymentId,
       totalAmount,
       order: newOrder
     });

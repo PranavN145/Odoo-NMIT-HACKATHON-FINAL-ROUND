@@ -1,47 +1,47 @@
 /**
- * Merchandise Card & Grid Renderer Component
+ * Clean Merchandise Card Component
+ * Minimalist design matching event cards
+ * Clicking card opens Product Overview & Purchase Checkout
  * Skyline Student Association Platform
  */
 
 export function renderMerchCard(item) {
-  const hasSizes = item.sizes && item.sizes.length > 0;
+  const memberPrice = item.priceMember || (item.memberPrice ? `₹${item.memberPrice}` : "₹899");
+  const guestPrice = item.priceGuest || (item.price ? `₹${item.price}` : "₹1,299");
+  const imageUrl = item.imageUrl || "./assets/Navy Hoodie Logo Mockup Duo.png";
+  const stockText = item.statusText || item.stock || "In Stock";
 
   return `
-    <article class="ref-merch-card" data-id="${item.id}">
-      <div class="merch-photo-stage">
-        <span class="merch-pill-disc">${item.discount}</span>
-        <span class="merch-pill-stock">${item.stock}</span>
-        <span class="merch-icon-large" aria-hidden="true">${item.icon}</span>
+    <article class="odoo-clean-event-card clickable-card" data-merch-id="${item.id}" tabindex="0" role="button" aria-label="View details for ${item.name}">
+      <!-- Top Image Stage (No text above photo) -->
+      <div class="odoo-card-cover-stage" style="height: 200px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; padding: 12px; position: relative;">
+        <img src="${imageUrl}" alt="${item.name}" class="odoo-cover-img" style="object-fit: contain; max-height: 100%; width: auto;" />
       </div>
-      <div class="merch-content-block">
-        <div>
-          <span class="card-cat-pill" style="margin-bottom: 6px; display: inline-block;">${item.categoryLabel}</span>
-          <h4 class="merch-name-text">${item.name}</h4>
-          <div class="merch-price-line">
-            <span class="price-bold">₹${item.price}</span>
-            <span class="price-member-tag">₹${item.memberPrice} (Members)</span>
-          </div>
-          ${
-            hasSizes
-              ? `
-              <div class="size-pill-row" id="sizes-${item.id}">
-                ${item.sizes
-                  .map(
-                    (sz, idx) =>
-                      `<button type="button" class="size-tag-btn ${
-                        idx === 1 ? "active" : ""
-                      }" data-item-id="${item.id}" data-size="${sz}" aria-label="Select size ${sz}">${sz}</button>`
-                  )
-                  .join("")}
-              </div>
-            `
-              : `<div style="height: 26px; margin-bottom: 14px;"></div>`
-          }
+
+      <!-- Card Main Info (Clean & Simple) -->
+      <div class="odoo-card-body">
+        <!-- Category & Mode Tag Pills -->
+        <div class="odoo-tag-pill-row">
+          <span class="odoo-tag-pill category">${item.categoryLabel || "Official Apparel"}</span>
+          <span class="odoo-tag-pill mode">Campus Gear</span>
         </div>
-        <button type="button" class="btn-add-merch-bag" data-merch-id="${item.id}" aria-label="Add ${item.name} to shopping bag">
-          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-          Add to Bag
-        </button>
+
+        <!-- Title -->
+        <h3 class="odoo-card-title">${item.name}</h3>
+
+        <!-- Pricing Line -->
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid #EEF2F6; padding-top: 10px; margin-top: 8px;">
+          <div>
+            <span style="font-size: 1.125rem; font-weight: 700; color: var(--color-navy);">${memberPrice}</span>
+            <span style="font-size: 0.75rem; color: var(--color-baltic); font-weight: 600; margin-left: 4px;">(Member Price)</span>
+          </div>
+          <span style="font-size: 0.8125rem; color: var(--color-text-muted); text-decoration: line-through;">${guestPrice}</span>
+        </div>
+      </div>
+
+      <!-- Card Footer: Status Pill -->
+      <div class="odoo-card-footer">
+        <div class="event-status-pill open" style="width: 100%; text-align: center;">In Stock</div>
       </div>
     </article>
   `;
@@ -54,8 +54,8 @@ export function renderMerchGrid(gridElement, merchList, currentCategory, searchQ
     const matchesCategory = currentCategory === "all" || item.category === currentCategory;
     const matchesSearch =
       searchQuery === "" ||
-      item.name.toLowerCase().includes(searchQuery) ||
-      item.categoryLabel.toLowerCase().includes(searchQuery);
+      (item.name && item.name.toLowerCase().includes(searchQuery)) ||
+      (item.categoryLabel && item.categoryLabel.toLowerCase().includes(searchQuery));
     return matchesCategory && matchesSearch;
   });
 
@@ -63,7 +63,7 @@ export function renderMerchGrid(gridElement, merchList, currentCategory, searchQ
     gridElement.innerHTML = `
       <div style="grid-column: 1/-1; text-align: center; padding: 48px; background: #FFFFFF; border: 1px solid var(--color-border); border-radius: 12px;">
         <h4 style="color: var(--color-navy); margin-bottom: 8px;">No merchandise items found</h4>
-        <p style="color: var(--color-text-muted); font-size: 0.875rem;">Explore another category or clear filters.</p>
+        <p style="color: var(--color-text-muted); font-size: 0.875rem;">Clear search query to see available gear.</p>
       </div>
     `;
     return;
