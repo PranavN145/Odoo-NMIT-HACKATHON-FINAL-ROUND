@@ -1,55 +1,52 @@
 /* ==========================================================================
-   Skyline Student Association — Styled strictly to reference screenshot & design.md
+   Skyline Student Association — Public Home Page Stylesheet
+   Adheres strictly to approved Manager Design System tokens & visual language
    ========================================================================== */
 
 :root {
-  /* Exact reference palette */
-  --color-canvas: #EBF1F2;          /* Pale teal-slate background from screenshot */
-  --color-surface: #FFFFFF;         /* Crisp white cards & panels */
-  --color-surface-subtle: #F5F9FA;  /* Very soft inner surfaces */
-  --color-border: #D8E4E8;          /* Restrained clean borders */
-  --color-border-subtle: #E2ECF0;
-  
-  /* Brand Blues */
-  --color-navy: #13293D;            /* Deep Space Blue for headings & dark icons */
-  --color-baltic: #005B82;          /* Primary button color in screenshot (+ Create event) */
+  /* Approved Brand Tokens (Section 4) */
+  --color-navy: #13293D;            /* Primary text & strong brand elements */
+  --color-blue: #006494;            /* Secondary emphasis */
+  --color-baltic: #006494;          /* Alias for primary actions */
   --color-baltic-hover: #004D6E;
-  --color-cerulean: #247BA0;
-  --color-accent: #1B98E0;          /* Focus rings & links */
-  --color-nav-active-bg: #E1EFFC;   /* Light blue active pill in sidebar */
-  --color-nav-active-text: #005B82;
-
-  /* Text Colors */
-  --color-text: #13293D;
-  --color-text-muted: #5F7485;
+  --color-cerulean: #247BA0;        /* Supporting emphasis */
+  --color-accent: #1B98E0;          /* Links, active states & primary focus rings */
+  --color-canvas: #E8F1F2;          /* Page background */
+  --color-surface: #FFFFFF;         /* Cards, header & content surfaces */
+  --color-surface-subtle: #F4F8F9;
+  --color-border: #D8E4E8;          /* Subtle outlines & dividers */
+  --color-border-subtle: #E8EFF2;
+  --color-text-muted: #5F7485;      /* Secondary information */
   --color-text-subtle: #899BA7;
 
-  /* Tag & Badge Tokens */
-  --color-tag-bg: #E8F3F7;
-  --color-tag-border: #D2E4EC;
-  --color-tag-text: #005B82;
-
+  /* Status Colors */
   --color-success: #1B998B;
   --color-success-bg: #E6F7F3;
+  --color-error: #D90429;
+  --color-error-bg: #FDF2F4;
   --color-warning: #E76F51;
 
   /* Typography */
-  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Dimensions & Spacing */
+  /* Dimensions, Corner Radii & Shadows */
   --radius-sm: 6px;
-  --radius-control: 8px;
-  --radius-card: 14px;
-  --radius-panel: 16px;
+  --radius-control: 8px;            /* Control radius ~8px per brief */
+  --radius-card: 12px;               /* Card radius ~12px per brief */
+  --radius-panel: 14px;
   --radius-full: 9999px;
 
-  /* Shadows (soft and restrained per design.md) */
   --shadow-sm: 0 1px 3px rgba(19, 41, 61, 0.04);
-  --shadow-card: 0 1px 4px rgba(19, 41, 61, 0.05);
-  --shadow-dropdown: 0 12px 28px -4px rgba(19, 41, 61, 0.14), 0 6px 12px -4px rgba(19, 41, 61, 0.08);
+  --shadow-card: 0 2px 8px -2px rgba(19, 41, 61, 0.06);
+  --shadow-dropdown: 0 12px 28px -4px rgba(19, 41, 61, 0.14);
   --shadow-modal: 0 24px 48px -12px rgba(19, 41, 61, 0.25);
   --transition-fast: 160ms ease;
+}
+
+/* Accessibility Focus Ring Indicator */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 /* Reset */
@@ -124,6 +121,94 @@ body {
   font-weight: 700;
   color: var(--color-navy);
   letter-spacing: -0.01em;
+}
+
+/* Public Header Center Navigation */
+.public-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.public-nav-item {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-control);
+  transition: all var(--transition-fast);
+}
+
+.public-nav-item:hover, .public-nav-item.active {
+  color: var(--color-navy);
+  background-color: var(--color-surface-subtle);
+}
+
+/* Public Main Container Layout */
+.public-main-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 28px 48px;
+  width: 100%;
+}
+
+/* Hero Banner Card */
+.hero-banner-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  padding: 40px 36px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-content {
+  max-width: 720px;
+}
+
+.academic-year-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #EAF5FB;
+  border: 1px solid #BDE0FE;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #006494;
+  margin-bottom: 16px;
+}
+
+.status-dot-blue {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #006494;
+}
+
+.hero-headline {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 /* Header Right: Cart & Login Dropdown */
