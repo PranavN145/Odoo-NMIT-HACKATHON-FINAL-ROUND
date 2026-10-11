@@ -1,244 +1,369 @@
-# Skyline Student Association — Design System
+# Quizlet — Style Reference
+> color-coded classroom on white — a quiet study desk where four pastel flashcards are the only splash of color against cool gray walls and a single indigo highlighter mark.
 
-> A minimal, smooth, and consistent interface system for the Skyline Student Association platform.
+**Theme:** light
 
-## 1. Design principles
+Source measurements are normalized; roles and recommendations are interpreted. Font summary lists are independent, not paired by position. HTML examples are reconstructions, not source components.
 
-- **Clarity first:** prioritize readable content and obvious actions.
-- **Quiet surfaces:** use light backgrounds, subtle borders, and restrained shadows.
-- **Consistent rhythm:** follow an 8px spacing scale.
-- **Purposeful color:** reserve bright blue for primary actions, focus states, and active navigation.
-- **No decorative noise:** avoid unnecessary gradients, glass effects, oversized rounded cards, and gratuitous animation.
-- **Accessible by default:** maintain readable contrast, visible focus states, and clear error messages.
+Quizlet presents an educational workspace on a soft blue-white canvas: a calm, distraction-free study environment where four vivid feature cards (cyan, magenta, brand violet, peach) inject personality into an otherwise restrained palette. Typography is geometric and approachable—Hurme Geometric Sans at weight 400 carrying most of the load, avoiding the over-bolded weight 700 headlines common in SaaS. Components are flat and soft-edged: 4px radius on controls, 8px on cards, 200px pill on filled buttons, with subtle rgba(40,46,62,0.1) shadows providing gentle elevation rather than dramatic depth. The single brand violet #4255ff is the focal point of the interface—links, active states, and filled interactive elements all draw from it, creating a consistent accent against the neutral charcoal #282e3 text and the cool gray canvas #f6f7fb. White card surfaces (#ffffff) and tinted lilac panels (#edefff) create a clear two-level surface hierarchy without ever needing heavy borders or saturated backgrounds.
 
-## 2. Color palette
+## Tokens — Colors
 
-| Token | Hex | Name | Intended use |
-|---|---|---|---|
-| `color.navy` | `#13293D` | Deep Space Blue | Primary text, dark navigation, primary buttons |
-| `color.blue` | `#006494` | Baltic Blue | Secondary actions, supporting surfaces |
-| `color.cerulean` | `#247BA0` | Cerulean | Secondary emphasis, charts, supporting accents |
-| `color.accent` | `#1B98E0` | Blue Bell | Primary CTA, links, active and focused states |
-| `color.canvas` | `#E8F1F2` | Alice Blue | App background and pale surfaces |
+| Name | Value | Token | Role |
+|------|-------|-------|------|
+| Iris Bolt | `#4255ff` | `--color-iris-bolt` | Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color |
+| Ink Charcoal | `#282e3e` | `--color-ink-charcoal` | Primary text, headings, body copy, footer headings, icon strokes — near-black navy that reads warmer than pure #000 on light surfaces |
+| Deep Indigo | `#2e3856` | `--color-deep-indigo` | Secondary body text, supporting copy where Ink Charcoal would feel too heavy |
+| Slate Veil | `#586380` | `--color-slate-veil` | Muted helper text, secondary metadata, tertiary nav items, subtle icon fills |
+| Fog Mist | `#939bb4` | `--color-fog-mist` | Placeholder text, disabled states, hairline icon strokes, low-emphasis borders |
+| Pure Black | `#000000` | `--color-pure-black` | App store download badges, maximum-contrast text on light tinted panels, occasional icon detail |
+| Chalk Canvas | `#f6f7fb` | `--color-chalk-canvas` | Page background, page-level canvas behind cards and content sections |
+| Paper White | `#ffffff` | `--color-paper-white` | Card surfaces, modal backgrounds, input fields, raised panel fills |
+| Lilac Wash | `#edefff` | `--color-lilac-wash` | Tinted section backgrounds, subtle highlight zones, promotional banner fills |
+| Mist Border | `#d9dde8` | `--color-mist-border` | Hairline dividers, card edges, input borders, separator lines |
 
-### Color usage
+## Tokens — Typography
 
-- Use `#13293D` for headings, high-emphasis text, and dark surfaces.
-- Use `#006494` and `#247BA0` sparingly for secondary emphasis.
-- Use `#1B98E0` for primary actions, selected navigation, links, and focus rings.
-- Use `#E8F1F2` for the page canvas and low-emphasis surfaces.
-- For cards, use white or near-white surfaces with a subtle border.
-- Do not use every palette color at equal intensity in the same view.
-- Check text contrast before using pale blue backgrounds or muted text.
+### hurme_no2-webfont — hurme_no2-webfont — detected in extracted data but not described by AI · `--font-hurmeno2-webfont`
+- **Weights:** 400, 600, 700
+- **Sizes:** 12px, 14px, 16px, 20px, 21px, 24px, 32px, 44px
+- **Line height:** 1.25, 1.27, 1.33, 1.4, 1.43, 1.5, 1.63
+- **Role:** hurme_no2-webfont — detected in extracted data but not described by AI
 
-## 3. Typography
+### Hurme Geometric Sans — Single-family type system for all UI text. Weight 400 dominates body, nav, and most headings; 600 reserved for emphasis and button labels; 700 used sparingly for card titles. Hurme's geometric construction and open apertures give an approachable, textbook feel rather than corporate austerity. · `--font-hurme-geometric-sans`
+- **Substitute:** Inter, DM Sans, or Nunito Sans
+- **Weights:** 400, 600, 700
+- **Sizes:** 12, 14, 16, 20, 21, 24, 32, 44
+- **Line height:** 1.25–1.63
+- **Role:** Single-family type system for all UI text. Weight 400 dominates body, nav, and most headings; 600 reserved for emphasis and button labels; 700 used sparingly for card titles. Hurme's geometric construction and open apertures give an approachable, textbook feel rather than corporate austerity.
 
-**Typeface:** Inter, with a system sans-serif fallback.
+### Type Scale
 
-```css
-font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-  "Segoe UI", sans-serif;
-```
+| Role | Family | Weight | Size | Line Height | Letter Spacing | Token |
+|------|--------|--------|------|-------------|----------------|-------|
+| caption | — | — | 12px | 18 | — | `--text-caption` |
+| body-sm | — | — | 14px | 20 | — | `--text-body-sm` |
+| body | — | — | 16px | 24 | — | `--text-body` |
+| subheading | — | — | 20px | 28 | — | `--text-subheading` |
+| heading-sm | — | — | 24px | 32 | — | `--text-heading-sm` |
+| heading | — | — | 32px | 41 | — | `--text-heading` |
+| display | — | — | 44px | 55 | — | `--text-display` |
 
-| Style | Size / line height | Weight | Usage |
-|---|---:|---|---|
-| H1 | 40 / 48 px | 700 | Page title; use only when the page needs a strong title |
-| H2 | 32 / 40 px | 600 | Major page heading |
-| H3 | 24 / 32 px | 600 | Section heading |
-| H4 | 18 / 28 px | 500 | Card or subsection heading |
-| Body | 16 / 24 px | 400 | Default body copy |
-| Small | 14 / 20 px | 400 | Secondary information |
-| Caption | 12 / 16 px | 500 | Labels, timestamps, helper text |
+## Tokens — Spacing & Shapes
 
-### Typography rules
+**Base unit:** 8px
 
-- Use sentence case for headings and labels.
-- Prefer short, descriptive headings over marketing copy.
-- Keep body text at 16px where space allows; do not use tiny text for important information.
-- Use muted text only for supporting content, never for critical instructions or statuses.
-- Use tabular numerals for totals, prices, and other values that need quick comparison.
+**Density:** compact
 
-## 4. Layout and spacing
+### Spacing Scale
 
-Use an **8px base spacing system**. Keep layouts aligned to a consistent content grid.
+| Name | Value | Token |
+|------|-------|-------|
+| 8 | 8px | `--spacing-8` |
+| 16 | 16px | `--spacing-16` |
+| 24 | 24px | `--spacing-24` |
+| 32 | 32px | `--spacing-32` |
+| 40 | 40px | `--spacing-40` |
+| 48 | 48px | `--spacing-48` |
+| 64 | 64px | `--spacing-64` |
 
-| Token | Value | Typical use |
-|---|---:|---|
-| `space.1` | 4px | Tight icon-to-label spacing |
-| `space.2` | 8px | Compact gaps |
-| `space.3` | 12px | Related inline elements |
-| `space.4` | 16px | Default component spacing |
-| `space.6` | 24px | Card padding and section gaps |
-| `space.8` | 32px | Major grouping |
-| `space.12` | 48px | Large section separation |
+### Border Radius
 
-### Layout rules
+| Element | Value |
+|---------|-------|
+| cards | 8px |
+| pills | 200px |
+| inputs | 4px |
+| buttons | 4px |
+| featureCards | 24px |
 
-- Use a clear page container and consistent horizontal gutters.
-- Align cards, tables, and section headings to the same grid.
-- Prefer whitespace and alignment over divider-heavy layouts.
-- Use a fixed or collapsible sidebar only when navigation genuinely needs it.
-- On smaller screens, collapse multi-column layouts into a single column.
-- Keep important actions visible without making every action look primary.
+### Shadows
 
-## 5. Shape, borders, and elevation
+| Name | Value | Token |
+|------|-------|-------|
+| md | `rgba(40, 46, 62, 0.1) 0px 4px 16px 0px` | `--shadow-md` |
+| subtle | `rgba(0, 0, 0, 0.3) 0px 0px 1px 0px inset` | `--shadow-subtle` |
+| sm | `rgba(40, 46, 62, 0.1) 0px 2px 4px 0px` | `--shadow-sm` |
 
-- **Small controls:** 6–8px radius.
-- **Cards and panels:** 10–12px radius.
-- **Large containers:** 14–16px radius only when the layout benefits from grouping.
-- **Borders:** 1px solid `#D8E4E8` or a similarly subtle neutral.
-- **Shadows:** use only for floating elements such as menus and dialogs; keep them soft and restrained.
-- Avoid putting every element inside a card. Use cards for content that needs separation, not as a default wrapper.
+### Layout
 
-## 6. Buttons
+- **Page max-width:** 1200px
+- **Section gap:** 80px
+- **Card padding:** 24px
+- **Element gap:** 8px
 
-### Primary button
-- Background: `#13293D`
-- Text: white
-- Use for the main action in a section or form.
+## Components
 
-### Accent button
-- Background: `#1B98E0`
-- Text: white
-- Use when a bright action needs extra emphasis.
+### Filled Pill Button
+**Role:** Primary interactive element (Sign up for free, Log in, Get the app)
 
-### Secondary / outline button
-- Background: transparent or white
-- Border: `#13293D`
-- Text: `#13293D`
+Background #4255ff, text #ffffff, font-weight 600, size 14-16px, padding 10px 20px, border-radius 200px, no border. Subtle shadow rgba(40,46,62,0.1) 0px 2px 4px 0px. Full pill shape distinguishes these from the squarer 4px utility buttons elsewhere.
 
-### Ghost button
-- Background: transparent
-- Text: `#006494`
-- No visible border until hover, if needed.
+### Outlined/Store Badge
+**Role:** App download buttons (App Store, Google Play)
 
-### Interaction states
+Background #000000, text #ffffff, border-radius 4px, padding 8px 16px. Black-on-white inversion to stand out as a distinct, external-store credential.
 
-- **Hover:** slightly darken the background or add a subtle surface change.
-- **Focus:** show a clearly visible 2px focus ring using `#1B98E0`, with sufficient offset.
-- **Active:** use a pressed shade; do not rely on animation alone.
-- **Disabled:** reduce emphasis and prevent interaction; maintain legible text.
+### Ghost Text Link
+**Role:** Inline secondary actions (I'm a teacher, Try it out)
 
-Buttons should have concise labels that describe the result, such as **Create event**, **Save changes**, or **View members**.
+No background, no border, text in #4255ff at 16px weight 400, underline on hover only. Sits below or beside a filled button as a low-priority alternative.
 
-## 7. Form fields
+### Ghost Outlined Button
+**Role:** Secondary call-to-action on promotional sections
 
-- Use a visible label above each field.
-- Placeholder text is an example, not a replacement for a label.
-- Default border: `#D8E4E8`.
-- Focus border: `#1B98E0`, with a visible focus ring.
-- Error border and message: accessible red with a clear explanation.
-- Disabled fields should look inactive but remain readable.
-- Keep input heights consistent, generally 40–44px.
-- Align field widths and labels across a form.
+Background transparent, border 1px #4255ff, text #4255ff, border-radius 200px, padding 10px 24px, font-weight 600.
 
-## 8. Navigation
+### Feature Category Card
+**Role:** Hero product showcase cards (Learn, Study Guides, Flashcards, Practice Tests)
 
-- Use `#13293D` for the brand mark, sidebar, or high-emphasis navigation areas.
-- Use `#1B98E0` to identify the active page, with a text or shape cue in addition to color.
-- Keep navigation labels short and familiar.
-- Show the Skyline Student Association name beside the logo where space permits. In the manager header, use the logo alone on the left if that is the chosen layout.
-- Place account actions and notifications together on the right.
-- Avoid showing too many top-level links at once; group secondary destinations under **More** when appropriate.
+Large 24px border-radius, solid pastel fill (cyan/magenta/violet/peach), white inner content panel with 8px radius inset. Card title in weight 700 20-24px, body content in weight 400 14-16px. Used in horizontal carousel with left/right navigation arrows.
 
-## 9. Cards and data displays
+### Study Set Card
+**Role:** Content discovery cards in grid (Leccion II Problemas, Greek Gods, etc.)
 
-Use cards when they help users scan distinct pieces of information.
+Background #ffffff, border 1px #d9dde8, border-radius 8px, padding 16px. Card title in weight 600 16px #282e3, term count badge in weight 400 12px #586380, creator avatar with circular crop and username in weight 400 12px.
 
-- Keep card backgrounds white or near-white.
-- Use a subtle border before adding a shadow.
-- Make the primary value or title the strongest element.
-- Place supporting context close to its value.
-- Keep actions in predictable locations.
-- Avoid decorative charts, fake trends, or invented metrics.
-- Use charts only when they help answer a real question.
-- Use consistent formatting for counts, dates, prices, and statuses.
+### Top Navigation Bar
+**Role:** Persistent site header
 
-Example metric card:
+Background #ffffff, full-width with inner max-width 1200px, height ~56px, subtle shadow rgba(40,46,62,0.1) 0px 4px 16px 0px. Logo left, dropdown menus (Study tools, Subjects) with 4px radius, search bar centered, Create button (ghost) and Log in pill right.
 
-```text
-Total members
-248
-Updated today
-```
+### Search Bar
+**Role:** Central navigation input in header
 
-The example is a layout illustration only; replace the values with real application data.
+Background #f6f7fb, border-radius 200px, padding 8px 16px, placeholder text #939bb4 at 14px. Search icon left, no visible border. Expands as the visual anchor of the nav row.
 
-## 10. Alerts and status
+### Footer Link Column
+**Role:** Multi-column site footer
 
-Use clear text and a restrained semantic color treatment.
+Five columns (About us, For students, For teachers, Resources, Language) on background #f6f7fb. Column headings in weight 600 14px #282e3, links in weight 400 14px #586380, 8px vertical gap between links, 48px column padding-top.
 
-- **Success:** confirm what completed and, when useful, what happens next.
-- **Information:** provide useful context without interrupting the workflow.
-- **Warning:** explain the risk and the action the user can take.
-- **Error:** state what failed and how to recover.
-- **Status:** pair color with a label or icon; never communicate status through color alone.
+### Promotional Section Panel
+**Role:** Alternating lilac-background feature sections (Study Guides preview)
 
-Avoid using bright colored backgrounds for large areas. A pale tint, concise message, and optional dismiss action are usually enough.
+Full-width section with background #edefff, inner max-width 1200px, two-column layout (image left, text right), headline in weight 700 32px #282e3, body in weight 400 16px #586380, filled pill button below copy.
 
-## 11. Icons and motion
+### Carousel Navigation Arrow
+**Role:** Left/right controls on horizontal card carousels
 
-- Use one consistent icon family and stroke weight.
-- Prefer familiar, simple icons over custom illustrations for routine actions.
-- Keep icons aligned to their text and sized consistently, usually 16–20px.
-- Use motion only to communicate a state change or provide feedback.
-- Keep transitions short and subtle, typically 150–220ms.
-- Respect `prefers-reduced-motion`.
-- Avoid parallax, bouncing controls, glowing borders, and animations that delay routine work.
+Circular button 40px diameter, background #ffffff, border 1px #d9dde8, center-aligned chevron icon in #282e3e. Floats at vertical center of card row.
 
-## 12. Responsive behavior
+### Term Count Badge
+**Role:** Small metadata pill on study set cards
 
-- **Desktop:** use the available width for a clear main content area; avoid excessive full-width text.
-- **Tablet:** reduce column count and preserve comfortable touch targets.
-- **Mobile:** stack content, collapse secondary navigation, and keep primary actions easy to reach.
-- Tables should remain usable on small screens through responsive columns, horizontal scrolling, or a deliberate card alternative.
-- Aim for touch targets around 44px where practical.
+Background transparent or #f6f7fb, text #586380, font-size 12px weight 400, no border, sits between title and creator row.
 
-## 13. Accessibility checklist
+## Do's and Don'ts
 
-- [ ] Text and interactive controls meet WCAG contrast expectations.
-- [ ] Every form field has a persistent label.
-- [ ] Keyboard focus is visible and not hidden by sticky UI.
-- [ ] Buttons and links have clear accessible names.
-- [ ] Errors explain both the problem and the next step.
-- [ ] Statuses do not rely on color alone.
-- [ ] Layout works at zoom and on narrow screens.
-- [ ] Reduced-motion preferences are respected.
+### Do
+- Use #4255ff exclusively for filled interactive elements and links — it is the only saturated color in the system
+- Apply 200px border-radius to all primary filled buttons to create the signature pill shape
+- Set body text to #282e3 at weight 400 — avoid defaulting to weight 600 or 700 for paragraph copy
+- Use 8px border-radius on content cards and 24px only on hero feature category cards
+- Build card surfaces on #ffffff over the #f6f7fb page canvas to establish the two-level surface hierarchy
+- Space sections at 80px vertical gap with 24px internal card padding and 8px element gaps
+- Apply the single shadow token rgba(40,46,62,0.1) 0px 4px 16px 0px to nav bars and elevated cards — never stack multiple shadows
 
-## 14. CSS tokens
+### Don't
+- Do not introduce additional saturated colors beyond #4255ff — the palette is deliberately near-monochrome with one accent
+- Do not use 4px or 8px radius on primary filled buttons — the pill (200px) is a signature
+- Do not set headings to weight 700 by default — weight 600 is the maximum for most titles, weight 700 reserved for feature card labels
+- Do not use pure #000000 for body text — use #282e3 for the warmer near-black
+- Do not place cards directly on #edefff without an inner white panel — the lilac is for section backgrounds, not card fills
+- Do not apply heavy or multi-layer shadows — elevation stays under 16px blur and 10% opacity
+- Do not use #d9dde8 as a fill — it is exclusively a hairline border and separator color
+
+## Surfaces
+
+| Level | Name | Value | Purpose |
+|-------|------|-------|---------|
+| 0 | Page Canvas | `#f6f7fb` | Full page background, base layer behind all content |
+| 1 | Card Surface | `#ffffff` | Study set cards, nav bar, raised content panels |
+| 2 | Tinted Highlight | `#edefff` | Promotional sections, subtle background washes, feature zones |
+| 3 | Feature Card Pastels | `#dbdfff` | Colored feature cards (cyan/pink/violet/peach tints) — decorative category backgrounds |
+
+## Elevation
+
+- **Study set card / nav bar:** `rgba(40, 46, 62, 0.1) 0px 4px 16px 0px`
+- **Interactive button (subtle pressed state):** `rgba(40, 46, 62, 0.1) 0px 2px 4px 0px`
+- **Icon detail (inset hairline):** `rgba(0, 0, 0, 0.3) 0px 0px 1px 0px inset`
+
+## Imagery
+
+Product-first visual language: the hero features four large illustrated product card mockups (flashcard interface, study guide table, anatomy diagram, practice test score screen) rather than lifestyle photography. Illustrations are flat with subtle shading, each card rendered on a distinct pastel background (cyan, magenta, violet, peach) at 24px radius. Secondary product previews show UI screenshots of the mobile and web app on device frames. No editorial photography, no human faces, no decorative stock imagery — the product interface IS the visual content. Icons are thin-stroke geometric line icons at ~16-20px, single-color in #282e3 or #4255ff.
+
+## Layout
+
+Centered max-width 1200px content rail on a full-bleed #f6f7fb canvas. The hero is a centered text stack (headline → subhead → pill button → ghost link) with no background image, followed by a full-width horizontal card carousel of four feature category cards at 24px radius. Below the carousel, the page alternates two-column sections (50/50 split: product mockup left, headline+body+pill button right) on alternating white and #edefff backgrounds, creating a rhythmic visual break without hard dividers. The footer is a 5-column link grid on #f6f7fb with 48px top padding. Navigation is a sticky-feeling top bar with logo, two dropdown menus, a centered pill search bar, and right-aligned Create + Log in actions. The overall density is compact: 80px between major sections, 8px between inline elements.
+
+## Agent Prompt Guide
+
+**Quick Color Reference**
+- text: #282e3e (headings/body), #586380 (muted), #939bb4 (placeholder)
+- background: #f6f7fb (page canvas), #ffffff (cards/surfaces), #edefff (tinted sections)
+- border: #d9dde8 (hairlines)
+- accent: #4255ff (links, filled buttons, active states)
+- primary action: no distinct CTA color
+
+**3-5 Example Component Prompts**
+1. Build a filled pill button: background #4255ff, text #ffffff, font-family Hurme Geometric Sans (substitute: Inter) weight 600 size 16px, padding 10px 24px, border-radius 200px, subtle shadow rgba(40,46,62,0.1) 0px 2px 4px 0px.
+2. Build a study set card: background #ffffff, border 1px solid #d9dde8, border-radius 8px, padding 16px. Title at 16px weight 600 color #282e3e. Metadata text at 12px weight 400 color #586380. Gap 8px between title and metadata.
+3. Build a feature category card: solid pastel fill background (use #dbdfff or equivalent category tint), border-radius 24px, internal white content panel at 8px radius. Card label at 20px weight 700 color #282e3e.
+4. Build a ghost text link: no background, no border, text #4255ff at 16px weight 400, underline appears on hover only, no padding.
+5. Build a top nav bar: background #ffffff, max-width 1200px centered, height 56px, shadow rgba(40,46,62,0.1) 0px 4px 16px 0px. Logo at left in #4255ff, nav items at 14px weight 400 #282e3e, search bar centered with background #f6f7fb and 200px radius.
+
+## Color Discipline
+
+The palette is intentionally near-monochrome. #4255ff is the ONLY saturated chromatic color. All other interface color is desaturated gray, near-gray, or off-white. The four pastel feature card backgrounds (cyan, magenta, violet, peach) are decorative category illustrations, NOT interface tokens — they should only appear as fill behind large illustrated product cards in hero or feature sections, never on buttons, nav, inputs, or body surfaces.
+
+## Similar Brands
+
+- **Duolingo** — Same educational-app visual approach: near-white canvas, single bold brand accent, playful illustrated product cards, and friendly geometric sans-serif typography
+- **Khan Academy** — Similar compact, text-forward layout with blue brand accent and clean card-based content grids for learning materials
+- **Notion** — Shared restraint in color (near-monochrome with one accent), flat soft-shadow cards, and the 8px/24px radius pairing on content surfaces
+- **Brainscape** — Direct study-tool competitor with the same white-on-cool-gray surface hierarchy and pill-shaped primary buttons
+- **Anki** — Same flashcard-centric product metaphor, geometric sans-serif typography, and minimal decoration letting content cards carry the visual weight
+
+## Quick Start
+
+### CSS Custom Properties
 
 ```css
 :root {
-  /* Brand palette */
-  --color-navy: #13293D;
-  --color-blue: #006494;
-  --color-cerulean: #247BA0;
-  --color-accent: #1B98E0;
-  --color-canvas: #E8F1F2;
+  /* Colors */
+  --color-iris-bolt: #4255ff;
+  --color-ink-charcoal: #282e3e;
+  --color-deep-indigo: #2e3856;
+  --color-slate-veil: #586380;
+  --color-fog-mist: #939bb4;
+  --color-pure-black: #000000;
+  --color-chalk-canvas: #f6f7fb;
+  --color-paper-white: #ffffff;
+  --color-lilac-wash: #edefff;
+  --color-mist-border: #d9dde8;
 
-  /* Surfaces and borders */
-  --color-surface: #FFFFFF;
-  --color-border: #D8E4E8;
-  --color-text: #13293D;
-  --color-text-muted: #5F7485;
+  /* Typography — Font Families */
+  --font-hurmeno2-webfont: 'hurme_no2-webfont', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-hurme-geometric-sans: 'Hurme Geometric Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --leading-caption: 18;
+  --text-body-sm: 14px;
+  --leading-body-sm: 20;
+  --text-body: 16px;
+  --leading-body: 24;
+  --text-subheading: 20px;
+  --leading-subheading: 28;
+  --text-heading-sm: 24px;
+  --leading-heading-sm: 32;
+  --text-heading: 32px;
+  --leading-heading: 41;
+  --text-display: 44px;
+  --leading-display: 55;
+
+  /* Typography — Weights */
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
   /* Spacing */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-12: 48px;
+  --spacing-unit: 8px;
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-64: 64px;
 
-  /* Shape and motion */
-  --radius-control: 8px;
-  --radius-card: 12px;
-  --radius-panel: 16px;
-  --transition-fast: 180ms ease;
+  /* Layout */
+  --page-max-width: 1200px;
+  --section-gap: 80px;
+  --card-padding: 24px;
+  --element-gap: 8px;
+
+  /* Border Radius */
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-3xl: 24px;
+  --radius-full: 200px;
+
+  /* Named Radii */
+  --radius-cards: 8px;
+  --radius-pills: 200px;
+  --radius-inputs: 4px;
+  --radius-buttons: 4px;
+  --radius-featurecards: 24px;
+
+  /* Shadows */
+  --shadow-md: rgba(40, 46, 62, 0.1) 0px 4px 16px 0px;
+  --shadow-subtle: rgba(0, 0, 0, 0.3) 0px 0px 1px 0px inset;
+  --shadow-sm: rgba(40, 46, 62, 0.1) 0px 2px 4px 0px;
+
+  /* Surfaces */
+  --surface-page-canvas: #f6f7fb;
+  --surface-card-surface: #ffffff;
+  --surface-tinted-highlight: #edefff;
+  --surface-feature-card-pastels: #dbdfff;
 }
 ```
 
-## 15. Final direction
+### Tailwind v4
 
-Build a practical product interface, not a showcase of effects. Prioritize clear hierarchy, dependable spacing, restrained color, useful data, and predictable interactions. Every visual element should help users understand where they are, what matters, or what to do next.
+```css
+@theme {
+  /* Colors */
+  --color-iris-bolt: #4255ff;
+  --color-ink-charcoal: #282e3e;
+  --color-deep-indigo: #2e3856;
+  --color-slate-veil: #586380;
+  --color-fog-mist: #939bb4;
+  --color-pure-black: #000000;
+  --color-chalk-canvas: #f6f7fb;
+  --color-paper-white: #ffffff;
+  --color-lilac-wash: #edefff;
+  --color-mist-border: #d9dde8;
+
+  /* Typography */
+  --font-hurmeno2-webfont: 'hurme_no2-webfont', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-hurme-geometric-sans: 'Hurme Geometric Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --leading-caption: 18;
+  --text-body-sm: 14px;
+  --leading-body-sm: 20;
+  --text-body: 16px;
+  --leading-body: 24;
+  --text-subheading: 20px;
+  --leading-subheading: 28;
+  --text-heading-sm: 24px;
+  --leading-heading-sm: 32;
+  --text-heading: 32px;
+  --leading-heading: 41;
+  --text-display: 44px;
+  --leading-display: 55;
+
+  /* Spacing */
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-64: 64px;
+
+  /* Border Radius */
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-3xl: 24px;
+  --radius-full: 200px;
+
+  /* Shadows */
+  --shadow-md: rgba(40, 46, 62, 0.1) 0px 4px 16px 0px;
+  --shadow-subtle: rgba(0, 0, 0, 0.3) 0px 0px 1px 0px inset;
+  --shadow-sm: rgba(40, 46, 62, 0.1) 0px 2px 4px 0px;
+}
+```

@@ -1,129 +1,45 @@
-# Student Organization System — Project Memory
+# AI Memory Log
 
-> Purpose: concise, evolving reference for project decisions. Distinguish verified decisions from proposals; update this file when implementation changes.
+## Purpose
+This file is the project's short, factual handover log for AI coding tools. Use it to understand what has actually been done and avoid guessing or hallucinating project state.
 
-## Problem statement
-Student organizations manage membership and dues, event tickets and attendance, announcements, merchandise, volunteer tasks, and finances across disconnected spreadsheets, notebooks, cash records, and messaging groups. This causes fragmented records, coordination problems, stock/payment confusion, and limited financial visibility.
+## Rules for the AI
+- Read this file before making project changes.
+- After each completed change, update this file with what changed.
+- Record only verified actions and current state; do not claim work is complete unless it was checked.
+- Keep entries short. Include relevant files, decisions, commands, and unresolved issues.
+- If something is unknown or unverified, label it **Unknown** or **Not verified**.
+- Do not treat planned work as completed work.
+- Preserve earlier useful notes; edit outdated details instead of accumulating contradictions.
 
-## Objectives
-- Centralize core organization operations in one web application.
-- Track membership status, dues, benefits, expiry, and renewal reminders.
-- Manage events, member/non-member ticket prices, capacity, ticket verification, and actual attendance.
-- Manage merchandise orders, payments, and inventory by product size.
-- Assign volunteer tasks and track progress.
-- Publish announcements and retain their history.
-- Record income, expenses, and volunteer reimbursements; report totals and balance.
-- Enforce role-based access and protect private/financial data.
+## Current Project
+- **Name:** Skyline Student Association Platform
+- **Project scope:** Public events and merchandise website plus Admin, Manager, Member, and User role-based platforms.
+- **Current reference:** `PRD.md` (confirm the actual path/name in the repository).
 
-## User roles
-- **Admin (Core Members):** manage users, memberships, events, ticket pricing/capacity, merchandise and inventory, announcements, volunteer tasks, transactions, reimbursements, and reports.
-- **Member:** view own membership and benefits; browse announcements/events; purchase eligible tickets; order merchandise; view own order/payment status.
-- **Volunteer:** view assigned tasks and event instructions; update task progress; support ticket verification and attendance when authorized; submit expense/reimbursement information if enabled.
-- **Pending:** whether one account can hold both Member and Volunteer permissions.
+## Change Log
+| Date | Change made | Files affected | Verification / Notes |
+|---|---|---|---|
+| 2026-10-11 | Removed the floating "In Stock" pill badge from above the hoodie photo in `merchCard.js` and `merchandiseModal.js`. Updated image serving and fallback in `serve.js` to ensure `Navy Hoodie Logo Mockup Duo.png` loads seamlessly across both `./assets/` and root repository paths. | `frontend/home-page/js/components/merchCard.js`, `frontend/home-page/js/components/merchandiseModal.js`, `frontend/serve.js` | Verified via Node fetch scripts on port 3000 (`200 image/png`), confirmed badge absence, and executed backend tests (`cmd /c npm test` - 6/6 passed). |
+| 2026-10-11 | Integrated official assets and interactive merchandise modal: 1. Applied `logo.png` to the header brand logo across `index.html` and `merchandise.html`; 2. Applied `Navy Hoodie Logo Mockup Duo.png` to the single merchandise product across frontend data, backend API, and card/modal views; 3. Kept merchandise card simple and clean matching event cards; 4. Clicking the merchandise card opens an expanded modal with product specs, size selection, and description; 5. Implemented complete purchase checkout collecting buyer details (Full Name, Phone, Email, Pickup/Delivery Option) and payment (UPI/Card/NetBanking) with confirmed order and payment ID. | `frontend/home-page/index.html`, `frontend/home-page/merchandise.html`, `frontend/home-page/styles.css`, `frontend/home-page/app.js`, `frontend/home-page/js/components/merchCard.js`, `frontend/home-page/js/components/merchandiseModal.js`, `frontend/home-page/js/data/merchandise.js`, `backend/src/lib/db.js`, `backend/src/routes/products.routes.js` | Verified via port 3000 static delivery, image asset loading (200 OK for logo.png and duo mockup), backend POST /api/orders endpoint (201 Created), and backend tests (`cmd /c npm test` - 6/6 passed). |
+| 2026-10-11 | Repositioned header navigation tabs (`Events` & `Merchandise`) alongside the `Sign In ▾` button on the right side of the header on both `index.html` and `merchandise.html`. Redesigned `merchandise.html` main body to match the clean events page layout (header bar with title + right-aligned search input, responsive 4-column cards grid, minimal footer). Generated and saved official `navy-hoodie.jpg` asset in `assets/`, featuring the single "Skyline Navy Hoodie" item across frontend and backend. | `frontend/home-page/index.html`, `frontend/home-page/merchandise.html`, `frontend/home-page/js/components/merchCard.js`, `frontend/home-page/js/data/merchandise.js`, `frontend/home-page/assets/navy-hoodie.jpg`, `backend/src/lib/db.js` | Verified via Node fetch scripts on port 3000 (`http://localhost:3000`), image asset delivery (`200 image/jpeg`), backend API on port 5000, and backend tests (`cmd /c npm test` - 6/6 passed). |
+| 2026-10-11 | Restored the "Merchandise" tab in the top navigation header across `frontend/home-page/index.html` and `frontend/home-page/merchandise.html` alongside "Events", keeping navigation synchronized and clean while preserving the events-only layout on the main page. | `frontend/home-page/index.html`, `frontend/home-page/merchandise.html` | Verified via Node fetch scripts on port 3000 (`http://localhost:3000/home-page/index.html` and `http://localhost:3000/merchandise.html`). |
+| 2026-10-11 | Redesigned Event Details modal to professional enterprise layout: 1. Completely eliminated all emojis from the modal metadata, headers, buttons, and confirmation screens; 2. Structured clean key-value metadata (Date & Time, Venue, Standard Ticket, Skyline Member Rate with discount tag); 3. Member pricing explicitly implemented as a discount on standard ticket price (e.g. Workshop: ₹499 standard vs ₹199 member discounted rate); 4. Built interactive 2-step registration & payment flow where registration completes strictly upon payment completion via UPI, Card, or Net Banking; 5. Added payment gateway authorization and confirmation screen with digital ticket pass and transaction reference. | `frontend/home-page/js/components/registrationModal.js`, `frontend/home-page/styles.css`, `backend/src/routes/events.routes.js` | Verified via Node fetch testing on ticket checkout endpoint, backend test suite (`cmd /c npm test` - 6/6 passed), and static asset delivery on port 3000. |
+| 2026-10-11 | Completed 11 UI & interaction refinements on the public Events page (`index.html`): 1. Nav title changed to "Events"; 2. Shopping Bag button removed; 3. Simple "Sign In ▾" button; 4. Simplified role dropdown menu with icons and titles only (no descriptions); 5. Hero banner card removed; 6. Header filters (programs, mode, schedule) removed; 7. Page made exclusively events-focused (merchandise sections removed); 8. Cards display status pills only (`Open`, `Closing Soon`, `Sold Out`) with no register button; 9. Clicking an event card opens detailed event overview modal and collects Full Name, Phone, Email, and Participant Type; 10. Discounted Member pricing enabled; 11. Custom styled select dropdown for Participant Type (`.modal-select-field`). | `frontend/home-page/index.html`, `frontend/home-page/styles.css`, `frontend/home-page/app.js`, `frontend/home-page/js/components/eventCard.js`, `frontend/home-page/js/components/registrationModal.js`, `backend/src/lib/db.js` | Verified via Node fetch scripts on port 3000 (`http://localhost:3000`), active backend API on port 5000 (`http://localhost:5000`), and backend test suite (`cmd /c npm test` - 6/6 passed). |
+| 2026-10-11 | Updated Events layout and card rendering to match the reference screenshot. Designed clean cards featuring top-right floating circular date badges (`OCT 10`), category & mode tags (`[Hackathon] [In Person]`), bold title, location line, and exact 3-card listing (2 with active `Register` buttons and 1 with `Sold Out` status badge). | `frontend/home-page/js/components/eventCard.js`, `frontend/home-page/js/data/events.js`, `frontend/home-page/styles.css`, `backend/src/lib/db.js` | Verified via static server on port 3000 (`http://localhost:3000`), backend tests (`cmd /c npm test` - 6/6 passed), and live API backend on port 5000. |
+| 2026-10-11 | Connected Frontend to Backend REST API and Backend to Database (Prisma ORM with PostgreSQL schema & fallback store). Created `backend/src/lib/db.js`, `backend/src/routes/events.routes.js`, and `backend/src/routes/products.routes.js`. Mounted `/api/events`, `/api/events/:id/tickets`, `/api/products`, and `/api/orders` endpoints. Updated integration tests (`tests/health.test.js` - 6/6 passed). | `backend/src/app.js`, `backend/src/lib/db.js`, `backend/src/routes/events.routes.js`, `backend/src/routes/products.routes.js`, `backend/tests/health.test.js` | Verified via `cmd /c npm test` (6/6 passed) and active backend server on port 5000 (`http://localhost:5000`). |
+| 2026-10-11 | Refined Public Frontend according to user requirements. Established `Home / Events` as the single unified landing page (`index.html`) and implemented `Merchandise` as a separate public page (`merchandise.html`). Created `frontend/admin/index.html` as a dedicated Admin Portal login route. Updated Header Login Dropdown to route to all 4 role portals (`../admin/index.html`, `../manager/index.html`, `../member/index.html`, `../user/index.html`). Standardized card height & fallbacks in `eventCard.js`. Updated `app.js` to gracefully serve both pages. | `frontend/home-page/index.html`, `frontend/home-page/merchandise.html`, `frontend/admin/index.html`, `frontend/home-page/app.js`, `frontend/home-page/js/components/eventCard.js` | Verified ES syntax (`node -c frontend/serve.js`), backend tests (`cmd /c npm test` - 3/3 passed), and Next.js manager build (`cmd /c npm run build`). |
+| 2026-10-11 | Modularized public frontend architecture into separate data layers, components, and utility modules (`data/events.js`, `data/merchandise.js`, `utils/validation.js`, `components/*.js`). Fixed CSS syntax typo on line 136 in `styles.css`. Updated header navigation item to unified `Home / Events` item. Preserved all role routes (Admin, Manager, Member, User) and visual tokens. | `frontend/home-page/index.html`, `frontend/home-page/styles.css`, `frontend/home-page/app.js`, `frontend/home-page/js/**/*` | Verified ES module loading via `node serve.js` on port 3000, backend health check on port 5000, and backend tests (`cmd /c npm test` - 3/3 passed). |
+| 2026-10-11 | Refined public Home Page per `HOME_PAGE_REQUIREMENTS.md`. Aligned design system tokens with Manager palette, removed Playfair Display serif font for clean Inter typography, fixed role login dropdown routes (Admin, Manager, Member, User), connected event fetching and public registration flow to real backend API endpoints with non-faked error/notice states for unmounted endpoints, and verified keyboard/aria accessibility. | `frontend/home-page/index.html`, `frontend/home-page/styles.css`, `frontend/home-page/app.js` | Verified via static server (`node serve.js` on port 3000), backend server (`node server.js` on port 5000), backend unit tests (`cmd /c npm test` - 3/3 passed), and Next.js manager build check (`cmd /c npm run build` - 0 errors). |
+| 2026-10-11 | Created the baseline PRD as a Markdown document from the agreed scope. | `Docx/PRD.md` | Document created and integrated into `Docx/PRD.md`. |
 
-## Key features
-1. Authentication and role-based authorization.
-2. Membership records, dues/payment status, validity, benefits, and renewal reminders.
-3. Event management, member/non-member pricing, capacity controls, ticket records, digital verification, check-in, attendance and revenue reporting.
-4. Merchandise catalogue, size-level stock, orders and payment status.
-5. Volunteer opportunities, assignments, deadlines and progress tracking.
-6. Announcements, audience targeting, mailing-list distribution and dated history.
-7. Finance: membership/event/merchandise/fundraising income, expenses, reimbursements, and balance reporting.
+## Current Status
+- **Clean Event Card Layout:** Cards updated in [`eventCard.js`](file:///c:/Users/Administrator/Desktop/Odoo-NMIT/Odoo-NMIT-HACKATHON-FINAL-ROUND/frontend/home-page/js/components/eventCard.js) to match reference screenshot design with top-right floating date badge (`OCT 10`), tag pills (`[Hackathon] [In Person]`), location line, and exact 3-card listing (2 with active `Register` buttons and 1 with `Sold Out` status button).
+- **Backend API & Database Connection:** Express REST API endpoints (`/api/events`, `/api/events/:id/tickets`, `/api/products`, `/api/orders`, `/api/health`) connected to Prisma ORM (`prisma/schema.prisma`) with database connection handling and resilient fallbacks.
+- **Verification & Test Results:** All 6 backend integration tests passed (`cmd /c npm test` - 6/6 passed, 100% pass rate).
 
-## Agreed technology stack
-- **Frontend:** Next.js + React
-- **Styling:** Tailwind CSS
-- **Backend:** Node.js + Express.js
-- **API style:** REST APIs using JSON over HTTP/HTTPS
-- **Database:** relational SQL database; PostgreSQL was previously selected in the project discussion
-- **ORM:** Prisma
-- **Authentication:** bcrypt for password hashing + JWT
-- **API testing:** Postman
 
-## Architecture decision
-Proposed modular monolith: Next.js frontend → Express REST API (routes/controllers/services/middleware) → Prisma ORM → PostgreSQL. Backend authorization must protect every restricted operation. Email delivery and payment gateway are integrations, not confirmed implementations.
+## Next Steps
+- Database environment configuration (`DATABASE_URL` in `backend/.env`) for production PostgreSQL instance.
+- Maintain `Docx/memory.md` after subsequent module changes.
 
-## Proposed project structure (not verified against an actual repository)
-```text
-student-organization-system/
-├── frontend/
-│   ├── app/                 # login/, admin/, volunteer/, member/
-│   ├── components/
-│   ├── lib/
-│   └── styles/
-├── backend/
-│   ├── src/
-│   │   ├── routes/
-│   │   ├── controllers/
-│   │   ├── services/
-│   │   ├── middleware/
-│   │   └── validators/
-│   ├── prisma/
-│   │   ├── schema.prisma
-│   │   └── migrations/
-│   ├── tests/
-│   └── server.js
-├── .gitignore
-└── README.md
-```
-
-## Proposed database schema (not implemented/verified)
-- `User`: id, name, email, password hash, account status; role/role assignments.
-- `Membership`: id, user id, start date, expiry date, payment status.
-- `Event`: id, title, description, date, venue, capacity, member price, standard price, status.
-- `Ticket`: id, event id, user id, price, payment status, check-in status/identifier.
-- `CheckIn`: ticket id, check-in time, staff user id.
-- `Product`: id, name, description, price, status.
-- `InventoryVariant`: product id, size, quantity available.
-- `Order`: id, user id, total, payment status, order status.
-- `OrderItem`: order id, product id/variant, quantity, unit price.
-- `VolunteerTask`: id, title, assignee, deadline, status, progress.
-- `Announcement`: id, title, content, audience, publication date.
-- `Transaction`: id, category, amount, date, description, reference.
-- `Reimbursement`: id, volunteer id, amount, evidence reference, review/payment status.
-- Additional payment records/audit logs may be needed; exact fields and relations remain pending.
-
-## Proposed REST API endpoints (not implemented/verified)
-- Auth: `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`
-- Users: `GET /api/users`, `PATCH /api/users/:id`
-- Membership: `GET /api/memberships/me`, `PATCH /api/memberships/:id`
-- Events: `GET /api/events`, `POST /api/events`, `GET /api/events/:id`
-- Tickets: `POST /api/events/:id/tickets`, `POST /api/tickets/:id/check-in`
-- Products/orders: `GET /api/products`, `POST /api/products`, `POST /api/orders`
-- Volunteer tasks: `GET /api/tasks`, `POST /api/tasks`, `PATCH /api/tasks/:id`
-- Announcements: `GET /api/announcements`, `POST /api/announcements`
-- Finance: `GET /api/finance/summary`, `POST /api/transactions`
-- Reimbursements: `POST /api/reimbursements`, `PATCH /api/reimbursements/:id`
-
-## Implementation progress
-- Problem scope and Admin/Member/Volunteer responsibilities documented.
-- PRD drafted.
-- High-level system architecture drafted for the agreed stack.
-- Proposed folder structure, data entities, and endpoint examples documented.
-- **Backend foundation initialized and verified:**
-  - Minimal Node.js + Express.js setup in `backend/` following modular structure (`backend/server.js`, `backend/src/app.js`, `backend/src/routes/health.routes.js`, `backend/src/middleware/notFoundHandler.js`, `backend/src/middleware/errorHandler.js`).
-  - Health check endpoint `GET /api/health` implemented and verified (HTTP 200).
-  - 404 handler and centralized error middleware implemented and verified.
-  - Automated tests verified passing using Node built-in test runner (`npm test`).
-  - Database, business features, authentication, and frontend remain not yet implemented.
-
-## Important decisions and constraints
-- Keep all PRD core modules in scope, including announcements, renewal reminders, member/non-member pricing, event capacity, actual attendance, size-wise stock, reimbursements, and financial reporting.
-- Start with a modular monolith rather than microservices.
-- Enforce permissions in backend middleware/services, not only in the UI.
-- Use database transactions/constraints to prevent ticket overselling, duplicate check-ins, and inventory overselling.
-- Calculate financial totals from traceable transaction records and define consistent treatment for pending payments, refunds, and reimbursements.
-- QR ticketing is a proposed implementation option, not a confirmed requirement.
-
-## Pending decisions / known issues
-- Confirm repository layout against actual code.
-- Confirm PostgreSQL as the final SQL database choice in the project configuration.
-- Decide whether Member and Volunteer access can coexist on one account.
-- Decide manual payment verification vs. payment gateway for MVP.
-- Define ticket issuance/payment-confirmation policy and inventory reservation/deduction policy.
-- Select email provider and reminder timing; mailing-list delivery is not verified as implemented.
-- Define reimbursement approval permissions and exact database fields.
-- No code-level defects or test failures have been verified because source code and test output were not available.
-
-## Update rule
-When the repository becomes available, inspect the actual files and tests before updating this document. Mark a feature as implemented only when supported by code or test evidence; keep proposals and undecided items clearly labelled.
